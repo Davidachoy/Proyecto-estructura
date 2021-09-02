@@ -4,10 +4,7 @@ using namespace std;
 
 int main()
 {
-    c
-    ee
-    f
-    efef
+    cout<<"hola"
     cout << "Hello world!" << endl;
     return 0;
 }
