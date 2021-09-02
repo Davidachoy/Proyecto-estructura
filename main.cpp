@@ -8,7 +8,7 @@ int main()
     cout<<"";
     cout<<"Casa";
     int casa;
-    cin>>casa;
+    
     cout << "Hello world!" << endl;
     return 0;
 }
