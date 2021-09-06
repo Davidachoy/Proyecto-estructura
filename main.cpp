@@ -2,6 +2,87 @@
 
 using namespace std;
 
+struct Administrador{
+    string nomUsuario;
+    Administrador * sig;
+
+    Administrador(string nom){
+    nomUsuario = nom;
+    sig  = NULL;
+    }
+};
+
+struct Profesor{
+    string nombre;
+    int cedula;
+    int edad;
+    Profesor *sig;
+    Profesor *ant;
+    struct conexionGrupo * suGrupo;
+
+    Profesor(string nom,int ced, int unEdad){
+
+    nombre = nom;
+    cedula = ced;
+    edad   = unEdad;
+    sig = NULL;
+    ant=NULL;
+    suGrupo = NULL;
+    }
+
+
+
+
+
+};
+
+struct Estudiante{
+    string nombre;
+    int carnet;
+    string carrera;
+    Estudiante* sig;
+
+    Estudiante(string nom, int unCarnet, string carr){
+
+    nombre = nom;
+    carnet = unCarnet;
+    carrera= carr;
+    sig  = NULL;
+    }
+
+
+};
+
+struct Semestre{
+    int anno;
+    int numSemestre;
+
+    Semestre(int unAnno, int unNumSemestre){
+
+    anno = unAnno;
+    numSemestre = unNumSemestre;
+
+
+
+    }
+
+
+
+};
+// Conecta a profesor con un grupo
+struct conexionGrupo{
+    conexionGrupo*sig;
+    struct Grupo* enlaceG;
+
+    conexionGrupo(){
+    sig = NULL;
+    enlaceG = NULL;
+
+    }
+
+};
+
+
 struct Curso{
 
     int creditos;
