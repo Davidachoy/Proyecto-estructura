@@ -2,7 +2,7 @@
 
 using namespace std;
 
-struct Administrador{
+struct Administrador{//Simple list
     string nomUsuario;
     Administrador * sig;
 
@@ -12,7 +12,7 @@ struct Administrador{
     }
 };
 
-struct Profesor{
+struct Profesor{//Double list
     string nombre;
     int cedula;
     int edad;
@@ -36,12 +36,12 @@ struct Profesor{
 
 };
 
-struct Estudiante{
+struct Estudiante{//Simple list
     string nombre;
     int carnet;
     string carrera;
     Estudiante* sig;
-
+    struct ReporteEstudiante*enlaceReporte;
 
     Estudiante(string nom, int unCarnet, string carr){
 
@@ -54,21 +54,24 @@ struct Estudiante{
 
 };
 
-struct Semestre{
+struct Semestre{//Double list
     int anno;
     int numSemestre;
+    Semestre*sig,*ant;
+    //structs
+    struct Charla*enlaceCharla;
+    struct ConexionCurso*enlaceConexionCurso;
 
     Semestre(int unAnno, int unNumSemestre){
-
     anno = unAnno;
-    numSemestre = unNumSemestre;
-
-
-
+    numSemestre  = unNumSemestre;
+    //structs
+    enlaceCharla = NULL;
+    enlaceConexionCurso = NULL;
+    //punteros
+    sig = NULL;
+    ant = NULL;
     }
-
-
-
 };
 // Conecta a profesor con un grupo
 struct conexionGrupo{
@@ -83,7 +86,16 @@ struct conexionGrupo{
 
 };
 
-struct Curso{
+struct ConexionCurso{//Conecta a semestre con curso
+    ConexionCurso*sig;// lista simple
+    struct Curso* enlaceCurso;
+    ConexionCurso(){
+    sig = NULL;
+    enlaceCurso = NULL;
+    }
+};
+
+struct Curso{//Circular list
 
     int creditos;
     string nomCurso;
@@ -95,19 +107,17 @@ struct Curso{
     creditos = c;
     nomCurso = nom;
     codigo   = cod;
-
     sig  = NULL;
     subListaGrupos = NULL;
-
     }
 };
 
-struct Grupo{
+struct Grupo{//Simple list
 
 
     int numGrupo;
     Grupo*sig;
-    struct Curso*enlaceCurso,*enlaceCursoFinal;
+    struct Curso*enlaceCurso;
     struct Evaluacion*tempTC,*tempP,*tempExa,*tempG;
     struct ReporteEstudiante*enlaceReporte;
 
@@ -124,16 +134,16 @@ struct Grupo{
     enlaceReportes = NULL;
 
 };
-struct Evaluacion{
-    string tipo;
+struct Evaluacion{//Simple list
+    string nombre;
     int dia;
     int mes;
     int year;
     string horaEntrega;
     Evaluacion*sig;
 
-    Evaluacion(string type, int day, int month, int a, string hour){
-    tipo        = type;
+    Evaluacion(string name, int day, int month, int a, string hour){
+    nombre      = name;
     dia         = day;
     mes         = month;
     year        = a;
@@ -145,21 +155,22 @@ struct Evaluacion{
 
 };
 
-struct ReporteEstudiante{
+struct ReporteEstudiante{//Simple list
 
     ReporteEstudiante*sig;
     struct AsistenciaCharla*enlaceAsistenciaCharla;
-
+    struct Grupo*enlaceGrupo;
     ReporteEstudiante(){
 
     sig = NULL;
     enlaceCharla = NULL;
+    enlaceGrupo  = NULL;
     }
 
 
 };
 
-struct AsistenciaCharla{
+struct AsistenciaCharla{//Simple list
 
     AsistenciaCharla*sig;
     struct Charla*enlaceCharla;
@@ -170,7 +181,7 @@ struct AsistenciaCharla{
     }
 };
 
-struct Charla{
+struct Charla{//Simple list
     int dia;
     int mes;
     int year;
