@@ -42,6 +42,7 @@ struct Estudiante{
     string carrera;
     Estudiante* sig;
 
+
     Estudiante(string nom, int unCarnet, string carr){
 
     nombre = nom;
@@ -82,7 +83,6 @@ struct conexionGrupo{
 
 };
 
-
 struct Curso{
 
     int creditos;
@@ -97,30 +97,33 @@ struct Curso{
     codigo   = cod;
 
     sig  = NULL;
-    punG = NULL;
+    subListaGrupos = NULL;
 
     }
 };
 
 struct Grupo{
+
+
     int numGrupo;
     Grupo*sig;
     struct Curso*enlaceCurso,*enlaceCursoFinal;
     struct Evaluacion*tempTC,*tempP,*tempExa,*tempG;
+    struct ReporteEstudiante*enlaceReporte;
 
-    Grupo(int num){
-    numGrupo = num;
     sig  = NULL;
+    //curso
     enlaceCurso = NULL;
     enlaceCursoFinal = NULL;
+    //Evaluaciones
     tempTC = NULL;
     tempP = NULL;
     tempExa = NULL;
     tempG = NULL;
-    }
+    //Reporte estudiante
+    enlaceReportes = NULL;
 
 };
-
 struct Evaluacion{
     string tipo;
     int dia;
@@ -141,6 +144,56 @@ struct Evaluacion{
     }
 
 };
+
+struct ReporteEstudiante{
+
+    ReporteEstudiante*sig;
+    struct AsistenciaCharla*enlaceAsistenciaCharla;
+
+    ReporteEstudiante(){
+
+    sig = NULL;
+    enlaceCharla = NULL;
+    }
+
+
+};
+
+struct AsistenciaCharla{
+
+    AsistenciaCharla*sig;
+    struct Charla*enlaceCharla;
+
+    AsistenciaCharla(){
+    sig = NULL;
+    enlaceCharla = NULL;
+    }
+};
+
+struct Charla{
+    int dia;
+    int mes;
+    int year;
+    string tipoCharla;
+    int numCharla;
+    Charla*sig;
+
+    Charla(int day, int month, int a, string type, int idC){
+        dia = day;
+        mes = month;
+        year= a;
+        tipoCharla = type;
+        numCharla  = idC;
+
+        sig = NULL;
+    }
+
+};
+
+//Punteros globales
+Curso*listaCurso;
+Charla*listaCharla;
+//ReporteEstudiante*
 
 int main()
 {
