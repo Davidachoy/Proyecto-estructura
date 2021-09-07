@@ -1,8 +1,12 @@
 #include <iostream>
+//Nicole Tencio y David Achoy
+//Iniciamos: Jueves 02 sept
+//Tarea corta#2
 
 using namespace std;
 
-struct Administrador{//Simple list
+
+struct Administrador{//Simple list del adiminstrador
     string nomUsuario;
     Administrador * sig;
 
@@ -12,13 +16,13 @@ struct Administrador{//Simple list
     }
 };
 
-struct Profesor{//Double list
+struct Profesor{//Double list del profesor
     string nombre;
     int cedula;
     int edad;
     Profesor *sig;
     Profesor *ant;
-    struct conexionGrupo * suGrupo;
+    struct conexionGrupo * suGrupo;//conecta con un auxiliar
 
     Profesor(string nom,int ced, int unEdad){
 
@@ -36,12 +40,12 @@ struct Profesor{//Double list
 
 };
 
-struct Estudiante{//Simple list
+struct Estudiante{//Simple list del estuditante
     string nombre;
     int carnet;
     string carrera;
     Estudiante* sig;
-    struct ReporteEstudiante*enlaceReporte;
+    struct ReporteEstudiante*enlaceReporte;// conecta con un auxiliar
 
     Estudiante(string nom, int unCarnet, string carr){
 
@@ -59,8 +63,8 @@ struct Semestre{//Double list
     int numSemestre;
     Semestre*sig,*ant;
     //structs
-    struct Charla*enlaceCharla;
-    struct ConexionCurso*enlaceConexionCurso;
+    struct Charla*enlaceCharla; // conecta con la estructura de charla
+    struct ConexionCurso*enlaceConexionCurso;//conecta con un auxiliar
 
     Semestre(int unAnno, int unNumSemestre){
     anno = unAnno;
@@ -73,6 +77,7 @@ struct Semestre{//Double list
     ant = NULL;
     }
 };
+//auxialiar de la estrctura Profesor.
 // Conecta a profesor con un grupo
 struct conexionGrupo{
     conexionGrupo*sig;
@@ -95,46 +100,44 @@ struct ConexionCurso{//Conecta a semestre con curso
     }
 };
 
-struct Curso{//Circular list
+struct Curso{ //Circular list de curso
 
     int creditos;
     string nomCurso;
     int codigo;
     Curso*sig;
-    struct Grupo*sublistaGrupos;
+    struct Grupo*sublistaGrupos;//Conecta con los grupos
 
     Curso(int c,string nom,int cod){
     creditos = c;
     nomCurso = nom;
     codigo   = cod;
     sig  = NULL;
-    subListaGrupos = NULL;
+    sublistaGrupos = NULL;
     }
 };
 
-struct Grupo{//Simple list
+struct Grupo{//Simple list del grupo
 
 
     int numGrupo;
-    Grupo*sig;
-    struct Curso*enlaceCurso;
-    struct Evaluacion*tempTC,*tempP,*tempExa,*tempG;
-    struct ReporteEstudiante*enlaceReporte;
+    struct Grupo*sig;
+    struct Curso*enlaceCurso;//Conecta con los cursos
+    struct Evaluacion*tempTC,*tempP,*tempExa,*tempG;//conecta con las evaluaciones
+    Grupo(){
+
 
     sig  = NULL;
     //curso
     enlaceCurso = NULL;
-    enlaceCursoFinal = NULL;
     //Evaluaciones
     tempTC = NULL;
     tempP = NULL;
     tempExa = NULL;
     tempG = NULL;
-    //Reporte estudiante
-    enlaceReportes = NULL;
-
+  }
 };
-struct Evaluacion{//Simple list
+struct Evaluacion{//Simple list de evaluaciones
     string nombre;
     int dia;
     int mes;
@@ -155,22 +158,36 @@ struct Evaluacion{//Simple list
 
 };
 
-struct ReporteEstudiante{//Simple list
+struct ReporteEstudiante{//Simple list de parte de estudiante
 
     ReporteEstudiante*sig;
     struct AsistenciaCharla*enlaceAsistenciaCharla;
     struct Grupo*enlaceGrupo;
+    struct Calificaciones*enlaceEvaluaciones;
     ReporteEstudiante(){
 
     sig = NULL;
-    enlaceCharla = NULL;
+    enlaceEvaluaciones = NULL;
     enlaceGrupo  = NULL;
+    enlaceAsistenciaCharla = NULL;
     }
 
 
 };
 
-struct AsistenciaCharla{//Simple list
+struct Calificaciones{ //Lista simple
+    Calificaciones* sig;
+    Evaluacion*enlaceEvaluaciones;
+
+    Calificaciones(){
+    enlaceEvaluaciones= NULL;
+    sig = NULL;
+    }
+};
+
+
+
+struct AsistenciaCharla{//Simple lista
 
     AsistenciaCharla*sig;
     struct Charla*enlaceCharla;
@@ -181,7 +198,7 @@ struct AsistenciaCharla{//Simple list
     }
 };
 
-struct Charla{//Simple list
+struct Charla{//Simple list de Charlas
     int dia;
     int mes;
     int year;
@@ -202,8 +219,10 @@ struct Charla{//Simple list
 };
 
 //Punteros globales
-Curso*listaCurso;
-Charla*listaCharla;
+Profesor*primerProfesor;
+Semestre*primerSemestre;
+Administrador*primerAdministrador;
+Estudiante*primerEstudiante;
 //ReporteEstudiante*
 
 int main()
