@@ -1,11 +1,16 @@
 #include <iostream>
-//Nicole Tencio y David Achoy
-//Iniciamos: Jueves 02 sept
-//Tarea corta#2
 
 using namespace std;
 
+/*
+Primer proyecto de estructuras de datos
 
+Estudiantes: Nicole Tencio y David Achoy
+
+Fecha de inicio: Jueves 02 sept
+*/
+
+//Estructuras a usar
 struct Administrador{//Simple list del adiminstrador
     string nomUsuario;
     Administrador * sig;
@@ -35,7 +40,7 @@ struct Profesor{//Double list del profesor
     }
 };
 
-struct Estudiante{//Simple list del estuditante
+struct Estudiante{//Simple list del estudiante
     string nombre;
     int carnet;
     string carrera;
@@ -72,9 +77,8 @@ struct Semestre{//Double list
     ant = NULL;
     }
 };
-//auxialiar de la estrctura Profesor.
-// Conecta a profesor con un grupo
-struct conexionGrupo{
+
+struct conexionGrupo{// Conecta a profesor con un grupo  //auxialiar de la estrctura Profesor.
     conexionGrupo*sig;
     struct Grupo* enlaceG;
 
@@ -113,6 +117,7 @@ struct Curso{ //Circular list de curso
 };
 
 struct Grupo{//Simple list del grupo
+
 
     int numGrupo;
     struct Grupo*sig;
@@ -216,29 +221,30 @@ Administrador*primerAdministrador;
 Estudiante*primerEstudiante;
 Curso*primerCurso;
 
-//Login user    punto "a"
-Administrador* insertarAdmin(string user){
+//punto "a"
+Administrador* insertarAdmin(string user){//Inserta los usuarios
     Administrador*newuser  = new Administrador(user);
     newuser->sig = primerAdministrador;
     primerAdministrador = newuser;
-    return primerAdministrador;
+return primerAdministrador;
 }
 
-bool buscarAdmin(){
+bool buscarAdmin(){//Login user
     cout<<" \nIngrese el usuario: ";
     string user;
     cin>>user;
     struct Administrador*local = primerAdministrador;
     while(local != NULL){
         if(local->nomUsuario == user){//Verifica si es igual al que se desea buscar
-                cout<<"\n--------- Bienvenido ---------\n";
+                cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+                cout<<"\n+               Bienvenid@                +";
+                cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n";
                 return true;
         }
         local=local->sig;
     }
     return false;
 }
-
 
 //Punto "b"... Acciones de Admin con profe
 Profesor*insertarInicio(string nom, int id,int edad){//Insertar al inicio lista doble
@@ -254,7 +260,7 @@ Profesor*insertarInicio(string nom, int id,int edad){//Insertar al inicio lista 
 return primerProfesor;
 }
 
-Profesor*eliminarProfe(int id){
+/*Profesor*eliminarProfe(int id){
     if(primerProfesor == NULL)//Lista vacia
         cout<<"\nLista vacia...";
     else if(primerProfesor->cedula == id){//Sí se encuentra de primero
@@ -284,62 +290,169 @@ Profesor*eliminarProfe(int id){
     }
 return primerProfesor;
 }
+*/
+
+//Punto "c"... Insertar, modificar y borrar estudiantes (inserción ordenada por carnet en lista simple)
+
+Estudiante*InsertaEst(string nombre, int num, string carrera){//Insertar a los estudiantes
+
+    Estudiante* newEst = new Estudiante(nombre,num,carrera);
+    //newEst->carnet = num;
+    newEst->sig = NULL;//nullptr;
+
+    if(primerEstudiante == NULL||num < primerEstudiante->carnet){
+        newEst->sig = primerEstudiante;
+        primerEstudiante = newEst;
+        cout<<"  Estudiante agregado salisfactoriamente\n";
+    }
+    else{
+        Estudiante*temp = primerEstudiante;
+        while(temp->sig != NULL && temp->sig->carnet < num){
+            newEst->sig = primerEstudiante;
+            temp = temp->sig;
+            cout<<"  Estudiante agregado salisfactoriamente\n";
+
+        }
+        if(temp->sig != NULL){
+            newEst->sig = temp->sig;
+            cout<<"  Estudiante agregado salisfactoriamente\n";
+
+        }
+        temp->sig = newEst;
+        //cout<<"  Estudiante agregado salisfactoriamente\n";
+
+
+    return primerEstudiante;
+    }
+return primerEstudiante;
+}
+
+void borrarEst(int num){//Borra a un estudiante por su número de carnet
+    if (primerEstudiante == NULL){
+        cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+        cout<<"\n+ Aun no se han ingresado los estudiantes +";
+        cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n";
+        //return NULL;
+    }
+    else if(primerEstudiante->carnet == num){
+        primerEstudiante = primerEstudiante->sig;
+        cout<<"\tEstudiante borrado exitosamente...\n";
+        //return primerEstudiante;
+    }
+    else{
+        Estudiante*temp = primerEstudiante;
+        Estudiante*tempAnt = primerEstudiante;
+
+        while(temp!= NULL){
+
+            if(temp->carnet == num){
+                tempAnt->sig = temp->sig;
+                cout<<"\tEstudiante borrado exitosamente...\n";
+                //return primerEstudiante;
+            }
+            tempAnt = temp;
+			temp = temp->sig;
+        }
+        if(temp == NULL){
+        }
+    }
+}
+
+//Metodos de impresion
+void imprimirEstudiante();
+
+//Metodos de buscar
+struct Estudiante*buscarEstudiante(int num);
 
 //Menus
 void menuAdmin(){
     bool repetir = true;
     do{
-        if(buscarAdmin() == true){
-            int choiceAdmin;
-            cout<<"\n ----------- Menu administrador -----------\n\n";
-            cout<<" 1 - Acciones con los profesores\n";
-            cout<<" 2 - Accines con los estudiantes\n";
-            cout<<" 3 - Acciones con los semestres\n";
-            cout<<" 4 - Acciones con los cursos\n";
-            cout<<" 5 - Insertar los grupos\n";
-            cout<<" 6 - Relacionar y borrar profesores con los grupos de los cursos respectivos \n";
-            cout<<" 7 - Relacionar y borrar estudiantes con los grupos de los cursos\n";
-            cout<<" 8 - Relacionar los semestres con los cursos, insertar y modificar\n";
-            cout<<" 9 - Volver a menu principal\n\n";
+        int choiceAdmin;
+        cout<<"\n ----------- Menu administrador -----------\n\n";
+        cout<<" 1 - Acciones con los profesores\n";
+        cout<<" 2 - Accines con los estudiantes\n";
+        cout<<" 3 - Acciones con los semestres\n";
+        cout<<" 4 - Acciones con los cursos\n";
+        cout<<" 5 - Insertar los grupos\n";
+        cout<<" 6 - Relacionar y borrar profesores con los grupos de los cursos respectivos \n";
+        cout<<" 7 - Relacionar y borrar estudiantes con los grupos de los cursos\n";
+        cout<<" 8 - Relacionar los semestres con los cursos, insertar y modificar\n";
+        cout<<" 9 - Volver a menu principal\n\n";
+        cout<<" Opcion: ";
+        cin>>choiceAdmin;
+
+        switch(choiceAdmin){
+
+    case 1:
+        break;
+
+    case 2:
+        int choiceEst;
+        while (choiceEst != 5){
+            cout<<"\n ----------- Acciones estudiantes -----------\n\n";
+            cout<<" 1 - Ingresar estudiantes\n";
+            cout<<" 2 - Modificar\n";
+            cout<<" 3 - Borrar un estudiante\n";
+            cout<<" 4 - Imprimir datos de los estudiantes ingresados\n";
+            cout<<" 5 - Volver a menu administrador\n";
             cout<<" Opcion: ";
-            cin>>choiceAdmin;
+            cin>>choiceEst;
+            if(choiceEst == 1){
+                cout<<"\n";
+                primerEstudiante = InsertaEst("Sharon",1010,"Ingenieria en computacion");
+                primerEstudiante = InsertaEst("David",2021,"Educacion fisica");
+                primerEstudiante = InsertaEst("Hilary",100,"Direccion de empresas");
+                primerEstudiante = InsertaEst("Josue",1900,"Ingles");
+            }
+            else if(choiceEst == 2){
 
-            switch(choiceAdmin){
+            }
+            else if(choiceEst == 3){
+                int idBorrar;
+                cout<<"\tIngrese el numero de carnet del estudiante que se desea borrar: ";
+                cin>>idBorrar;
+                cout<<"\n";
+                borrarEst(idBorrar);
 
-        case 1:
-            break;
-
-        case 2:
-            break;
-
-        case 3:
-            break;
-
-        case 4:
-            break;
-
-        case 5:
-            break;
-
-        case 6:
-            break;
-
-        case 7:
-            break;
-
-        case 8:
-            break;
-
-        case 9:
-            repetir = false;
-            break;
+            }
+            else if(choiceEst == 4){
+                imprimirEstudiante();
+            }
+            else if(choiceEst == 5){
+                menuAdmin();
+            }
+            else{
+                cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+                cout<<"\n+   Por favor ingrese una opcion valida   +";
+                cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n";
             }
         }
-    else{
-        repetir = false;
-        cout<<" --- Nombre de usuario no encontrado\n --- ";
-    }
+        menuAdmin();
+        break;
 
+    case 3:
+        break;
+
+    case 4:
+        break;
+
+    case 5:
+        break;
+
+    case 6:
+        break;
+
+    case 7:
+        break;
+
+    case 8:
+        break;
+
+    case 9:
+        repetir = false;
+        break;
+        }
     }while(repetir);
 
 }
@@ -456,7 +569,13 @@ int main()
         switch(choice){
 
     case 1:
-        menuAdmin();
+        if(buscarAdmin()==true){
+            menuAdmin();
+        }else{
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+            cout<<"\n+          Usuario no registrado          +";
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n\n";
+        }
         break;
 
     case 2:
@@ -470,4 +589,36 @@ int main()
     }while(repetir);
 
     return 0;
+};
+
+//Metodos de impresion
+void imprimirEstudiante(){
+
+//Metodos de buscar
+/*bool Estudiante*buscarEstudiante(int num){
+
+    Estudiante * i = primerEstudiante;
+    while(i != NULL){
+        if(i->carnet =num){
+            return true;
+        }
+        i = i ->sig;
+    }
+    return false;
+};
+}*/
+    cout<<"\n ------------- Imprimiendo estudiantes ------------- \n\n";
+    if(primerEstudiante == NULL){
+        cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+        cout<<"\n+ Aun no se han ingresado los estudiantes +";
+        cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n";
+    }else{
+        Estudiante* temp = primerEstudiante;
+        while(temp != NULL){
+            cout<<"\n------ Datos ------\n"<<"\nNombre: "<<temp->nombre<<"\nCarne: "<<temp->carnet<<"\nCarrera: "<<temp->carrera;
+            temp = temp->sig;
+            cout<<"\n-------------------------------------------\n";
+        }
+        system("pause>nul");
+    };
 }
