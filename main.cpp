@@ -378,7 +378,9 @@ void menuAdmin(){
         cout<<" 6 - Relacionar y borrar profesores con los grupos de los cursos respectivos \n";
         cout<<" 7 - Relacionar y borrar estudiantes con los grupos de los cursos\n";
         cout<<" 8 - Relacionar los semestres con los cursos, insertar y modificar\n";
-        cout<<" 9 - Volver a menu principal\n\n";
+        cout<<" 9 - Reporte 7\n";
+        cout<<" 10- Reporte 8  \n";
+        cout<<" 0 - Volver a menu principal\n\n";
         cout<<" Opcion: ";
         cin>>choiceAdmin;
 
@@ -414,7 +416,6 @@ void menuAdmin(){
                 cin>>idBorrar;
                 cout<<"\n";
                 borrarEst(idBorrar);
-
             }
             else if(choiceEst == 4){
                 imprimirEstudiante();
@@ -450,6 +451,12 @@ void menuAdmin(){
         break;
 
     case 9:
+        break;
+
+    case 10:
+        break;
+
+    case 0:
         repetir = false;
         break;
         }
@@ -478,6 +485,18 @@ void menuProfe(){
         break;
 
     case 3:
+        int choiceReporte;
+        while(){
+            cout<<"----------- Menu de reportes -----------\n\n";
+            cout<<" 1 - Reporte 1 \n";
+            cout<<" 2 - Reporte 2 \n";
+            cout<<" 3 - Reporte 3 \n";
+            cout<<" 4 - Reporte 4 \n";
+            cout<<" 5 - Reporte 5 \n\n";
+            cout<<"\tOpcion: ";
+            cin>>choiceReporte;
+        }
+
         break;
 
     case 4:
@@ -494,7 +513,7 @@ void menuEst(){
         cout<<"----------- Menu de estudiantes -----------\n\n";
         cout<<" 1 - Registrar actividad cumplida\n";
         cout<<" 2 - Registrar asistencia en alguna charla\n";
-        cout<<" 3 - Reportes\n";
+        cout<<" 3 - Reporte 6\n";
         cout<<" 4 - Salir\n\n";
         cout<<" Opcion: ";
 
@@ -547,7 +566,6 @@ void menuUsuarios(){
     }while(repetir);
 }
 
-
 int main()
 {
     //Inserción de los usuarios de los administradores
@@ -594,19 +612,6 @@ int main()
 //Metodos de impresion
 void imprimirEstudiante(){
 
-//Metodos de buscar
-/*bool Estudiante*buscarEstudiante(int num){
-
-    Estudiante * i = primerEstudiante;
-    while(i != NULL){
-        if(i->carnet =num){
-            return true;
-        }
-        i = i ->sig;
-    }
-    return false;
-};
-}*/
     cout<<"\n ------------- Imprimiendo estudiantes ------------- \n\n";
     if(primerEstudiante == NULL){
         cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
@@ -622,3 +627,17 @@ void imprimirEstudiante(){
         system("pause>nul");
     };
 }
+
+//Metodos de buscar
+/*bool Estudiante*buscarEstudiante(int num){
+
+    Estudiante * i = primerEstudiante;
+    while(i != NULL){
+        if(i->carnet =num){
+            return true;
+        }
+        i = i ->sig;
+    }
+    return false;
+};
+}*/
