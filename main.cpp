@@ -119,12 +119,13 @@ struct Curso{ //Circular list de curso
 struct Grupo{//Simple list del grupo
 
 
+
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
     struct Evaluacion*tempTC,*tempP,*tempExa,*tempG;//conecta con las evaluaciones
-    Grupo(){
-
+    Grupo(int unNum){
+    numGrupo = unNum;
     sig  = NULL;
     //curso
     enlaceCurso = NULL;
@@ -364,6 +365,84 @@ void imprimirEstudiante();
 //Metodos de buscar
 struct Estudiante*buscarEstudiante(int num);
 
+//punto D inserta y modificar semestres
+//E: anno y numsemestre
+//S: semestre creado de forma ordenada en lista doble
+Semestre* insertarSemestreOrdenado(int anno,int numSemestre){
+
+        Semestre *newSemestre = new Semestre(anno,numSemestre);
+
+        if(primerSemestre == NULL)
+            primerSemestre = newSemestre;
+        else if(anno == primerSemestre->anno && numSemestre<primerSemestre->numSemestre ){
+                newSemestre->sig = primerSemestre;
+                primerSemestre->ant = newSemestre;
+                primerSemestre = newSemestre;
+            }
+        else if(anno < primerSemestre->anno){
+                newSemestre->sig = primerSemestre;
+                primerSemestre->ant = newSemestre;
+                primerSemestre = newSemestre;
+            }
+     else{
+
+        Semestre*temp = primerSemestre;
+        Semestre*tempAnt =NULL;
+
+
+        while((temp != NULL) && (anno >= temp->anno)){
+                tempAnt = temp;
+                temp = temp->sig;
+        }//
+        if(temp ==NULL){//el numero a insertar es mayor a todos
+               tempAnt->sig = newSemestre;
+               newSemestre->ant =  tempAnt;
+        }
+        else{// insertar en medio
+            newSemestre->sig = temp;
+            newSemestre->ant = tempAnt;
+            tempAnt->sig = newSemestre;
+            temp->ant = newSemestre;
+        }
+     }
+
+return primerSemestre;
+}
+//punto E insertar curso lista circular final
+//E: creditos, nombre, codigo
+Curso* insertarCurso(int creditos, string nombre, int codigo){
+
+    Curso* newCurso = new Curso(creditos,nombre,codigo);
+
+    if(primerCurso == NULL){
+
+        primerCurso = newCurso;
+        newCurso->sig = newCurso;// aqui se apunta asi mismo
+
+    }
+    else{
+        newCurso->sig = primerCurso;
+        Curso* temp = primerCurso;
+        while(temp->sig != primerCurso)
+            temp = temp->sig;
+
+        temp->sig = newCurso;
+}return newCurso;
+}
+
+//punto F insertar grupo relacionandolo con los cursos
+//E:Recibe un numero de grupo
+//S: grupo asociado con curso
+Grupo* insertarGrupo(int unNum){
+    Grupo* newGrupo = new Grupo(unNum);
+
+
+
+
+}
+
+
+
 //Menus
 void menuAdmin(){
     bool repetir = true;
@@ -485,8 +564,8 @@ void menuProfe(){
         break;
 
     case 3:
-        int choiceReporte;
-        while(){
+        int choiceReporte;//cambiar por un do while
+        while(choiceReporte!=1){
             cout<<"----------- Menu de reportes -----------\n\n";
             cout<<" 1 - Reporte 1 \n";
             cout<<" 2 - Reporte 2 \n";
@@ -539,6 +618,10 @@ void menuEst(){
 };
 
 void menuUsuarios(){
+
+
+
+
     bool repetir = false;
     do{
         int choiceUser;
@@ -566,13 +649,51 @@ void menuUsuarios(){
     }while(repetir);
 }
 
-int main()
-{
-    //Inserción de los usuarios de los administradores
+void baseDeDatos(){
+    //Semestres insertados
+    primerSemestre      = insertarSemestreOrdenado(2020,2);
+    primerSemestre      = insertarSemestreOrdenado(2020,1);
+    primerSemestre      = insertarSemestreOrdenado(2019,2);
+    primerSemestre      = insertarSemestreOrdenado(2021,1);
+    primerSemestre      = insertarSemestreOrdenado(2021,2);
+    //Administradores insertados
     primerAdministrador = insertarAdmin("Admin1");
     primerAdministrador = insertarAdmin("Admin2");
     primerAdministrador = insertarAdmin("Admin3");
+    primerAdministrador = insertarAdmin("Admin4");
+    primerAdministrador = insertarAdmin("Admin5");
+    //insertar profesores
+    primerProfesor     =  insertarInicio("David"   , 702900638, 37);
+    primerProfesor     =  insertarInicio("Sofia"   , 645900638, 25);
+    primerProfesor     =  insertarInicio("Juan"    , 204500638, 27);
+    primerProfesor     =  insertarInicio("Fabiola" , 514000638, 32);
+    primerProfesor     =  insertarInicio("Frank"   , 852040638, 45);
+    //insertar estudiantes
+    primerEstudiante   =  InsertaEst("Maria" ,2020053336 ,"Ing. computacion");
+    primerEstudiante   =  InsertaEst("Jimmy" ,2021053336 ,"Ing. industrial");
+    primerEstudiante   =  InsertaEst("Felipe",2020053874 ,"Ing. computacion");
+    primerEstudiante   =  InsertaEst("Amanda",2019053336 ,"Ing. mecanica");
+    primerEstudiante   =  InsertaEst("Andres",2020054897 ,"Ing. mecanica");
+    //insertar cursos
+    primerCurso        =  insertarCurso(5,"Mate Discreta", 1520);
+    primerCurso        =  insertarCurso(2,"Programacion basica", 1535);
+    primerCurso        =  insertarCurso(5,"Dibujo tecnico", 1545);
+    primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
+    primerCurso        =  insertarCurso(5,"Deporte", 1510);
+    //insertar Grupos
 
+
+
+
+
+
+
+
+
+}
+int main()
+{
+    baseDeDatos();
     bool repetir = true;
 
     do{
@@ -607,7 +728,7 @@ int main()
     }while(repetir);
 
     return 0;
-};
+}
 
 //Metodos de impresion
 void imprimirEstudiante(){
