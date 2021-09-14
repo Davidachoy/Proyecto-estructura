@@ -120,6 +120,7 @@ struct Grupo{//Simple list del grupo
 
 
 
+
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
@@ -259,6 +260,22 @@ Profesor*insertarInicio(string nom, int id,int edad){//Insertar al inicio lista 
         primerProfesor = newProf;
 
 return primerProfesor;
+}
+
+bool modificarProfesor(int ced, string nom){
+
+    if(primerEstudiante == NULL)
+        cout<<"Lista de profesores vacia...\n";
+
+    Profesor* temp = primerProfesor;
+    while(temp != NULL){
+        if(temp->cedula == ced){
+            temp->nombre = nom;
+            return true;
+        }
+        temp = temp->sig;
+    }
+    return false;
 }
 
 bool eliminarProfe(int id){
@@ -489,6 +506,8 @@ void menuAdmin(){
             cin>>choiceProf;
 
             if(choiceProf == 1){
+
+
                 cout<<"\n";
                 cout<<"Ingrese los datos que se le solicitan del profesor a ingresar\n\n";
                 cout<<"Nombre: ";
@@ -509,9 +528,23 @@ void menuAdmin(){
                 }else{cout<<"Ya se encuentra registrado ese numero de cedula...\n\t¡Vuelvalo a intentar!\n";}
             }
             else if(choiceProf == 2){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan del profesor a modificar\n";
+                cout<<"**    Solo se modificara el nombre del profesor    **\n\n";
+                cout<<"Cedula: ";
+                int ced;
+                cin>>ced;
 
+                cout<<"Nuevo nombre: ";
+                string nom;
+                cin>>nom;
+                if(modificarProfesor(ced,nom) == true){
+                    cout<<"\tProfesor modificado correctamente...\n";
+                }else{cout<<"\tEl profesor que se desea moficicar, no se encuentra...\n";}
             }
+
             else if(choiceProf == 3){
+
                 cout<<"\n";
                 cout<<"Ingrese los datos que se le solicitan del profesor a borrar\n\n";
                 cout<<" Cedula: ";
@@ -524,6 +557,7 @@ void menuAdmin(){
             else if(choiceProf == 4){
                 imprimirProfesor();
             }
+
             else if(choiceProf == 5){
                 menuAdmin();
             }else{
@@ -774,6 +808,7 @@ void menuUsuarios(){
 }
 
 void baseDeDatos(){
+
 
 
     //Semestres insertados
