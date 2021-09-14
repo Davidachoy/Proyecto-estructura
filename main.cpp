@@ -261,7 +261,7 @@ Profesor*insertarInicio(string nom, int id,int edad){//Insertar al inicio lista 
 return primerProfesor;
 }
 
-/*Profesor*eliminarProfe(int id){
+bool eliminarProfe(int id){
     if(primerProfesor == NULL)//Lista vacia
         cout<<"\nLista vacia...";
     else if(primerProfesor->cedula == id){//Sí se encuentra de primero
@@ -269,6 +269,7 @@ return primerProfesor;
             primerProfesor = primerProfesor->sig;
             if(primerProfesor != NULL)
             primerProfesor->ant = NULL;
+            return true;
     }
     else{
         Profesor*temp = primerProfesor;
@@ -280,18 +281,16 @@ return primerProfesor;
                 tempAnt->sig = temp->sig;
                 if(temp->sig != NULL)
                     temp->sig->ant = tempAnt;
+                    return true;
+                return true;
                 break;
-            }
-            else{
-                cout<<"\n Id de profesor NO encontrado\n";
             }
             tempAnt = temp;
             temp = temp->sig;
         }
     }
-return primerProfesor;
+return false;
 }
-*/
 
 //Punto "c"... Insertar, modificar y borrar estudiantes (inserción ordenada por carnet en lista simple)
 
@@ -304,28 +303,41 @@ Estudiante*InsertaEst(string nombre, int num, string carrera){//Insertar a los e
     if(primerEstudiante == NULL||num < primerEstudiante->carnet){
         newEst->sig = primerEstudiante;
         primerEstudiante = newEst;
-        cout<<"  Estudiante agregado salisfactoriamente\n";
+        //cout<<"  Estudiante agregado salisfactoriamente\n";
     }
     else{
         Estudiante*temp = primerEstudiante;
         while(temp->sig != NULL && temp->sig->carnet < num){
             newEst->sig = primerEstudiante;
             temp = temp->sig;
-            cout<<"  Estudiante agregado salisfactoriamente\n";
+            //cout<<"  Estudiante agregado salisfactoriamente\n";
 
         }
         if(temp->sig != NULL){
             newEst->sig = temp->sig;
-            cout<<"  Estudiante agregado salisfactoriamente\n";
+            //cout<<"  Estudiante agregado salisfactoriamente\n";
 
         }
         temp->sig = newEst;
-        //cout<<"  Estudiante agregado salisfactoriamente\n";
-
 
     return primerEstudiante;
     }
 return primerEstudiante;
+}
+
+bool modificarEstudiante(int id, string carreraNueva){//Modifica la carrera del estudiante
+
+    Estudiante*temp = primerEstudiante;
+
+    while(temp != NULL){
+        if(temp->carnet == id){
+            temp->carrera = carreraNueva;
+            cout<<"\tEstudiante modificado exitosamente...\n";
+            return true;
+        }
+        temp = temp->sig;
+    }
+    return false;
 }
 
 void borrarEst(int num){//Borra a un estudiante por su número de carnet
@@ -333,12 +345,10 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
         cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
         cout<<"\n+ Aun no se han ingresado los estudiantes +";
         cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n";
-        //return NULL;
     }
     else if(primerEstudiante->carnet == num){
         primerEstudiante = primerEstudiante->sig;
         cout<<"\tEstudiante borrado exitosamente...\n";
-        //return primerEstudiante;
     }
     else{
         Estudiante*temp = primerEstudiante;
@@ -349,7 +359,6 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
             if(temp->carnet == num){
                 tempAnt->sig = temp->sig;
                 cout<<"\tEstudiante borrado exitosamente...\n";
-                //return primerEstudiante;
             }
             tempAnt = temp;
 			temp = temp->sig;
@@ -361,9 +370,11 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
 
 //Metodos de impresion
 void imprimirEstudiante();
+void imprimirProfesor();
 
 //Metodos de buscar
-struct Estudiante*buscarEstudiante(int num);
+bool buscarEstudiante(int num);
+bool buscarProfesor(int ced);
 
 //punto D inserta y modificar semestres
 //E: anno y numsemestre
@@ -466,6 +477,62 @@ void menuAdmin(){
         switch(choiceAdmin){
 
     case 1:
+        int choiceProf;
+        while (choiceProf != 5){
+            cout<<"\n ----------- Acciones profesor -----------\n\n";
+            cout<<" 1 - Ingresar un profesor\n";
+            cout<<" 2 - Modificar un profesor\n";
+            cout<<" 3 - Borrar un profesor\n";
+            cout<<" 4 - Imprimir datos de los profesores ingresados\n";
+            cout<<" 5 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceProf;
+
+            if(choiceProf == 1){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan del profesor a ingresar\n\n";
+                cout<<"Nombre: ";
+                string nom;
+                cin>>nom;
+
+                cout<<" Cedula: ";
+                int ced;
+                cin>>ced;
+
+                cout<<"Edad: ";
+                int age;
+                cin>>age;
+
+                if(buscarProfesor(ced) == true){
+                    primerProfesor = insertarInicio(nom,ced,age);
+                    cout<<"Profesor agregado correctamente...\n";
+                }else{cout<<"Ya se encuentra registrado ese numero de cedula...\n\t¡Vuelvalo a intentar!\n";}
+            }
+            else if(choiceProf == 2){
+
+            }
+            else if(choiceProf == 3){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan del profesor a borrar\n\n";
+                cout<<" Cedula: ";
+                int ced;
+                cin>>ced;
+                if(eliminarProfe(ced)  == true){
+                    cout<<"\tProfesor borrado exitosamente...\n";
+                }else{cout<<"Profesor no encontrado...\n";}
+            }
+            else if(choiceProf == 4){
+                imprimirProfesor();
+            }
+            else if(choiceProf == 5){
+                menuAdmin();
+            }else{
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+            cout<<"\n+   Por favor ingrese una opcion valida   +";
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n\n";
+            }
+
+        }
         break;
 
     case 2:
@@ -476,18 +543,45 @@ void menuAdmin(){
             cout<<" 2 - Modificar\n";
             cout<<" 3 - Borrar un estudiante\n";
             cout<<" 4 - Imprimir datos de los estudiantes ingresados\n";
-            cout<<" 5 - Volver a menu administrador\n";
+            cout<<" 5 - Volver a menu administrador\n\n";
             cout<<" Opcion: ";
             cin>>choiceEst;
             if(choiceEst == 1){
                 cout<<"\n";
-                primerEstudiante = InsertaEst("Sharon",1010,"Ingenieria en computacion");
-                primerEstudiante = InsertaEst("David",2021,"Educacion fisica");
-                primerEstudiante = InsertaEst("Hilary",100,"Direccion de empresas");
-                primerEstudiante = InsertaEst("Josue",1900,"Ingles");
+                cout<<"Ingrese los datos que se le solicitan \n\n";
+                string nombre;
+                cout<<" Nombre: ";
+                cin>>nombre;
+
+                int id;
+                cout<<" Carne: ";
+                cin>> id;
+
+                string carrera;
+                cout<<" Carrera: ";
+                cin>>carrera;
+
+                if(buscarEstudiante(id) == true){
+                    primerEstudiante = InsertaEst(nombre,id,carrera);
+                    cout<<"\n\tEstudiante insertado exitosamente...\n";
+                }else{
+                    cout<<"\n\tDicho carne ya esta ocupado...\n";
+                }
             }
             else if(choiceEst == 2){
+                cout<<"Ingrese los datos que se le solicitan \n";
+                cout<<"** Solo se puede cambiar de carrera **\n\n";
+                int id;
+                cout<<"Carnet del estudiante: ";
+                cin>>id;
 
+                string nuevoNombre;
+                cout<<"Nueva carrera: ";
+                cin>>nuevoNombre;
+                cout<<"\n";
+                if(modificarEstudiante(id,nuevoNombre) == false){
+                    cout<<"\tEl estudiante a modificar no se encuentra...\n";
+                }
             }
             else if(choiceEst == 3){
                 int idBorrar;
@@ -512,6 +606,36 @@ void menuAdmin(){
         break;
 
     case 3:
+        int choiceSem;
+        while(choiceSem != 5){
+            cout<<"\n ----------- Acciones semestres -----------\n\n";
+            cout<<" 1 - Ingresar un semestre\n";
+            cout<<" 2 - Modificar un semestre\n";
+            cout<<" 3 - Borrar un semestres\n";
+            cout<<" 4 - Imprimir datos de los semestres\n";
+            cout<<" 5 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceSem;
+            if(choiceSem == 1){
+
+            }
+            else if(choiceSem == 2){
+
+            }
+            else if(choiceSem == 3){
+
+            }
+            else if(choiceSem == 4){
+
+            }
+            else if(choiceSem == 5){
+                menuAdmin();
+            }else{
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
+            cout<<"\n+   Por favor ingrese una opcion valida   +";
+            cout<<"\n+++++++++++++++++++++++++++++++++++++++++++\n\n";
+            }
+        }
         break;
 
     case 4:
@@ -650,6 +774,8 @@ void menuUsuarios(){
 }
 
 void baseDeDatos(){
+
+
     //Semestres insertados
     primerSemestre      = insertarSemestreOrdenado(2020,2);
     primerSemestre      = insertarSemestreOrdenado(2020,1);
@@ -663,6 +789,7 @@ void baseDeDatos(){
     primerAdministrador = insertarAdmin("Admin4");
     primerAdministrador = insertarAdmin("Admin5");
     //insertar profesores
+    primerProfesor     =  insertarInicio("Hilary",1001,45);
     primerProfesor     =  insertarInicio("David"   , 702900638, 37);
     primerProfesor     =  insertarInicio("Sofia"   , 645900638, 25);
     primerProfesor     =  insertarInicio("Juan"    , 204500638, 27);
@@ -749,16 +876,42 @@ void imprimirEstudiante(){
     };
 }
 
+void imprimirProfesor(){
+
+    if(primerProfesor == NULL)
+        cout<<"\nNo hay lista ";
+    else{
+        Profesor * temp = primerProfesor;
+        while(temp->sig != NULL){
+            cout<<"---- Datos ----\n";
+            cout<<"Nombre: "<<temp->nombre<<"\nCedula: "<<temp->cedula<<"\nEdad:   "<<temp->edad<<"\n";
+            temp = temp->sig;
+        }
+        cout<<"Nombre: "<<temp->nombre<<"\nCedula: "<<temp->cedula<<"\nEdad:   "<<temp->edad<<"\n";//Imprime el ultimo
+        }
+
+    }
+
 //Metodos de buscar
-/*bool Estudiante*buscarEstudiante(int num){
+bool buscarEstudiante(int num){
 
     Estudiante * i = primerEstudiante;
     while(i != NULL){
-        if(i->carnet =num){
-            return true;
+        if(i->carnet == num){
+            return false;
         }
         i = i ->sig;
     }
-    return false;
+    return true;
 };
-}*/
+
+bool buscarProfesor(int ced){
+    Profesor*i = primerProfesor;
+    while(i != NULL){
+        if(i->cedula == ced){
+            return false;
+        }
+        i = i->sig;
+    }
+    return true;
+}
