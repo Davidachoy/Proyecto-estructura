@@ -53,6 +53,7 @@ struct Estudiante{//Simple list del estudiante
     carnet = unCarnet;
     carrera= carr;
     sig  = NULL;
+    enlaceReporte=NULL;
     }
 
 
@@ -388,6 +389,7 @@ void imprimirProfesor();
 //Metodos de buscar
 bool buscarEstudiante(int num);
 bool buscarProfesor(int ced);
+Curso* buscarCurso(int codigo);
 
 //punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
@@ -453,6 +455,7 @@ Curso* insertarCurso(int creditos, string nombre, int codigo){
         temp->sig = newCurso;
 }return newCurso;
 }
+
 
 //punto **F** insertar grupo relacionandolo con los cursos
 //E:Recibe un numero de grupo
@@ -1009,7 +1012,7 @@ bool buscarProfesor(int ced){
     }
     return true;
 }
-
+//funcion para buscar curso
 Curso* buscarCurso(int codigo){
     if(primerCurso == NULL)
         return NULL;
