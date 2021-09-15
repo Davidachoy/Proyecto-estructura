@@ -78,7 +78,7 @@ struct Semestre{//Double list
     }
 };
 
-struct conexionGrupo{// Conecta a profesor con un grupo  //auxialiar de la estrctura Profesor.
+struct conexionGrupo{// Conecta a profesor con un grupo   //auxialiar de la estrctura Profesor.
     conexionGrupo*sig;
     struct Grupo* enlaceG;
 
@@ -99,7 +99,7 @@ struct ConexionCurso{//Conecta a semestre con curso
     }
 };
 
-struct Curso{ //Circular list de curso
+struct Curso{ //Circular list de curso creditos(int)-nombre(string)-codigo(int)
 
     int creditos;
     string nomCurso;
@@ -117,10 +117,6 @@ struct Curso{ //Circular list de curso
 };
 
 struct Grupo{//Simple list del grupo
-
-
-
-
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
@@ -393,7 +389,7 @@ void imprimirProfesor();
 bool buscarEstudiante(int num);
 bool buscarProfesor(int ced);
 
-//punto D inserta y modificar semestres
+//punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
 //S: semestre creado de forma ordenada en lista doble
 Semestre* insertarSemestreOrdenado(int anno,int numSemestre){
@@ -436,7 +432,7 @@ Semestre* insertarSemestreOrdenado(int anno,int numSemestre){
 
 return primerSemestre;
 }
-//punto E insertar curso lista circular final
+//punto **E** insertar curso lista circular final        falta borrar y modificar
 //E: creditos, nombre, codigo
 Curso* insertarCurso(int creditos, string nombre, int codigo){
 
@@ -458,17 +454,70 @@ Curso* insertarCurso(int creditos, string nombre, int codigo){
 }return newCurso;
 }
 
-//punto F insertar grupo relacionandolo con los cursos
+//punto **F** insertar grupo relacionandolo con los cursos
 //E:Recibe un numero de grupo
-//S: grupo asociado con curso
-Grupo* insertarGrupo(int unNum){
+//S: True si lo asocia, false si no lo asosia
+bool insertarGrupo(int unNum, int codigo){
+    Curso*tempC = buscarCurso(codigo);
+    if (tempC == NULL)
+        return false;
     Grupo* newGrupo = new Grupo(unNum);
+    if (tempC->sublistaGrupos == NULL){
+        tempC->sublistaGrupos = newGrupo;
+        newGrupo->enlaceCurso= tempC;
+        return true;
+    }
+    Grupo*tempGrupo = tempC->sublistaGrupos;
+    if(tempGrupo->numGrupo>newGrupo->numGrupo){
+        tempC->sublistaGrupos = newGrupo;
+        newGrupo->enlaceCurso= tempC;
+        newGrupo->sig = tempGrupo;
+        return true;
+    }
+    Grupo*tempGrupoAnt = NULL;
+    //Doble*temp = lista;
+    //Doble*tempAnt =NULL;
+    while((tempGrupo != NULL) && (unNum > tempGrupo->numGrupo)){
+                tempGrupoAnt = tempGrupo;
+                tempGrupo = tempGrupo->sig;
+        }
+        if(tempGrupo ==NULL){//el grupo a insertar es mayor a todos
+               tempGrupoAnt->sig = newGrupo;
+               return true;
+        }
+        else{// insertar en medio
+            newGrupo->sig = tempGrupo;
+            tempGrupoAnt->sig = newGrupo;
+            return true;
+        }
 
 
 
 
 }
+/* imprimir los grupos
+void imprimirGrupos(int codigo){
 
+        Curso *tempC = buscarCurso(codigo);
+
+        if(tempC== NULL){
+            cout<<"No se encuentra el curso";
+            return;
+        }
+         cout<<"\n--------------------------INFORME DE MATRICULA ---------------------------------------\n";
+
+        cout<<"\nLos grupos de: "<<tempC->nomCurso<<" es: "<<endl;
+        Grupo *tempG = tempC->sublistaGrupos;
+
+        while(tempG != NULL){
+
+            cout<<"\t"<<tempG->numGrupo<<endl;
+            tempG = tempG->sig;
+        }
+
+        cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
+
+}*/
 
 
 //Menus
@@ -843,6 +892,16 @@ void baseDeDatos(){
     primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
     primerCurso        =  insertarCurso(5,"Deporte", 1510);
     //insertar Grupos
+    insertarGrupo(53,1520);
+    insertarGrupo(51,1520);
+    insertarGrupo(52,1520);
+    insertarGrupo(40,1512);
+    insertarGrupo(35,1510);
+    insertarGrupo(02,1545);
+    insertarGrupo(15,1535);
+
+
+
 
 
 
@@ -950,3 +1009,17 @@ bool buscarProfesor(int ced){
     }
     return true;
 }
+
+Curso* buscarCurso(int codigo){
+    if(primerCurso == NULL)
+        return NULL;
+    struct Curso*temp = primerCurso;
+    do{
+        if(codigo == temp->codigo)
+            return temp;
+        temp= temp->sig;
+    }while(temp != primerCurso);
+    return NULL;
+
+}
+
