@@ -390,6 +390,8 @@ void imprimirProfesor();
 bool buscarEstudiante(int num);
 bool buscarProfesor(int ced);
 Curso* buscarCurso(int codigo);
+Grupo*buscarGrupo(int codigo, Curso*puntero);
+Estudiante*buscarEstudianteReturn(int carnet);
 
 //punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
@@ -521,6 +523,51 @@ void imprimirGrupos(int codigo){
         cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
 
 }*/
+//punto **H** relacionar y borrar estudiantes de los grupos
+bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
+    Estudiante*tempE = buscarEstudianteReturn(carnet);
+    if (tempE == NULL)
+        return false;
+    Curso*tempC = buscarCurso(codigoCurso);
+    if (tempC == NULL)
+        return false;
+    Grupo*tempG = buscarGrupo(numGrupo, tempC);
+    if (tempG==NULL)
+        return false;
+    ReporteEstudiante*newReporte = new ReporteEstudiante();
+    newReporte->enlaceGrupo = tempG;
+    newReporte->sig = tempE->enlaceReporte;
+    tempE ->enlaceReporte = newReporte;// inserta al inicio de la sublista de matricula
+    return true;
+}
+void imprimirInformeMatricula(int carnet){
+
+        Estudiante*tempE = buscarEstudianteReturn(carnet);
+
+        if(tempE== NULL){
+            cout<<"No se encuentra el estudiante";
+            return;
+        }
+         cout<<"\n--------------------------INFORME DE MATRICULA ---------------------------------------\n";
+
+        cout<<"\nLa matricula de: "<<tempE->nombre<<" es: "<<endl;
+        ReporteEstudiante*tempR = tempE->enlaceReporte;
+
+        while(tempR != NULL){
+
+            cout<<"\t"<<tempR->enlaceGrupo->numGrupo<<endl;
+            tempR = tempR->sig;
+        }
+
+        cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
+
+}
+
+
+
+
+
+
 
 
 //Menus
@@ -918,6 +965,9 @@ void baseDeDatos(){
 int main()
 {
     baseDeDatos();
+    //relacionarEstudiantesGrupo(2020053336,1520,53);
+    //imprimirInformeMatricula(2020053336);
+
     bool repetir = true;
 
     do{
@@ -990,7 +1040,8 @@ void imprimirProfesor(){
     }
 
 //Metodos de buscar
-bool buscarEstudiante(int num){
+bool buscarEstudiante(int num)
+{
 
     Estudiante * i = primerEstudiante;
     while(i != NULL){
@@ -1025,4 +1076,27 @@ Curso* buscarCurso(int codigo){
     return NULL;
 
 }
+Grupo*buscarGrupo(int codigo, Curso*puntero){
+    if(puntero->sublistaGrupos == NULL)
+        return NULL;
+    Grupo*tempG = puntero->sublistaGrupos;
+    while (tempG!= NULL){
+        if(tempG->numGrupo == codigo)
+            return tempG;
+        tempG = tempG->sig;
+    }
+    return NULL;
+}
+Estudiante*buscarEstudianteReturn(int num){
 
+    Estudiante * i = primerEstudiante;
+    while(i != NULL){
+        if(i->carnet == num){
+            return i;
+        }
+        i = i ->sig;
+    }
+    return NULL;
+
+
+}
