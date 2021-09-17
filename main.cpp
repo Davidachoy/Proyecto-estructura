@@ -118,6 +118,7 @@ struct Curso{ //Circular list de curso creditos(int)-nombre(string)-codigo(int)
 };
 
 struct Grupo{//Simple list del grupo
+
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
@@ -392,6 +393,8 @@ bool buscarProfesor(int ced);
 Curso* buscarCurso(int codigo);
 Grupo*buscarGrupo(int codigo, Curso*puntero);
 Estudiante*buscarEstudianteReturn(int carnet);
+Profesor*buscarProfesor2(int ced);
+Semestre*buscarSemestre(int year, int numS);
 
 //punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
@@ -523,6 +526,30 @@ void imprimirGrupos(int codigo){
         cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
 
 }*/
+
+//Punto "G"
+bool relacionarProfesoresGrupo(int ced, int codigoCurso,int numGrupo){
+
+    Profesor*tempP = buscarProfesor2(ced);
+    if(tempP == NULL)
+        return false;
+
+    Curso*tempC = buscarCurso(codigoCurso);
+    if(tempC == NULL)
+        return false;
+
+    Grupo*tempG = buscarGrupo(numGrupo, tempC);
+    if(tempG == NULL)
+        return false;
+
+    conexionGrupo*newConexion = new conexionGrupo();
+    newConexion->enlaceG = tempG;
+    newConexion->sig = tempP->suGrupo;
+    tempP->suGrupo = newConexion;//
+    return true;
+
+}
+
 //punto **H** relacionar y borrar estudiantes de los grupos
 bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
     Estudiante*tempE = buscarEstudianteReturn(carnet);
@@ -540,9 +567,30 @@ bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
     tempE ->enlaceReporte = newReporte;// inserta al inicio de la sublista de matricula
     return true;
 }
-void imprimirInformeMatricula(int carnet){
 
-        Estudiante*tempE = buscarEstudianteReturn(carnet);
+//Punto "i"
+bool relacionarSemestresCursos(int year, int numS, int codC){
+
+    Semestre*tempS = buscarSemestre(year,numS);
+    if(tempS == NULL)
+        return false;
+
+    Curso*tempC = buscarCurso(codC);
+    if(tempC == NULL)
+        return false;
+
+
+    ConexionCurso* newConexion = new ConexionCurso();
+    newConexion->enlaceCurso = tempC;
+    newConexion->sig = tempS->enlaceConexionCurso;
+    tempS->enlaceConexionCurso = newConexion;
+    return true;
+
+}
+
+void imprimirInformeMatricula(int year, int numS){
+
+        Semestre*tempE = buscarSemestre(year,numS);
 
         if(tempE== NULL){
             cout<<"No se encuentra el estudiante";
@@ -550,12 +598,12 @@ void imprimirInformeMatricula(int carnet){
         }
          cout<<"\n--------------------------INFORME DE MATRICULA ---------------------------------------\n";
 
-        cout<<"\nLa matricula de: "<<tempE->nombre<<" es: "<<endl;
-        ReporteEstudiante*tempR = tempE->enlaceReporte;
+        cout<<"\nYear : "<<tempE->anno<<" numS: "<<tempE->numSemestre<<endl;
+        ConexionCurso*tempR = tempE->enlaceConexionCurso;
 
         while(tempR != NULL){
 
-            cout<<"\t"<<tempR->enlaceGrupo->numGrupo<<endl;
+            cout<<"\t"<<tempR->enlaceCurso->nomCurso<<endl;
             tempR = tempR->sig;
         }
 
@@ -564,11 +612,63 @@ void imprimirInformeMatricula(int carnet){
 }
 
 
+//Punto "j"
+void asignarAsignaciones(string tipo, int id, string nom, int p, int d, int m, int year, string codCurso, int idGrupo, int cedula){
 
+    Profesor* tempProf = buscarProfesor2(cedula);
+    if(tempProf == NULL){
+        cout<<"No se encuentra el profesor");
+        return NULL;
+    }
+else{// si existe el profesor
 
+    Grupo *temp = tempProf->suGrupo;
+    while(temp!= NULL){//verificar si tiene el grupo asignado
+        if(temp->enlaceCurso->codigo == idGrupo)
+                if(temp->enlace->enlaceCurso->codigo == codCurso){
+                    //si lo tiene asignado
+                    Asignaciones *nn = new Asignaciones(id,nom,p,d,m,year);
+                    //ocupo saber en cual de las cuatros  sublista es
+                   //FALTA la programacion de insertar ordenado por fecha de entrega.
+                    if(tipo == "Proyecto" ){
 
+                        nn->sig = temp->enlace->subListaProyectos;
+                        temp->enlace->subListaProyectos = nn;// aquí se hizo insercion al inicio y no ORDENADO
 
+                    }
+                    else if(tipo == "Tarea" ){
 
+                        nn->sig = temp->enlace->subListaTareas;
+                        temp->enlace->subListaTareas = nn;
+                    }
+                    else if(tipo == "Giras" ){
+
+                        nn->sig = temp->enlace->subListaGiras;
+                        temp->enlace->subListaGiras = nn;
+                    }
+                    else if(tipo == "Examen" ){
+
+                        nn->sig = temp->enlace->subListaExamen;
+                        temp->enlace->subListaExamen = nn;
+                    }
+                    else{
+                        cout<<"El tipo de asignacion no existe";
+                        return;
+
+                    }
+                    cout<<"Se inserto la asignacion correctamente";
+                    break;//se sale cuando lo inserta
+                }
+
+        temp = temp->sig;
+    }
+    if(temp == NULL){
+
+        cout<<"No tiene el curso asignado";
+        return;
+    }
+ }
+}
 
 //Menus
 void menuAdmin(){
@@ -949,6 +1049,16 @@ void baseDeDatos(){
     insertarGrupo(35,1510);
     insertarGrupo(02,1545);
     insertarGrupo(15,1535);
+    //insertar profesor con grupos
+    relacionarProfesoresGrupo(1001,1520,53);
+    //imprimirInformeMatricula(1001);
+    relacionarSemestresCursos(2020,1,1520);
+    relacionarSemestresCursos(2020,1,1535);
+    relacionarSemestresCursos(2020,1,1545);
+
+    imprimirInformeMatricula(2020,1);
+
+
 
 
 
@@ -1063,6 +1173,16 @@ bool buscarProfesor(int ced){
     }
     return true;
 }
+Profesor* buscarProfesor2(int ced){
+    Profesor*i = primerProfesor;
+    while(i != NULL){
+        if(i->cedula == ced)
+            return i;
+        i = i->sig;
+    }
+    return NULL;
+}
+
 //funcion para buscar curso
 Curso* buscarCurso(int codigo){
     if(primerCurso == NULL)
@@ -1099,4 +1219,15 @@ Estudiante*buscarEstudianteReturn(int num){
     return NULL;
 
 
+}
+
+Semestre*buscarSemestre(int year, int numS){
+    Semestre*tempS = primerSemestre;
+
+    while(tempS != NULL){
+        if(tempS->anno == year && tempS->numSemestre == numS)
+            return tempS;
+        tempS = tempS->sig;
+    }
+    return NULL;
 }
