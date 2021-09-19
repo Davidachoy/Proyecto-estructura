@@ -119,6 +119,7 @@ struct Curso{ //Circular list de curso creditos(int)-nombre(string)-codigo(int)
 
 struct Grupo{//Simple list del grupo
 
+
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
@@ -140,15 +141,15 @@ struct Evaluacion{//Simple list de evaluaciones
     int dia;
     int mes;
     int year;
-    string horaEntrega;
+    int id;
     Evaluacion*sig;
 
-    Evaluacion(string name, int day, int month, int a, string hour){
+    Evaluacion(string name, int day, int month, int a, int id){
     nombre      = name;
     dia         = day;
     mes         = month;
     year        = a;
-    horaEntrega = hour;
+    id          = id;
 
     sig   = NULL;
 
@@ -159,7 +160,7 @@ struct Evaluacion{//Simple list de evaluaciones
 struct ReporteEstudiante{//Simple list de parte de estudiante
 
     ReporteEstudiante*sig;
-    struct AsistenciaCharla*enlaceAsistenciaCharla;
+    //struct AsistenciaCharla*enlaceAsistenciaCharla;
     struct Grupo*enlaceGrupo;
     struct Calificaciones*enlaceEvaluaciones;
     ReporteEstudiante(){
@@ -167,7 +168,7 @@ struct ReporteEstudiante{//Simple list de parte de estudiante
     sig = NULL;
     enlaceEvaluaciones = NULL;
     enlaceGrupo  = NULL;
-    enlaceAsistenciaCharla = NULL;
+    //enlaceAsistenciaCharla = NULL;
     }
 
 
@@ -386,6 +387,8 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
 //Metodos de impresion
 void imprimirEstudiante();
 void imprimirProfesor();
+void imprimirEvaluaciones(conexionGrupo*temp, Grupo*puntero, Evaluacion*nn);
+
 
 //Metodos de buscar
 bool buscarEstudiante(int num);
@@ -609,34 +612,102 @@ void imprimirInformeMatricula(int year, int numS){
 
         cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
 
+};
+
+Grupo*insertarEvaluacion(int day,int month,int anno,conexionGrupo*temp, Grupo*puntero,string nom, int id){
+    Evaluacion *nn = new Evaluacion(nom,day,month,anno,id);
+    nn->dia  = day;
+    nn->mes  = month;
+    nn->year = anno;
+
+    nn->sig = NULL;
+
+
+    if(temp->enlaceG->tempP == NULL || nn->dia < temp->enlaceG->tempP->dia){
+        nn->sig=temp->enlaceG->tempP;
+        temp->enlaceG->tempP = nn;
+        cout<<"\nNombre de la asignacion: "<<temp->enlaceG->tempP->nombre;
+        cout<<"\nDía de entrega: "<<temp->enlaceG->tempP->dia;//<<"\n";
+        cout<<"\nMes de entrega: "<<temp->enlaceG->tempP->mes;//<<"\n";
+        cout<<"\nAno de entrega: "<<temp->enlaceG->tempP->year<<"\n";
+    }else{
+        //conexionGrupo*listaProyectos = listaProyectos->enlaceG->tempP;
+        while(temp->enlaceG->tempP->sig != NULL && temp->enlaceG->tempP->sig->year < anno){
+            nn->sig = temp->enlaceG->tempP;
+            temp->enlaceG->tempP = temp->enlaceG->tempG->sig;
+            cout<<"\nNombre de la asignacion: "<<temp->enlaceG->tempP->nombre;
+            cout<<"\nDía de entrega: "<<temp->enlaceG->tempP->dia;//<<"\n";
+            cout<<"\nMes de entrega: "<<temp->enlaceG->tempP->mes;//<<"\n";
+            cout<<"\nAno de entrega: "<<temp->enlaceG->tempP->year<<"\n";
+            /*while(temp->enlaceG->tempP->sig->mes < month){
+                while(temp->enlaceG->tempP->sig->dia < day){
+
+                        nn->sig = temp->enlaceG->tempP;
+                        temp->enlaceG->tempP = temp->enlaceG->tempG->sig;
+                        cout<<"\nNombre de la asignacion: "<<temp->enlaceG->tempP->nombre;
+                        cout<<"\nDía de entrega: "<<temp->enlaceG->tempP->dia;//<<"\n";
+                        cout<<"\nMes de entrega: "<<temp->enlaceG->tempP->mes;//<<"\n";
+                        cout<<"\nAno de entrega: "<<temp->enlaceG->tempP->year<<"\n";
+                }
+            }*/
+        }
+        if(temp->enlaceG->tempG->sig != NULL){
+            nn->sig = temp->enlaceG->tempG->sig;
+        }
+        temp->enlaceG->tempG->sig = nn;
+    }
+
+};
+
+void imprimirEvaluaciones(conexionGrupo*temp, Grupo*puntero, Evaluacion*nn){
+
+    if(temp->enlaceG->tempP != NULL){
+        //cout<<"\n";
+        cout<<"\nNombre de la asignacion: "<<temp->enlaceG->tempP->nombre;
+        cout<<"\nDía de entrega: "<<temp->enlaceG->tempP->dia;//<<"\n";
+        cout<<"\nMes de entrega: "<<temp->enlaceG->tempP->mes;//<<"\n";
+        cout<<"\nAno de entrega: "<<temp->enlaceG->tempP->year<<"\n";
+        //cout<<"\n\tNo hay evaluaciones";
+    }/*else{
+        while(temp->enlaceG->tempP->sig != NULL){
+            cout<<"\nNombre de la asignacion: "<<temp->enlaceG->tempP->nombre;
+            cout<<"\nDía de entrega: "<<temp->enlaceG->tempP->dia;//<<"\n";
+            cout<<"\nMes de entrega: "<<temp->enlaceG->tempP->mes;//<<"\n";
+            cout<<"\nAno de entrega: "<<temp->enlaceG->tempP->year<<"\n";
+
+        }
+    }*/
 }
 
-
 //Punto "j"
-void asignarAsignaciones(string tipo, int id, string nom, int p, int d, int m, int year, string codCurso, int idGrupo, int cedula){
+bool asignarAsignaciones(string tipo, int id, string nom, int d, int m, int year, int codCurso, int idGrupo, int cedula){
 
     Profesor* tempProf = buscarProfesor2(cedula);
     if(tempProf == NULL){
-        cout<<"No se encuentra el profesor");
-        return NULL;
+        cout<<"No se encuentra el profesor";
+        return false;
     }
 else{// si existe el profesor
 
-    Grupo *temp = tempProf->suGrupo;
+    conexionGrupo *temp = tempProf->suGrupo;
     while(temp!= NULL){//verificar si tiene el grupo asignado
-        if(temp->enlaceCurso->codigo == idGrupo)
-                if(temp->enlace->enlaceCurso->codigo == codCurso){
+        if(temp->enlaceG->numGrupo == idGrupo)
+                if(temp->enlaceG->enlaceCurso->codigo == codCurso){
                     //si lo tiene asignado
-                    Asignaciones *nn = new Asignaciones(id,nom,p,d,m,year);
+                    //Evaluacion *nn = new Evaluacion(nom,d,m,year,id);
                     //ocupo saber en cual de las cuatros  sublista es
                    //FALTA la programacion de insertar ordenado por fecha de entrega.
                     if(tipo == "Proyecto" ){
-
-                        nn->sig = temp->enlace->subListaProyectos;
-                        temp->enlace->subListaProyectos = nn;// aquí se hizo insercion al inicio y no ORDENADO
+                        Grupo*puntero;
+                        insertarEvaluacion(d,m,year,temp,puntero,nom,id);
+                        //imprimirEvaluaciones(temp, puntero, nn);
+                        //nn->sig=temp->enlaceG->tempP;
+                        //temp->enlaceG->tempP = nn;
+                        //nn->sig = temp->enlace->subListaProyectos;
+                        //temp->enlace->subListaProyectos = nn;// aquí se hizo insercion al inicio y no ORDENADO
 
                     }
-                    else if(tipo == "Tarea" ){
+                    /*else if(tipo == "Tarea" ){
 
                         nn->sig = temp->enlace->subListaTareas;
                         temp->enlace->subListaTareas = nn;
@@ -653,9 +724,9 @@ else{// si existe el profesor
                     }
                     else{
                         cout<<"El tipo de asignacion no existe";
-                        return;
+            return;
 
-                    }
+                    }*/
                     cout<<"Se inserto la asignacion correctamente";
                     break;//se sale cuando lo inserta
                 }
@@ -665,7 +736,7 @@ else{// si existe el profesor
     if(temp == NULL){
 
         cout<<"No tiene el curso asignado";
-        return;
+        //return;
     }
  }
 }
@@ -1056,8 +1127,11 @@ void baseDeDatos(){
     relacionarSemestresCursos(2020,1,1535);
     relacionarSemestresCursos(2020,1,1545);
 
-    imprimirInformeMatricula(2020,1);
+    //imprimirInformeMatricula(2020,1);
 
+    //asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",109,"Proyecto de estructura II",9,19,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",503,"Proyecto de estructura I",12,9,2020,1520,53,1001);
 
 
 
@@ -1075,6 +1149,7 @@ void baseDeDatos(){
 int main()
 {
     baseDeDatos();
+
     //relacionarEstudiantesGrupo(2020053336,1520,53);
     //imprimirInformeMatricula(2020053336);
 
@@ -1082,7 +1157,7 @@ int main()
 
     do{
         int choice;
-        cout<<"----------- Menu principal -----------\n\n";
+        cout<<"\n----------- Menu principal -----------\n\n";
         cout<<" 1 - Seccion administrador\n";
         cout<<" 2 - Seccion de usuarios (Profesores y estudiantes)\n";
         cout<<" 3 - Salir\n\n";
