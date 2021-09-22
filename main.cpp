@@ -689,32 +689,221 @@ bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
 
     }
 
+return true;
+
+}
 
 
-/*
+bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
+    if( grupo->tempExa == NULL){
+        grupo->tempExa = nuevaEvaluacion;
+        return true;
     }
-    while((tempGrupo != NULL) && (unNum > tempGrupo->numGrupo)){
-                tempGrupoAnt = tempGrupo;
-                tempGrupo = tempGrupo->sig;
-        }
-        if(tempGrupo ==NULL){//el grupo a insertar es mayor a todos
-               tempGrupoAnt->sig = newGrupo;
-               return true;
-        }
-        else{// insertar en medio
-            newGrupo->sig = tempGrupo;
-            tempGrupoAnt->sig = newGrupo;
+    Evaluacion*tempEvaluacion = grupo->tempExa;
+
+    if (tempEvaluacion->year>nuevaEvaluacion->year){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempExa = nuevaEvaluacion;
+         return true;
+    }
+
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes>nuevaEvaluacion->mes){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempExa = nuevaEvaluacion;
             return true;
         }
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes == nuevaEvaluacion->mes && tempEvaluacion->dia>nuevaEvaluacion->dia){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempExa = nuevaEvaluacion;
+        return true;
+            }
 
-   */
+
+    Evaluacion*tempEvaluacionAnt = NULL;
+    while(tempEvaluacion!=NULL){
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes == nuevaEvaluacion->mes){
+                    if (tempEvaluacion->dia> nuevaEvaluacion->dia)
+                        break;
+                }
+            }
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes > nuevaEvaluacion->mes){
+                    break;
+                }
+            }
 
 
 
+
+
+                tempEvaluacionAnt = tempEvaluacion;
+                tempEvaluacion = tempEvaluacion->sig;
+
+}
+
+    if (tempEvaluacion==NULL){
+
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+    }else{
+        nuevaEvaluacion->sig = tempEvaluacion;
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+
+
+
+    }
+return true;
+}
+
+
+
+
+
+
+
+
+
+bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
+    if( grupo->tempTC == NULL){
+        grupo->tempTC = nuevaEvaluacion;
+        return true;
+    }
+    Evaluacion*tempEvaluacion = grupo->tempTC;
+
+    if (tempEvaluacion->year>nuevaEvaluacion->year){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempTC = nuevaEvaluacion;
+         return true;
+    }
+
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes>nuevaEvaluacion->mes){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempTC = nuevaEvaluacion;
+            return true;
+        }
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes == nuevaEvaluacion->mes && tempEvaluacion->dia>nuevaEvaluacion->dia){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempTC = nuevaEvaluacion;
+        return true;
+            }
+
+
+    Evaluacion*tempEvaluacionAnt = NULL;
+    while(tempEvaluacion!=NULL){
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes == nuevaEvaluacion->mes){
+                    if (tempEvaluacion->dia> nuevaEvaluacion->dia)
+                        break;
+                }
+            }
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes > nuevaEvaluacion->mes){
+                    break;
+                }
+            }
+
+
+
+
+
+                tempEvaluacionAnt = tempEvaluacion;
+                tempEvaluacion = tempEvaluacion->sig;
+
+}
+
+    if (tempEvaluacion==NULL){
+
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+    }else{
+        nuevaEvaluacion->sig = tempEvaluacion;
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+
+
+
+    }
 
 return true;
 
 }
+
+
+
+bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
+    if( grupo->tempG == NULL){
+        grupo->tempG = nuevaEvaluacion;
+        return true;
+    }
+    Evaluacion*tempEvaluacion = grupo->tempG;
+
+    if (tempEvaluacion->year>nuevaEvaluacion->year){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempG = nuevaEvaluacion;
+         return true;
+    }
+
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes>nuevaEvaluacion->mes){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempG = nuevaEvaluacion;
+            return true;
+        }
+    if (tempEvaluacion->year == nuevaEvaluacion->year && tempEvaluacion->mes == nuevaEvaluacion->mes && tempEvaluacion->dia>nuevaEvaluacion->dia){
+        nuevaEvaluacion ->sig = tempEvaluacion;
+        grupo->tempG = nuevaEvaluacion;
+        return true;
+            }
+
+
+    Evaluacion*tempEvaluacionAnt = NULL;
+    while(tempEvaluacion!=NULL){
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes == nuevaEvaluacion->mes){
+                    if (tempEvaluacion->dia> nuevaEvaluacion->dia)
+                        break;
+                }
+            }
+            if(tempEvaluacion->year == nuevaEvaluacion->year){
+                if(tempEvaluacion->mes > nuevaEvaluacion->mes){
+                    break;
+                }
+            }
+
+
+
+
+
+                tempEvaluacionAnt = tempEvaluacion;
+                tempEvaluacion = tempEvaluacion->sig;
+
+}
+
+    if (tempEvaluacion==NULL){
+
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+    }else{
+        nuevaEvaluacion->sig = tempEvaluacion;
+        tempEvaluacionAnt->sig = nuevaEvaluacion;
+        return true;
+
+
+
+
+    }
+
+return true;
+
+}
+
+
 
 
 //Punto "j"
@@ -742,8 +931,28 @@ bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int 
                             insertarProyecto(nuevaEvaluacion,tempGrupo);
                             return true;
 
+                    }else if(tipo == "Tarea "){
 
 
+                            insertarTarea(nuevaEvaluacion,tempGrupo);
+                            return true;
+
+                    }else if(tipo == "Examen "){
+
+
+                            insertarExamen(nuevaEvaluacion,tempGrupo);
+                            return true;
+
+                    }else if(tipo == "Giras"){
+
+
+                            insertarGiras(nuevaEvaluacion,tempGrupo);
+                            return true;
+
+                    }
+                    else{
+                        cout<<"El tipo de asignacion no existe";
+                        return false;
 
                     }
 
