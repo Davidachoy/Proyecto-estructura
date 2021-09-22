@@ -46,6 +46,7 @@ struct Estudiante{//Simple list del estudiante
     string carrera;
     Estudiante* sig;
     struct ReporteEstudiante*enlaceReporte;// conecta con un auxiliar
+    struct ReporteCharla*enlaceCharla;
 
     Estudiante(string nom, int unCarnet, string carr){
 
@@ -53,7 +54,8 @@ struct Estudiante{//Simple list del estudiante
     carnet = unCarnet;
     carrera= carr;
     sig  = NULL;
-    enlaceReporte=NULL;
+    enlaceReporte = NULL;
+    enlaceCharla = NULL;
     }
 
 
@@ -64,14 +66,14 @@ struct Semestre{//Double list
     int numSemestre;
     Semestre*sig,*ant;
     //structs
-    struct Charla*enlaceCharla; // conecta con la estructura de charla
+    struct Charla*sublistaCharla; // conecta con la estructura de charla
     struct ConexionCurso*enlaceConexionCurso;//conecta con un auxiliar
 
     Semestre(int unAnno, int unNumSemestre){
     anno = unAnno;
     numSemestre  = unNumSemestre;
     //structs
-    enlaceCharla = NULL;
+    sublistaCharla = NULL;
     enlaceConexionCurso = NULL;
     //punteros
     sig = NULL;
@@ -120,6 +122,7 @@ struct Curso{ //Circular list de curso creditos(int)-nombre(string)-codigo(int)
 struct Grupo{//Simple list del grupo
 
 
+
     int numGrupo;
     struct Grupo*sig;
     struct Curso*enlaceCurso;//Conecta con los cursos
@@ -157,10 +160,23 @@ struct Evaluacion{//Simple list de evaluaciones
 
 };
 
+struct ReporteCharla{
+
+    struct AsistenciaCharla*enlaceAsistenciaCharla;
+    ReporteCharla*sig;
+
+    ReporteCharla(){
+
+    sig = NULL;
+    enlaceAsistenciaCharla = NULL;
+
+    }
+
+};
+
 struct ReporteEstudiante{//Simple list de parte de estudiante
 
     ReporteEstudiante*sig;
-    //struct AsistenciaCharla*enlaceAsistenciaCharla;
     struct Grupo*enlaceGrupo;
     struct Calificaciones*enlaceEvaluaciones;
     ReporteEstudiante(){
@@ -196,19 +212,19 @@ struct AsistenciaCharla{//Simple lista
 };
 
 struct Charla{//Simple list de Charlas
-    int dia;
-    int mes;
-    int year;
     string tipoCharla;
     int numCharla;
+    int dia;
+    int mes;
+    int anno;
     Charla*sig;
 
-    Charla(int day, int month, int a, string type, int idC){
-        dia = day;
-        mes = month;
-        year= a;
+    Charla(string type, int idC,int day,int month,int year){
         tipoCharla = type;
         numCharla  = idC;
+        dia = day;
+        mes = month;
+        anno = year;
 
         sig = NULL;
     }
@@ -387,11 +403,12 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
 //Metodos de impresion
 void imprimirEstudiante();
 void imprimirProfesor();
-
+void imprimirCharlas();
 
 //Metodos de buscar
 bool buscarEstudiante(int num);
 bool buscarProfesor(int ced);
+bool buscarSemestreBool(int year, int numS);
 Curso* buscarCurso(int codigo);
 Grupo*buscarGrupo(int codigo, Curso*puntero);
 Estudiante*buscarEstudianteReturn(int carnet);
@@ -454,6 +471,7 @@ Semestre* insertarSemestreOrdenado(int anno,int numSemestre){
 
 return primerSemestre;
 }
+
 //punto **E** insertar curso lista circular final        falta borrar y modificar
 //E: creditos, nombre, codigo
 Curso* insertarCurso(int creditos, string nombre, int codigo){
@@ -626,6 +644,7 @@ void imprimirInformeMatricula(int year, int numS){
 
 };
 
+//Inserción de las evaluaciones
 bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempP == NULL){
         grupo->tempP = nuevaEvaluacion;
@@ -664,14 +683,8 @@ bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
                     break;
                 }
             }
-
-
-
-
-
                 tempEvaluacionAnt = tempEvaluacion;
                 tempEvaluacion = tempEvaluacion->sig;
-
 }
 
     if (tempEvaluacion==NULL){
@@ -683,16 +696,11 @@ bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         nuevaEvaluacion->sig = tempEvaluacion;
         tempEvaluacionAnt->sig = nuevaEvaluacion;
         return true;
-
-
-
-
     }
 
 return true;
 
 }
-
 
 bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempExa == NULL){
@@ -718,7 +726,6 @@ bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         return true;
             }
 
-
     Evaluacion*tempEvaluacionAnt = NULL;
     while(tempEvaluacion!=NULL){
             if(tempEvaluacion->year == nuevaEvaluacion->year){
@@ -732,14 +739,8 @@ bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
                     break;
                 }
             }
-
-
-
-
-
                 tempEvaluacionAnt = tempEvaluacion;
                 tempEvaluacion = tempEvaluacion->sig;
-
 }
 
     if (tempEvaluacion==NULL){
@@ -751,21 +752,9 @@ bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         nuevaEvaluacion->sig = tempEvaluacion;
         tempEvaluacionAnt->sig = nuevaEvaluacion;
         return true;
-
-
-
-
     }
 return true;
 }
-
-
-
-
-
-
-
-
 
 bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempTC == NULL){
@@ -805,14 +794,8 @@ bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
                     break;
                 }
             }
-
-
-
-
-
                 tempEvaluacionAnt = tempEvaluacion;
                 tempEvaluacion = tempEvaluacion->sig;
-
 }
 
     if (tempEvaluacion==NULL){
@@ -824,17 +807,11 @@ bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         nuevaEvaluacion->sig = tempEvaluacion;
         tempEvaluacionAnt->sig = nuevaEvaluacion;
         return true;
-
-
-
-
     }
 
 return true;
 
 }
-
-
 
 bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempG == NULL){
@@ -860,7 +837,6 @@ bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         return true;
             }
 
-
     Evaluacion*tempEvaluacionAnt = NULL;
     while(tempEvaluacion!=NULL){
             if(tempEvaluacion->year == nuevaEvaluacion->year){
@@ -874,14 +850,8 @@ bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
                     break;
                 }
             }
-
-
-
-
-
                 tempEvaluacionAnt = tempEvaluacion;
                 tempEvaluacion = tempEvaluacion->sig;
-
 }
 
     if (tempEvaluacion==NULL){
@@ -893,18 +863,11 @@ bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
         nuevaEvaluacion->sig = tempEvaluacion;
         tempEvaluacionAnt->sig = nuevaEvaluacion;
         return true;
-
-
-
-
     }
 
 return true;
 
 }
-
-
-
 
 //Punto "j"
 bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int year, int codCurso, int numGrupo, int cedula)
@@ -931,13 +894,13 @@ bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int 
                             insertarProyecto(nuevaEvaluacion,tempGrupo);
                             return true;
 
-                    }else if(tipo == "Tarea "){
+                    }else if(tipo == "Tarea"){
 
 
                             insertarTarea(nuevaEvaluacion,tempGrupo);
                             return true;
 
-                    }else if(tipo == "Examen "){
+                    }else if(tipo == "Examen"){
 
 
                             insertarExamen(nuevaEvaluacion,tempGrupo);
@@ -955,35 +918,82 @@ bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int 
                         return false;
 
                     }
-
-
-
-
-
-
-
-
-
-
             }else{
             return false;
             }
         }else{
             tempConexion = tempConexion->sig;
         }
-
-
-
     }return false;
 
+}
 
+//Punto "k"
+bool insertarCharlas(int id, string nomCharla, int numSem, int anSemestre, int day, int month){//Relaciona los semestres con las charlas
+   Charla*newCharla = new Charla(nomCharla,id,day,month,anSemestre);
 
+   Semestre*tempS = primerSemestre;
 
+   if(tempS->anno == anSemestre && tempS->numSemestre == numSem){
+    if(tempS->sublistaCharla == NULL){
+    tempS->sublistaCharla = newCharla;
+    return true;
+   }
 
+   Charla*tempChar = tempS->sublistaCharla;
+   if(tempChar->mes > newCharla->mes){
+    newCharla->sig = tempChar;
+    tempS->sublistaCharla = newCharla;
+    return true;
+   }
 
+   if(tempChar->mes == newCharla->mes && tempChar->dia > newCharla->dia){
+    newCharla->sig = tempChar;
+    tempS->sublistaCharla = newCharla;
+    return true;
+   }
 
+   Charla*tempCharlaAnt = NULL;
+   while(tempChar != NULL){
+        if(tempChar->mes == newCharla->mes){
+            if(tempChar->dia > newCharla->dia)
+                break;
+        }
+        tempCharlaAnt = tempChar;
+        tempChar = tempChar->sig;
+   }
+   if(tempChar == NULL){
+    tempCharlaAnt->sig = newCharla;
+    return true;
 
+   }else{
 
+    newCharla->sig = tempChar;
+    tempCharlaAnt->sig = newCharla;
+    return true;
+
+   }
+
+return true;
+   }
+
+return true;
+}
+
+bool modificarCharla(int id, int anSemestre, int numSem){//MOdifica el nombre de la charla
+
+    //cout<<"Que se desea modificar: "
+    Semestre*tempS = buscarSemestre(anSemestre,numSem);
+    Charla*tempC = tempS->sublistaCharla;
+    while(tempC->sig != NULL){
+        if(tempC->numCharla == id){
+            cout<<"Ingrese el nuevo nombre de la charla: ";
+            string nombre;
+            cin>>nombre;
+            tempC->tipoCharla = nombre;
+        }
+        tempC = tempC->sig;
+    }
 
 
 }
@@ -1223,7 +1233,7 @@ void menuProfe(){
     do{
         cout<<"----------- Menu de profesores -----------\n\n";
         cout<<" 1 - Insertar, modoficar o borrar actividades relacionadas con los cursos\n";
-        cout<<" 2 - Insertar charla\n";
+        cout<<" 2 - Insertar charla, modoficar o borrar\n";
         cout<<" 3 - Reportes\n";
         cout<<" 4 - Salir\n\n";
         cout<<" Opcion: ";
@@ -1233,9 +1243,127 @@ void menuProfe(){
 
         switch(choiceProf){
     case 1:
+        int actCurco;
+        while(actCurco != 4){
+            cout<<"----------- Actividades relacionadas con los cursos -----------\n\n";
+            cout<<" 1 - Insertar una evaluacion\n";
+            cout<<" 2 - Modificar evaluacion\n";
+            cout<<" 3 - Borrar evaluacion\n";
+            cout<<" 4 - Volver  menu profesor\n\n";
+            cout<<"Opcion: ";
+            cin>>actCurco;
+
+            if(actCurco == 1){
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+                cout<<"Que tipo de evaluacion desea ingresar...\n";
+                cout<<" Se pueden ingresar: Proyecto, Tarea, Examen, Gira\n";
+                cout<<"Se tiene que escribir con la primera letra en Mayuscula...\n\n";
+                cout<<"Tipo: ";
+                string type;
+                cin>>type;
+
+                cout<<"ID de la evaluacion: ";
+                int ID;
+                cin>>ID;
+
+                cout<<"Nombre de la evaluacion: ";
+                string nomEv;
+                cin>>nomEv;
+
+                cout<<"Dia: ";
+                int day;
+                cin>>day;
+
+                cout<<"Mes: ";
+                int month;
+                cin>>month;
+
+                cout<<"Anno: ";
+                int year;
+                cin>>year;
+
+                cout<<"ID del curso a ingresar la evaluacion: ";
+                int idCurso;
+                cin>>idCurso;
+
+                cout<<"Numero del grupo a ingresar: ";
+                int numG;
+                cin>>numG;
+
+                cout<<"Numero de cedula del profesor encargado del grupo: ";
+                int cedP;
+                cin>>cedP;
+
+                if(asignarAsignaciones(type,ID,nomEv,day,month,year,idCurso,numG,cedP)== true){
+                    cout<<"\tEvaluacion registrada...\n\n";
+                }else{cout<<"\tEvaluacion NO registrada...\n\n";}
+            }
+        else if(actCurco == 2){
+
+        }
+        else if(actCurco == 3){
+
+        }
+        else if(actCurco == 4){
+            menuProfe();
+        }else{cout<<"Opcion no valida...\n";}}
         break;
 
     case 2:
+
+        int choiceCharla;
+        while(choiceCharla != 4){
+            cout<<"----------- Menu de Charlas -----------\n\n";
+            cout<<" 1 - Insertar charla\n";
+            cout<<" 2 - Modificar nombre de una charla\n";
+            cout<<" 3 - Eliminar una charla\n";
+            cout<<" 4 - Volver a menu profesor\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceCharla;
+
+            if(choiceCharla == 1){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan para verificar la existencia del semestre\n\n";
+
+                cout<<"Anno: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                if(buscarSemestreBool(anno,numSem) == true){
+                    cout<<"Ingrese los datos que se le solicitan de la charla a ingresar\n\n";
+                    cout<<"ID de la charla: ";
+                    int numC;
+                    cin>>numC;
+
+                    cout<<"Nombre de la charla: ";
+                    string nombreC;
+                    cin>>nombreC;
+
+                    cout<<"Día: ";
+                    int day;
+                    cin>>day;
+
+                    cout<<"Mes: ";
+                    int month;
+                    cin>>month;
+
+                    insertarCharlas(numC,nombreC,numSem,anno,day,month);
+                }else{
+                    cout<<"\nNo se pudo crear la charla debido a que no\n";
+                    cout<<"existe ese semestre o el anno del semestre\n";
+                }
+            }else if(choiceCharla == 2){
+
+            }else if(choiceCharla == 3){
+
+            }else if(choiceCharla == 4){
+                break;
+            }
+        }
         break;
 
     case 3:
@@ -1247,6 +1375,7 @@ void menuProfe(){
             cout<<" 3 - Reporte 3 \n";
             cout<<" 4 - Reporte 4 \n";
             cout<<" 5 - Reporte 5 \n\n";
+            cout<<" 6 - Volver a menú profesor\n\n";
             cout<<"\tOpcion: ";
             cin>>choiceReporte;
         }
@@ -1294,9 +1423,6 @@ void menuEst(){
 
 void menuUsuarios(){
 
-
-
-
     bool repetir = false;
     do{
         int choiceUser;
@@ -1331,15 +1457,22 @@ void imprimirEvaluacion(){
     while(tempE != NULL){
         cout<<tempE->nombre<<endl;
         tempE = tempE->sig;
+    }
+}
 
+void imprimirCharlas(){
 
+    Semestre*tempS = buscarSemestre(2019,2);
+    Charla*tempC = tempS->sublistaCharla;
+    while(tempC->sig != NULL){
+        cout<<tempC->tipoCharla<<endl;
+        tempC = tempC->sig;
+    }
+    cout<<tempC->tipoCharla<<endl;
 
-    }}
-
+}
 
 void baseDeDatos(){
-
-
 
     //Semestres insertados
     primerSemestre      = insertarSemestreOrdenado(2019,2);
@@ -1348,13 +1481,13 @@ void baseDeDatos(){
     primerSemestre      = insertarSemestreOrdenado(2021,1);
     primerSemestre      = insertarSemestreOrdenado(2021,2);
 
-
     //Administradores insertados
     primerAdministrador = insertarAdmin("Admin1");
     primerAdministrador = insertarAdmin("Admin2");
     primerAdministrador = insertarAdmin("Admin3");
     primerAdministrador = insertarAdmin("Admin4");
     primerAdministrador = insertarAdmin("Admin5");
+
     //insertar profesores
     primerProfesor     =  insertarInicio("Hilary",1001,45);
     primerProfesor     =  insertarInicio("David"   , 702900638, 37);
@@ -1362,18 +1495,21 @@ void baseDeDatos(){
     primerProfesor     =  insertarInicio("Juan"    , 204500638, 27);
     primerProfesor     =  insertarInicio("Fabiola" , 514000638, 32);
     primerProfesor     =  insertarInicio("Frank"   , 852040638, 45);
+
     //insertar estudiantes
     primerEstudiante   =  InsertaEst("Maria" ,2020053336 ,"Ing. computacion");
     primerEstudiante   =  InsertaEst("Jimmy" ,2021053336 ,"Ing. industrial");
     primerEstudiante   =  InsertaEst("Felipe",2020053874 ,"Ing. computacion");
     primerEstudiante   =  InsertaEst("Amanda",2019053336 ,"Ing. mecanica");
     primerEstudiante   =  InsertaEst("Andres",2020054897 ,"Ing. mecanica");
+
     //insertar cursos
     primerCurso        =  insertarCurso(5,"Mate Discreta", 1520);
     primerCurso        =  insertarCurso(2,"Programacion basica", 1535);
     primerCurso        =  insertarCurso(5,"Dibujo tecnico", 1545);
     primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
     primerCurso        =  insertarCurso(5,"Deporte", 1510);
+
     //insertar Grupos
     insertarGrupo(53,1520);
     insertarGrupo(51,1520);
@@ -1382,15 +1518,19 @@ void baseDeDatos(){
     insertarGrupo(35,1510);
     insertarGrupo(02,1545);
     insertarGrupo(15,1535);
+
     //insertar profesor con grupos
     relacionarProfesoresGrupo(1001,1520,53);
     //imprimirInformeMatricula(1001);
+
+    //Relaciona los semestres con los cursos
     relacionarSemestresCursos(2020,1,1520);
     relacionarSemestresCursos(2020,1,1535);
     relacionarSemestresCursos(2020,1,1545);
 
     //imprimirInformeMatricula(2020,1);
 
+    //Asignacion de evaluaciones
     //asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
@@ -1400,25 +1540,16 @@ void baseDeDatos(){
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura jjjj",7,04,2020,1520,53,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
-    imprimirEvaluacion();
+    //imprimirEvaluacion();
 
-
-
-
-
-
-
-
-
-
-
+    //insertar charlas
+    insertarCharlas(1,"Ultimo",2,2019,1,05);
+    insertarCharlas(2,"Primero",2,2019,10,04);
+    insertarCharlas(3,"Medio",2,2019,11,04);
+    insertarCharlas(4,"Nuevo primero",2,2019,2,04);
+    //imprimirCharlas();
 
 }
-
-
-
-
-
 
 int main()
 {
@@ -1496,11 +1627,26 @@ void imprimirProfesor(){
         cout<<"Nombre: "<<temp->nombre<<"\nCedula: "<<temp->cedula<<"\nEdad:   "<<temp->edad<<"\n";//Imprime el ultimo
         }
 
+}
+
+/*void imprimirCharlas(){
+    if(primerSemestre == NULL)
+        cout<<"Lista vacia";
+    else{
+        Semestre*temp = primerSemestre;
+        while(temp->enlaceCharla->sig != NULL){
+            cout<<"\n\nCharlas...\nTipo de charla: "<<temp->enlaceCharla->tipoCharla;
+            cout<<"\nID de la charla: "<<temp->enlaceCharla->numCharla;
+            temp = temp->sig;
+        }
+    cout<<"\n\nCharlas...\nTipo de charla: "<<temp->enlaceCharla->tipoCharla;
+    cout<<"\nID de la charla: "<<temp->enlaceCharla->numCharla;
     }
+}*/
+
 
 //Metodos de buscar
-bool buscarEstudiante(int num)
-{
+bool buscarEstudiante(int num){
 
     Estudiante * i = primerEstudiante;
     while(i != NULL){
@@ -1513,6 +1659,7 @@ bool buscarEstudiante(int num)
 };
 
 bool buscarProfesor(int ced){
+
     Profesor*i = primerProfesor;
     while(i != NULL){
         if(i->cedula == ced){
@@ -1534,6 +1681,7 @@ Profesor* buscarProfesor2(int ced){
 
 //funcion para buscar curso
 Curso* buscarCurso(int codigo){
+
     if(primerCurso == NULL)
         return NULL;
     struct Curso*temp = primerCurso;
@@ -1546,6 +1694,7 @@ Curso* buscarCurso(int codigo){
 
 }
 Grupo*buscarGrupo(int codigo, Curso*puntero){
+
     if(puntero->sublistaGrupos == NULL)
         return NULL;
     Grupo*tempG = puntero->sublistaGrupos;
@@ -1579,4 +1728,15 @@ Semestre*buscarSemestre(int year, int numS){
         tempS = tempS->sig;
     }
     return NULL;
+}
+
+bool buscarSemestreBool(int year, int numS){
+    Semestre*tempS = primerSemestre;
+
+    while(tempS != NULL){
+        if(tempS->anno == year && tempS->numSemestre == numS)
+            return true;
+        tempS = tempS->sig;
+    }
+    return false;
 }
