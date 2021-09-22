@@ -742,9 +742,6 @@ bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int 
                             insertarProyecto(nuevaEvaluacion,tempGrupo);
                             return true;
 
-
-
-
                     }
 
 
