@@ -493,7 +493,97 @@ Curso* insertarCurso(int creditos, string nombre, int codigo){
         temp->sig = newCurso;
 }return newCurso;
 }
+bool borrarCurso(int codigo){
 
+
+  Curso*tempC = primerCurso;
+    if (tempC == NULL)
+        return false;
+    Curso*tempC2 = buscarCurso(codigo);
+    if (tempC2 == NULL)
+        return false;
+
+
+
+    if (tempC->codigo==codigo && tempC->sig == tempC){
+
+    primerCurso = NULL;
+
+    return true;
+    }
+
+
+
+    if (primerCurso->codigo==codigo){
+        Curso*cursoBorrar = primerCurso;
+        primerCurso = primerCurso->sig;
+        while(tempC->sig != cursoBorrar){
+
+            tempC= tempC->sig;
+
+        }
+        tempC->sig = primerCurso;
+        return true;
+    }else{
+
+        Curso*tempCursoAnt = NULL;
+
+
+        while (tempC ->codigo !=codigo ){
+
+            tempCursoAnt = tempC;
+            tempC = tempC->sig;
+
+
+        }
+
+        tempCursoAnt->sig = tempC->sig;
+        return true;
+
+
+
+
+
+    }
+
+
+
+
+
+}
+bool modificarCurso(string tipo,string nombre,int creditos,int codigo){ //si no se modifica se pone x valor solo para llenar campo
+
+    Curso*tempC = buscarCurso(codigo);
+    if(tempC == NULL)
+        return false;
+    if (tipo == "Nombre"){
+        tempC->nomCurso = nombre;
+        return true;
+    }else if(tipo == "Creditos"){
+        tempC->creditos = creditos;
+        return true;
+    }
+    else{
+        tempC->nomCurso = nombre;
+        tempC->creditos = creditos;
+        return true;
+    }
+}
+
+
+
+
+void imprimirCursos(){
+    Curso*tempC = primerCurso;
+    do{
+        cout<<tempC->nomCurso<<endl;
+        tempC = tempC->sig;
+
+    }while(tempC != primerCurso);
+
+
+
+}
 
 //punto **F** insertar grupo relacionandolo con los cursos
 //E:Recibe un numero de grupo
@@ -1475,78 +1565,83 @@ void imprimirCharlas(){
 void baseDeDatos(){
 
     //Semestres insertados
-    primerSemestre      = insertarSemestreOrdenado(2019,2);
-    primerSemestre      = insertarSemestreOrdenado(2020,2);
-    primerSemestre      = insertarSemestreOrdenado(2020,1);
-    primerSemestre      = insertarSemestreOrdenado(2021,1);
-    primerSemestre      = insertarSemestreOrdenado(2021,2);
+    insertarSemestreOrdenado(2019,2);
+    insertarSemestreOrdenado(2020,2);
+    insertarSemestreOrdenado(2020,1);
+    insertarSemestreOrdenado(2021,1);
+    insertarSemestreOrdenado(2021,2);
 
     //Administradores insertados
-    primerAdministrador = insertarAdmin("Admin1");
-    primerAdministrador = insertarAdmin("Admin2");
-    primerAdministrador = insertarAdmin("Admin3");
-    primerAdministrador = insertarAdmin("Admin4");
-    primerAdministrador = insertarAdmin("Admin5");
+    insertarAdmin("Admin1");
+    insertarAdmin("Admin2");
+    insertarAdmin("Admin3");
+    insertarAdmin("Admin4");
+    insertarAdmin("Admin5");
 
     //insertar profesores
-    primerProfesor     =  insertarInicio("Hilary",1001,45);
-    primerProfesor     =  insertarInicio("David"   , 702900638, 37);
-    primerProfesor     =  insertarInicio("Sofia"   , 645900638, 25);
-    primerProfesor     =  insertarInicio("Juan"    , 204500638, 27);
-    primerProfesor     =  insertarInicio("Fabiola" , 514000638, 32);
-    primerProfesor     =  insertarInicio("Frank"   , 852040638, 45);
+    insertarInicio("Hilary",1001,45);
+    insertarInicio("David"   , 702900638, 37);
+    insertarInicio("Sofia"   , 645900638, 25);
+    insertarInicio("Juan"    , 204500638, 27);
+    insertarInicio("Fabiola" , 514000638, 32);
+    insertarInicio("Frank"   , 852040638, 45);
 
     //insertar estudiantes
-    primerEstudiante   =  InsertaEst("Maria" ,2020053336 ,"Ing. computacion");
-    primerEstudiante   =  InsertaEst("Jimmy" ,2021053336 ,"Ing. industrial");
-    primerEstudiante   =  InsertaEst("Felipe",2020053874 ,"Ing. computacion");
-    primerEstudiante   =  InsertaEst("Amanda",2019053336 ,"Ing. mecanica");
-    primerEstudiante   =  InsertaEst("Andres",2020054897 ,"Ing. mecanica");
+    InsertaEst("Maria" ,2020053336 ,"Ing. computacion");
+    InsertaEst("Jimmy" ,2021053336 ,"Ing. industrial");
+    InsertaEst("Felipe",2020053874 ,"Ing. computacion");
+    InsertaEst("Amanda",2019053336 ,"Ing. mecanica");
+    InsertaEst("Andres",2020054897 ,"Ing. mecanica");
 
     //insertar cursos
-    primerCurso        =  insertarCurso(5,"Mate Discreta", 1520);
-    primerCurso        =  insertarCurso(2,"Programacion basica", 1535);
-    primerCurso        =  insertarCurso(5,"Dibujo tecnico", 1545);
-    primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
-    primerCurso        =  insertarCurso(5,"Deporte", 1510);
+    insertarCurso(5,"Mate Discreta", 1520);
+    insertarCurso(2,"Programacion basica", 1535);
+
+
+    insertarCurso(5,"Dibujo tecnico", 1545);
+
+    borrarCurso(1545);
+    imprimirCursos();
+   // primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
+   // primerCurso        =  insertarCurso(5,"Deporte", 1510);
 
     //insertar Grupos
-    insertarGrupo(53,1520);
-    insertarGrupo(51,1520);
-    insertarGrupo(52,1520);
-    insertarGrupo(40,1512);
-    insertarGrupo(35,1510);
-    insertarGrupo(02,1545);
-    insertarGrupo(15,1535);
+   // insertarGrupo(53,1520);
+   // insertarGrupo(51,1520);
+   // insertarGrupo(52,1520);
+  //  insertarGrupo(40,1512);
+  //  insertarGrupo(35,1510);
+  //  insertarGrupo(02,1545);
+  //  insertarGrupo(15,1535);
 
     //insertar profesor con grupos
-    relacionarProfesoresGrupo(1001,1520,53);
+//relacionarProfesoresGrupo(1001,1520,53);
     //imprimirInformeMatricula(1001);
 
     //Relaciona los semestres con los cursos
-    relacionarSemestresCursos(2020,1,1520);
-    relacionarSemestresCursos(2020,1,1535);
-    relacionarSemestresCursos(2020,1,1545);
+  ///  relacionarSemestresCursos(2020,1,1520);
+  //  relacionarSemestresCursos(2020,1,1535);
+  //  relacionarSemestresCursos(2020,1,1545);
 
     //imprimirInformeMatricula(2020,1);
 
     //Asignacion de evaluaciones
     //asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",123,"Proyecto de estructura ultimo",01,06,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",124,"Proyecto de estructura penultimo",30,05,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",123,"Proyecto de estructura IcccII",8,04,2020,1520,53,1001);
+   // asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
+  //  asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
+ //   asignarAsignaciones("Proyecto",123,"Proyecto de estructura ultimo",01,06,2020,1520,53,1001);
+ //   asignarAsignaciones("Proyecto",124,"Proyecto de estructura penultimo",30,05,2020,1520,53,1001);
+ //   asignarAsignaciones("Proyecto",123,"Proyecto de estructura IcccII",8,04,2020,1520,53,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura jjjj",7,04,2020,1520,53,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
     //imprimirEvaluacion();
 
     //insertar charlas
-    insertarCharlas(1,"Ultimo",2,2019,1,05);
-    insertarCharlas(2,"Primero",2,2019,10,04);
-    insertarCharlas(3,"Medio",2,2019,11,04);
-    insertarCharlas(4,"Nuevo primero",2,2019,2,04);
+   // insertarCharlas(1,"Ultimo",2,2019,1,05);
+  //  insertarCharlas(2,"Primero",2,2019,10,04);
+  //  insertarCharlas(3,"Medio",2,2019,11,04);
+ //   insertarCharlas(4,"Nuevo primero",2,2019,2,04);
     //imprimirCharlas();
 
 }
