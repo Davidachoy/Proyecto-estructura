@@ -414,6 +414,7 @@ Grupo*buscarGrupo(int codigo, Curso*puntero);
 Estudiante*buscarEstudianteReturn(int carnet);
 Profesor*buscarProfesor2(int ced);
 Semestre*buscarSemestre(int year, int numS);
+Charla*buscarCharla(int year, int numS, int numCharla);
 
 //punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
@@ -1124,25 +1125,134 @@ return true;
 return true;
 }
 
-bool modificarCharla(int id, int anSemestre, int numSem){//MOdifica el nombre de la charla
+bool modificarCharla(int id, int anSemestre, int numSemn, string nuevoName){//Modifica el nombre de la charla //No funciona del todo
 
-    //cout<<"Que se desea modificar: "
-    Semestre*tempS = buscarSemestre(anSemestre,numSem);
+    Semestre*tempS = buscarSemestre(anSemestre,numSemn);
+    if(tempS == NULL)
+        return false;
+
     Charla*tempC = tempS->sublistaCharla;
-    while(tempC->sig != NULL){
-        if(tempC->numCharla == id){
-            cout<<"Ingrese el nuevo nombre de la charla: ";
-            string nombre;
-            cin>>nombre;
-            tempC->tipoCharla = nombre;
+    if(tempC == NULL)
+        return false;
+
+    else{
+    while(tempS->sublistaCharla->sig != NULL){
+        if(tempS->sublistaCharla->numCharla == id){
+            tempS->sublistaCharla->tipoCharla = nuevoName;
+            return true;
+            }
+        tempS->sublistaCharla = tempS->sublistaCharla->sig;
         }
-        tempC = tempC->sig;
     }
-
-
+    /*
+    while(tempS->sublistaCharla != NULL){
+        if(tempS->sublistaCharla->numCharla == id){
+            tempS->sublistaCharla->tipoCharla = nuevoName;
+            return true;
+        }
+        tempS->sublistaCharla = tempS->sublistaCharla->sig;
+    }*/
+    return false;
 }
 
+bool borrarCharla(int numC, int anSemestre, int numSem){//No funciona del todo
+    cout<<"Llego hasta aquí...1\n";
+    Semestre*tempS = buscarSemestre(anSemestre,numSem);
+    cout<<"Llego hasta aquí...2\n";
+    if(tempS == NULL){
+        cout<<"Llego hasta aquí...3\n";
+        return false;
+    }
+    cout<<"Llego hasta aquí...4\n";
+    Charla*tempC = tempS->sublistaCharla;
+    cout<<"Llego hasta aquí...5\n";
+    if(tempC == NULL){
+        cout<<"Llego hasta aquí...6\n";
+        return false;
+
+    }
+    cout<<"Llego hasta aquí...\n";
+
+    if(tempS->sublistaCharla->numCharla == numC){
+        tempS->sublistaCharla = tempS->sublistaCharla->sig;
+        cout<<"\n\tSe dejo de relacionar dicho semestre con la charla "<<numC<<"\n";
+        return true;
+    }else{
+        Charla* tempCharla = tempS->sublistaCharla;
+        Charla* tempCharlaAnt = NULL;
+        while(tempCharla != NULL){
+            if(tempCharla->numCharla == numC){
+                tempCharlaAnt->sig = tempCharla->sig;
+                cout<<"\n\tSe dejo de relacionar dicho semestre con la charla "<<numC<<"\n";
+                return true;
+            }
+            tempCharlaAnt = tempCharla;
+            tempCharla = tempCharla->sig;
+        }
+    }
+    cout<<"NO se pudo borrar dicha Charla...\n";
+    return false;
+}
 //punto **L**
+
+//punto "m"
+bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
+
+    Estudiante*tempE = buscarEstudianteReturn(cedEst);
+    if(tempE == NULL)
+        return false;
+
+    Semestre*tempS = buscarSemestre(anno,numS);
+    if(tempS == NULL)
+        return false;
+
+    Charla*tempC = tempS->sublistaCharla;
+    if(tempC == NULL)
+        return false;
+
+    while(tempC != NULL){
+        if(tempS->sublistaCharla->numCharla == idChar){
+            if(tempC->numCharla == idChar){
+                ReporteCharla*newReporteAsistencia = new ReporteCharla();
+                AsistenciaCharla*confirmarA = new AsistenciaCharla();
+
+                tempE->enlaceCharla = newReporteAsistencia;
+                newReporteAsistencia->enlaceAsistenciaCharla = confirmarA;
+                confirmarA->enlaceCharla = tempC;
+                newReporteAsistencia->sig = tempE->enlaceCharla;
+                confirmarA->sig = newReporteAsistencia->enlaceAsistenciaCharla;
+
+                return true;
+            }
+        }
+    }
+}
+
+bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
+
+    Estudiante*tempE = buscarEstudianteReturn(cedEst);
+    if(tempE == NULL)
+        return false;
+
+    ReporteCharla*tempR = tempE->enlaceCharla;
+
+    AsistenciaCharla*tempAsis = tempR->enlaceAsistenciaCharla;
+
+    Charla*tempC = tempAsis->enlaceCharla;
+    if(tempC == NULL)
+        return false;
+
+    cout<<"\n----------------------------------------\n";
+    cout<<"Nombre: "<<tempE->nombre<<"\nCedula: "<<tempE->carnet<<"\nCarrera: "<<tempE->carrera<<"c\n";
+
+    while(tempC != NULL){
+        cout<<"\tTipo de charla: "<<tempC->tipoCharla<<endl;
+        tempC = tempC->sig;
+        //return true;
+    }
+    //cout<<"\t\nTipo de charla: "<<tempC->tipoCharla<<endl;
+    return NULL;
+}
 
 //Menus
 void menuAdmin(){
@@ -1166,9 +1276,9 @@ void menuAdmin(){
 
         switch(choiceAdmin){
 
-    case 1:
+    case 1://punto "b"
         int choiceProf;
-        while (choiceProf != 5){
+        while(choiceProf != 5){
             cout<<"\n ----------- Acciones profesor -----------\n\n";
             cout<<" 1 - Ingresar un profesor\n";
             cout<<" 2 - Modificar un profesor\n";
@@ -1242,9 +1352,9 @@ void menuAdmin(){
         }
         break;
 
-    case 2:
+    case 2://punto "c"
         int choiceEst;
-        while (choiceEst != 5){
+        while(choiceEst != 5){
             cout<<"\n ----------- Acciones estudiantes -----------\n\n";
             cout<<" 1 - Ingresar estudiantes\n";
             cout<<" 2 - Modificar\n";
@@ -1312,26 +1422,33 @@ void menuAdmin(){
         menuAdmin();
         break;
 
-    case 3:
+    case 3://punto "d"
         int choiceSem;
-        while(choiceSem != 4){
+        while(choiceSem != 3){//falta modificar semestre
             cout<<"\n ----------- Acciones semestres -----------\n\n";
             cout<<" 1 - Ingresar un semestre\n";
             cout<<" 2 - Modificar un semestre\n";
-            cout<<" 3 - Borrar un semestres\n";
-            cout<<" 4 - Volver a menu administrador\n\n";
+            cout<<" 3 - Volver a menu administrador\n\n";
             cout<<" Opcion: ";
             cin>>choiceSem;
             if(choiceSem == 1){
+                cout<<"Ingrese los datos que se le solicitan \n\n";
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
 
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                if(insertarSemestreOrdenado(anno,numSem) != NULL){
+                    cout<<"Semestre insertado exitosamente...\n";
+                }else{cout<<"El semestre NO se puedo insertar...\n";}
             }
             else if(choiceSem == 2){
-
+                cout<<"Ingrese los datos que se le solicitan \n\n";
             }
             else if(choiceSem == 3){
-
-            }
-            else if(choiceSem == 4){
                 menuAdmin();
             }else{
             cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
@@ -1342,14 +1459,15 @@ void menuAdmin(){
         menuAdmin();
         break;
 
-    case 4:
+    case 4://punto "e"  falta modificar
         int choiceCurso;
         while(choiceCurso != 4){
             cout<<"\n ----------- Acciones cursos -----------\n\n";
             cout<<" 1 - Ingresar un curso\n";
             cout<<" 2 - Modificar un curso\n";
             cout<<" 3 - Borrar un curso\n";
-            cout<<" 4 - Volver a menu administrador\n\n";
+            cout<<" 4 - Imprimir cursos\n";
+            cout<<" 5 - Volver a menu administrador\n\n";
             cout<<" Opcion: ";
             cin>>choiceCurso;
 
@@ -1375,15 +1493,27 @@ void menuAdmin(){
 
             }else if(choiceCurso == 2){
 
-            }else if(choiceCurso == 3){
+                cout<<"Ingrese los datos que se le solicitan \n\n";
+                cout<<"";
 
+            }else if(choiceCurso == 3){
+                cout<<"Ingrese los datos que se le solicitan \n\n";
+                cout<<"Codigo del curso a borrar: ";
+                int codCurso;
+                cin>>codCurso;
+
+                if(borrarCurso(codCurso) == true){
+                    cout<<"Curso borrardo exitosamente...\n";
+                }else{cout<<"El curso NO se pudo borrar...\n";}
             }else if(choiceCurso == 4){
+                imprimirCursos();
+            }else if(choiceCurso == 5){
                 menuAdmin();
             }else{cout<<"Opcion no valida...\n";}}
         menuAdmin();
         break;
 
-    case 5:
+    case 5://punto "f"
         int choiceGrupoCurso;
         while(choiceGrupoCurso != 2){
             cout<<"\n ----------- Acciones grupo con cursos -----------\n\n";
@@ -1412,7 +1542,7 @@ void menuAdmin(){
         menuAdmin();
         break;
 
-    case 6:
+    case 6://punto "g"
         int choiceProGru;
         while(choiceProGru != 4){
             cout<<"\n ----------- Acciones profesores con los grupos -----------\n\n";
@@ -1469,8 +1599,8 @@ void menuAdmin(){
         }
         break;
 
-    case 7:
-                int choiceEstGrupo;
+    case 7://punto "h"
+        int choiceEstGrupo;
         while(choiceEstGrupo != 3){
             cout<<"\n ----------- Acciones profesores con los grupos -----------\n\n";
             cout<<" 1 - Relacionar un estudiante a un grupo de x cursos\n";
@@ -1505,9 +1635,9 @@ void menuAdmin(){
                 int numG;
                 cin>>numG;
 
-                /*if(borrarRelacionEstudiantesGrupo(carnet,numG) == true){
+                if(borrarRelacionEstudiantesGrupo(carnet,numG) == true){
                     cout<<"Curso borrado exitosamente...\n";
-                }else{cout<<"El curso NO se pudo borrar...\n";}*/
+                }else{cout<<"El curso NO se pudo borrar...\n";}
 
             }else if(choiceEstGrupo == 3){
                 menuAdmin();
@@ -1515,7 +1645,7 @@ void menuAdmin(){
         }
         break;
 
-    case 8:
+    case 8://punto "i"
         int choiceSemCurso;
         while(choiceSemCurso != 2){
             cout<<"\n ----------- Acciones semestre con cursos -----------\n\n";
@@ -1523,13 +1653,33 @@ void menuAdmin(){
             cout<<" 2 - Volver a menu administrador\n\n";
             cout<<" Opcion: ";
             cin>>choiceSemCurso;
+            if(choiceSemCurso == 1){
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                cout<<"Codigo del curso a relacionar: ";
+                int codCurso;
+                cin>>codCurso;
+
+                if(relacionarSemestresCursos(anno,numSem,codCurso) == true){
+                    cout<<"Curso relacionado exitosamente...\n";
+                }else{cout<<"El curso NO se pudo relacionar...\n";}
+            }else if(choiceSemCurso == 2){
+                menuAdmin();
+            }else{cout<<"Opcion no valida\n";}
         }
         break;
 
-    case 9:
+    case 9://reporte 7
         break;
 
-    case 10:
+    case 10://reporte 8
         break;
 
     case 0:
@@ -1554,9 +1704,10 @@ void menuProfe(){
         cin>>choiceProf;
 
         switch(choiceProf){
-    case 1:
+
+    case 1://punto "j"
         int actCurco;
-        while(actCurco != 4){
+        while(actCurco != 4){//falta modificar y borrar
             cout<<"----------- Actividades relacionadas con los cursos -----------\n\n";
             cout<<" 1 - Insertar una evaluacion\n";
             cout<<" 2 - Modificar evaluacion\n";
@@ -1621,10 +1772,9 @@ void menuProfe(){
         }else{cout<<"Opcion no valida...\n";}}
         break;
 
-    case 2:
-
+    case 2://punto "k"
         int choiceCharla;
-        while(choiceCharla != 4){
+        while(choiceCharla != 4){//falta insertar y borrar
             cout<<"----------- Menu de Charlas -----------\n\n";
             cout<<" 1 - Insertar charla\n";
             cout<<" 2 - Modificar nombre de una charla\n";
@@ -1669,17 +1819,52 @@ void menuProfe(){
                     cout<<"existe ese semestre o el anno del semestre\n";
                 }
             }else if(choiceCharla == 2){
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+                cout<<"Numero de la charla: ";
+                int IDcharla;
+                cin>>IDcharla;
+
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero del semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                cout<<"Ingrese el nuevo nombre de la charla: ";
+                string nombre;
+                cin>>nombre;
+
+                if(modificarCharla(IDcharla,anno,numSem,nombre)== true ){
+                    cout<<"Charla modificada correctamente...\n";
+                    imprimirCharlas();
+                }else{cout<<"La charla NO se pudo modificar...\n";}
 
             }else if(choiceCharla == 3){
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+                cout<<"Numero de la charla: ";
+                int IDcharla;
+                cin>>IDcharla;
 
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero del semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                borrarCharla(IDcharla,anno,numSem);
+                imprimirCharlas();
             }else if(choiceCharla == 4){
                 break;
             }
         }
         break;
 
-    case 3:
-        int choiceReporte;//cambiar por un do while
+    case 3://Reportes
+        int choiceReporte;
         while(choiceReporte!=1){
             cout<<"----------- Menu de reportes -----------\n\n";
             cout<<" 1 - Reporte 1 \n";
@@ -1690,8 +1875,26 @@ void menuProfe(){
             cout<<" 6 - Volver a menú profesor\n\n";
             cout<<"\tOpcion: ";
             cin>>choiceReporte;
-        }
 
+            if(choiceReporte == 1){
+
+            }
+            else if(choiceReporte == 2){
+
+            }
+            else if(choiceReporte == 3){
+
+            }
+            else if(choiceReporte == 4){
+
+            }
+            else if(choiceReporte == 5){
+
+            }
+            else if(choiceReporte == 6){
+                menuProfe();
+            }else{cout<<"Opcion no valida\n";}
+        }
         break;
 
     case 4:
@@ -1720,6 +1923,24 @@ void menuEst(){
         break;
 
     case 2:
+        cout<<"Numero de carnet: ";
+        int cedEst;
+        cin>>cedEst;
+
+        cout<<"Numero de la charla: ";
+        int numC;
+        cin>>numC;
+
+        cout<<"Año del semestre: ";
+        int anno;
+        cin>>anno;
+
+        cout<<"Numero de semestre: ";
+        int numS;
+        cin>>numS;
+
+        registrarAsistenciaCharla(cedEst,numC,anno,numS);
+
         break;
 
     case 3:
@@ -1841,9 +2062,9 @@ void baseDeDatos(){
     //imprimirInformeMatricula(1001);
 
     //Relaciona los semestres con los cursos
-  ///  relacionarSemestresCursos(2020,1,1520);
-  //  relacionarSemestresCursos(2020,1,1535);
-  //  relacionarSemestresCursos(2020,1,1545);
+    relacionarSemestresCursos(2020,1,1520);
+    relacionarSemestresCursos(2020,1,1535);
+    relacionarSemestresCursos(2020,1,1545);
 
     //imprimirInformeMatricula(2020,1);
 
@@ -1860,16 +2081,17 @@ void baseDeDatos(){
     //imprimirEvaluacion();
 
     //insertar charlas
-   // insertarCharlas(1,"Ultimo",2,2019,1,05);
-  //  insertarCharlas(2,"Primero",2,2019,10,04);
-  //  insertarCharlas(3,"Medio",2,2019,11,04);
- //   insertarCharlas(4,"Nuevo primero",2,2019,2,04);
-    //imprimirCharlas();
+    insertarCharlas(1,"Ultimo",2,2019,1,05);
+    insertarCharlas(2,"Primero",2,2019,10,04);
+    insertarCharlas(3,"Embarazo",2,2019,11,04);
+    insertarCharlas(5,"Drogas",2,2019,2,04);
+    imprimirCharlas();
 
+    registrarAsistenciaCharla(2019053336,5,2019,2);
+    imprimirAsistenciaCharla(2019053336,2019,2,5);
 }
 
-int main()
-{
+int main(){
     baseDeDatos();
 
     //relacionarEstudiantesGrupo(2020053336,1520,53);
@@ -2056,4 +2278,17 @@ bool buscarSemestreBool(int year, int numS){
         tempS = tempS->sig;
     }
     return false;
+}
+
+Charla*buscarCharla(int year, int numS,int numC){
+    //Semestre*tempS = buscarSemestre(year,numS);
+    //if(tempS == NULL)
+      //  return NULL;
+    Charla*tempC = primerSemestre->sublistaCharla;
+    while(tempC != NULL){
+        if(tempC->numCharla == numC )
+            return tempC;
+        tempC = tempC->sig;
+    }
+return NULL;
 }
