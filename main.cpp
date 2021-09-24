@@ -500,8 +500,10 @@ Curso* insertarCurso(int creditos, string nombre, int codigo){
 //S: True si lo asocia, false si no lo asosia
 bool insertarGrupo(int unNum, int codigo){
     Curso*tempC = buscarCurso(codigo);
-    if (tempC == NULL)
+    if (tempC == NULL){
+        cout<<"\n\tVuelva a ingresar el codigo del curso..\n";
         return false;
+    }
     Grupo* newGrupo = new Grupo(unNum);
     if (tempC->sublistaGrupos == NULL){
         tempC->sublistaGrupos = newGrupo;
@@ -516,8 +518,6 @@ bool insertarGrupo(int unNum, int codigo){
         return true;
     }
     Grupo*tempGrupoAnt = NULL;
-    //Doble*temp = lista;
-    //Doble*tempAnt =NULL;
     while((tempGrupo != NULL) && (unNum > tempGrupo->numGrupo)){
                 tempGrupoAnt = tempGrupo;
                 tempGrupo = tempGrupo->sig;
@@ -531,10 +531,6 @@ bool insertarGrupo(int unNum, int codigo){
             tempGrupoAnt->sig = newGrupo;
             return true;
         }
-
-
-
-
 }
 /* imprimir los grupos
 void imprimirGrupos(int codigo){
@@ -581,6 +577,63 @@ bool relacionarProfesoresGrupo(int ced, int codigoCurso,int numGrupo){
     tempP->suGrupo = newConexion;//
     return true;
 
+}
+
+bool eleminarProfesoresGrupo(int ced, int codigoCurso, int numGrupo){
+
+    Profesor*tempP= buscarProfesor2(ced);
+    if(tempP == NULL)
+        return false;
+
+    Curso*tempC = buscarCurso(codigoCurso);
+    if(tempC == NULL)
+        return false;
+
+    if(tempP->suGrupo->enlaceG->numGrupo == numGrupo){
+    tempP->suGrupo = tempP->suGrupo->sig;
+    cout<<"\n\tSe dejo de relacion dicho profesor con el grupo "<<numGrupo<<"\n";
+    return true;
+
+    }else{
+        conexionGrupo*tempCg = tempP->suGrupo;
+        conexionGrupo*tempCgAnt = NULL;
+        while(tempCg != NULL){
+            if(tempCg->enlaceG->numGrupo == numGrupo){
+                tempCgAnt->sig = tempCg->sig;
+                cout<<"\n\tSe dejo de relacion dicho profesor con el grupo "<<numGrupo<<"\n";
+
+                return true;
+            }
+            tempCgAnt = tempCg;
+            tempCg = tempCg->sig;
+        }
+    }
+    cout<<"\n\tNO se dejo de relacion dicho profesor con el grupo "<<numGrupo<<"\n";
+    return false;
+}
+
+void imprimirProfesorGrupos(int ced, int codigoCurso){
+
+    Profesor*tempP = buscarProfesor2(ced);
+    if(tempP == NULL){
+        cout<<"Profesor no encontrado...\n";
+        return;
+    }
+    Curso*i = buscarCurso(codigoCurso);
+    if(i == NULL){
+        cout<<"Curso no encontrado...\n";
+        return;
+    }
+
+    cout<<"\n ------ Informe profesor -----\n";
+    cout<<"Nombre: "<<tempP->nombre<<"\nCedula: "<<tempP->cedula<<"\nEdad: "<<tempP->edad;
+    conexionGrupo*tempG = tempP->suGrupo;
+    cout<<"\nGrupos que imparte el curso de "<<i->nomCurso<<": ";
+    while(tempG != NULL){
+        cout<<"\n\t"<<tempG->enlaceG->numGrupo;
+        tempG = tempG->sig;
+    }
+    cout<<"\n-----------------------------------\n";
 }
 
 //punto **H** relacionar y borrar estudiantes de los grupos
@@ -1011,9 +1064,9 @@ void menuAdmin(){
         cout<<" 5 - Insertar los grupos\n";
         cout<<" 6 - Relacionar y borrar profesores con los grupos de los cursos respectivos \n";
         cout<<" 7 - Relacionar y borrar estudiantes con los grupos de los cursos\n";
-        cout<<" 8 - Relacionar los semestres con los cursos, insertar y modificar\n";
+        cout<<" 8 - Relacionar los semestres con los cursos\n";
         cout<<" 9 - Reporte 7\n";
-        cout<<" 10- Reporte 8  \n";
+        cout<<" 10- Reporte 8\n";
         cout<<" 0 - Volver a menu principal\n\n";
         cout<<" Opcion: ";
         cin>>choiceAdmin;
@@ -1166,15 +1219,14 @@ void menuAdmin(){
         menuAdmin();
         break;
 
-    case 3:
+    case 3: //falta modificar y borrar
         int choiceSem;
-        while(choiceSem != 5){
+        while(choiceSem != 4){
             cout<<"\n ----------- Acciones semestres -----------\n\n";
             cout<<" 1 - Ingresar un semestre\n";
             cout<<" 2 - Modificar un semestre\n";
             cout<<" 3 - Borrar un semestres\n";
-            cout<<" 4 - Imprimir datos de los semestres\n";
-            cout<<" 5 - Volver a menu administrador\n\n";
+            cout<<" 4 - Volver a menu administrador\n\n";
             cout<<" Opcion: ";
             cin>>choiceSem;
             if(choiceSem == 1){
@@ -1187,9 +1239,6 @@ void menuAdmin(){
 
             }
             else if(choiceSem == 4){
-
-            }
-            else if(choiceSem == 5){
                 menuAdmin();
             }else{
             cout<<"\n+++++++++++++++++++++++++++++++++++++++++++";
@@ -1199,16 +1248,175 @@ void menuAdmin(){
         }
         break;
 
-    case 4:
+    case 4://falta modificar y borrar
+        int choiceCurso;
+        while(choiceCurso != 4){
+            cout<<"\n ----------- Acciones cursos -----------\n\n";
+            cout<<" 1 - Ingresar un curso\n";
+            cout<<" 2 - Modificar un curso\n";
+            cout<<" 3 - Borrar un curso\n";
+            cout<<" 4 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceCurso;
+
+            if(choiceCurso == 1){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan para validar la existencia del curso\n\n";
+                cout<<"Ingrese el ID del curso: ";
+                int IDcurso;
+                cin>>IDcurso;
+
+                if(buscarCurso(IDcurso) != NULL){
+                    cout<<"Ingrese los datos que se le solicitan del curso a ingresar\n\n";
+                    cout<<"Numero de creditos: ";
+                    int numCre;
+                    cin>>numCre;
+
+                    cout<<"Nombre del curso: ";
+                    string nomCurso;
+                    cin>>nomCurso;
+
+                    insertarCurso(numCre,nomCurso,IDcurso);
+                }else{cout<<"Ese código de curso ya existe...\n\n";}
+
+            }else if(choiceCurso == 2){
+
+            }else if(choiceCurso == 3){
+
+            }else if(choiceCurso == 4){
+                menuAdmin();
+            }else{cout<<"Opcion no valida...\n";}}
         break;
 
     case 5:
+        int choiceGrupoCurso;
+        while(choiceGrupoCurso != 2){
+            cout<<"\n ----------- Acciones grupo con cursos -----------\n\n";
+            cout<<" 1 - Ingresar un grupo y relacionarlos con los cursos\n";
+            cout<<" 2 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceGrupoCurso;
+
+            if(choiceGrupoCurso == 1){
+                cout<<"Ingrese los datos que se le solicitan para validar la existencia del grupo y su relacion con el curso\n\n";
+                cout<<"Numero del grupo: ";
+                int numG;
+                cin>>numG;
+
+                cout<<"ID del curso a relacionar: ";
+                int IDcurso;
+                cin>>IDcurso;
+
+                if(insertarGrupo(numG,IDcurso)==true){
+                    cout<<"\n\tGrupo insertado exitosamente...\n";
+                }else{cout<<"\n\tEl grupo no se pudo insertar...\n";}
+            }else if(choiceGrupoCurso == 2){
+                menuAdmin();
+            }else{cout<<"\nOpcion no valida...\n";}
+        }
         break;
 
     case 6:
+        int choiceProGru;
+        while(choiceProGru != 4){
+            cout<<"\n ----------- Acciones profesores con los grupos -----------\n\n";
+            cout<<" 1 - Relacionar profesor con un grupo de x curso\n";
+            cout<<" 2 - Borrar un profesor con un grupo de x curso\n";
+            cout<<" 3 - Imprimir datos de las relaciones\n";
+            cout<<" 4 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceProGru;
+            if(choiceProGru == 1){
+                cout<<"Ingrese los datos que se le solicitan...\n\n";
+                cout<<"Cedula del profesor: ";
+                int ced;
+                cin>>ced;
+
+                cout<<"Codigo del curso: ";
+                int codCurso;
+                cin>>codCurso;
+
+                cout<<"Numero del grupo: ";
+                int numG;
+                cin>>numG;
+                relacionarProfesoresGrupo(ced,codCurso,numG);
+            }else if(choiceProGru == 2){
+                cout<<"Ingrese los datos que se le solicitan...\n\n";
+                cout<<"Cedula del profesor: ";
+                int ced;
+                cin>>ced;
+
+                cout<<"Codigo del curso: ";
+                int codCurso;
+                cin>>codCurso;
+
+                cout<<"Numero del grupo: ";
+                int numG;
+                cin>>numG;
+
+                eleminarProfesoresGrupo(ced,codCurso,numG);
+            }else if(choiceProGru == 3){
+                cout<<"Ingrese los datos que se le solicitan...\n\n";
+                cout<<"Cedula del profesor: ";
+                int ced;
+                cin>>ced;
+
+                cout<<"Codigo del curso: ";
+                int codCurso;
+                cin>>codCurso;
+
+                cout<<endl;
+                imprimirProfesorGrupos(ced,codCurso);
+            }else if(choiceProGru == 4){
+            menuAdmin();
+            }else{cout<<"\nOpcion no valida...\n";}
+        }
         break;
 
     case 7:
+        int choiceEstGrupo;
+        while(choiceEstGrupo != 3){
+            cout<<"\n ----------- Acciones profesores con los grupos -----------\n\n";
+            cout<<" 1 - Relacionar un estudiante a un grupo de x cursos\n";
+            cout<<" 2 - Borrar un estudiante a un grupo de x cursos\n";
+            cout<<" 4 - Volver a menu administrador\n\n";
+            cout<<" Opcion: ";
+            cin>>choiceEstGrupo;
+            if(choiceEstGrupo == 1){
+                cout<<"Ingrese los datos que se le solicitan...\n\n";
+                cout<<"Numero de carne: ";
+                int carne;
+                cin>>carne;
+
+                cout<<"Codigo del curso a relacionar: ";
+                int codCurso;
+                cin>>codCurso;
+
+                cout<<"Numero del grupo a matricular: ";
+                int numG;
+                cin>>numG;
+
+                if(relacionarEstudiantesGrupo(carne,codCurso,numG) == true){
+                    cout<<"Curso matriculado exitosamente...\n";
+                }else{cout<<"El curso no se pudo matricular...\n";}
+            }else if(choiceEstGrupo == 2){
+                cout<<"Ingrese los datos que se le solicitan...\n\n";
+                cout<<"Numero de carne: ";
+                int carnet;
+                cin>>carnet;
+
+                cout<<"Numero del grupo: ";
+                int numG;
+                cin>>numG;
+
+                /*if(borrarRelacionEstudiantesGrupo(carnet,numG) == true){
+                    cout<<"Curso borrado exitosamente...\n";
+                }else{cout<<"El curso NO se pudo borrar...\n";}*/
+
+            }else if(choiceEstGrupo == 3){
+                menuAdmin();
+            }else{cout<<"\nOpcion no valida...\n";}
+        }
         break;
 
     case 8:
@@ -1357,10 +1565,56 @@ void menuProfe(){
                     cout<<"existe ese semestre o el anno del semestre\n";
                 }
             }else if(choiceCharla == 2){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan para verificar la existencia del semestre\n\n";
 
-            }else if(choiceCharla == 3){
+                cout<<"Anno: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                if(buscarSemestreBool(anno,numSem) == true){
+                    cout<<"Ingrese los datos que se le solicitan de la charla a modificar\n\n";
+                    cout<<"ID de la charla: ";
+                    int numC;
+                    cin>>numC;
+
+                    modificarCharla(numC,anno,numSem);
+                    cout<<"\n";
+                    }
+
+            }else if(choiceCharla == 3){//Eliminar charla
 
             }else if(choiceCharla == 4){
+                cout<<"\n";
+                cout<<"Ingrese los datos que se le solicitan para verificar la existencia del semestre\n\n";
+
+                cout<<"Anno: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                if(buscarSemestreBool(anno,numSem) == true){
+                    Semestre*tempS = buscarSemestre(anno,numSem);
+                    Charla*tempC = tempS->sublistaCharla;
+                    while(tempC->sig != NULL){
+                        cout<<"\n---------- Charla ----------\n";
+                        cout<<"Nombre: "<<tempC->tipoCharla<<endl;
+                        cout<<"Numero de charla: "<<tempC->numCharla<<endl;
+                        cout<<"Fecha: "<<tempC->dia<<"/"<<tempC->mes<<"/"<<tempC->anno<<endl;
+                        tempC = tempC->sig;
+                    }
+                        cout<<"\n---------- Charla ----------\n";
+                        cout<<"Nombre: "<<tempC->tipoCharla<<endl;
+                        cout<<"Numero de charla: "<<tempC->numCharla<<endl;
+                        cout<<"Fecha: "<<tempC->dia<<"/"<<tempC->mes<<"/"<<tempC->anno<<endl;
+                }else{cout<<"Dicho semestre o año no se encuentra...\n\n";}
                 break;
             }
         }
@@ -1521,6 +1775,8 @@ void baseDeDatos(){
 
     //insertar profesor con grupos
     relacionarProfesoresGrupo(1001,1520,53);
+    relacionarProfesoresGrupo(1001,1520,51);
+    relacionarProfesoresGrupo(1001,1520,52);
     //imprimirInformeMatricula(1001);
 
     //Relaciona los semestres con los cursos
