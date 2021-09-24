@@ -1197,15 +1197,12 @@ bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
     ReporteCharla*newReporteAsistencia = new ReporteCharla();
     AsistenciaCharla*confirmarA = new AsistenciaCharla();
 
-    tempE->enlaceCharla = newReporteAsistencia;
-    newReporteAsistencia->enlaceAsistenciaCharla = confirmarA;
-    confirmarA->enlaceCharla = tempC;
-
     newReporteAsistencia->sig = tempE->enlaceCharla;
+    tempE->enlaceCharla = newReporteAsistencia;
     confirmarA->sig = newReporteAsistencia->enlaceAsistenciaCharla;
-
+    newReporteAsistencia->enlaceAsistenciaCharla = confirmarA;
+    newReporteAsistencia->enlaceAsistenciaCharla->enlaceCharla = buscarCharla(anno,numS,idChar);
     return true;
-
 }
 
 bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
@@ -1218,21 +1215,28 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
 
     AsistenciaCharla*tempAsis = tempR->enlaceAsistenciaCharla;
 
-    Charla*tempC = tempAsis->enlaceCharla;
-    if(tempC == NULL)
-        return false;
+    //Charla*tempC = tempAsis->enlaceCharla;
+
+    //if(tempC == NULL)
+      //  return false;
 
     cout<<"\n----------------------------------------\n";
     cout<<"Nombre: "<<tempE->nombre<<"\nCedula: "<<tempE->carnet<<"\nCarrera: "<<tempE->carrera<<"c\n";
 
 
-    while(tempC != NULL){
-        cout<<"\tTipo de charla: "<<tempC->tipoCharla<<endl;
-        tempC = tempC->sig;
+    while(tempAsis != NULL){
+        cout<<"\tTipo de charla: "<<tempAsis->enlaceCharla->tipoCharla<<endl;
+        tempAsis = tempAsis->sig;
         //return true;
     }
     //cout<<"\t\nTipo de charla: "<<tempC->tipoCharla<<endl;
     return NULL;
+}
+
+bool reporte1(){
+
+
+
 }
 
 //Menus
@@ -2075,13 +2079,14 @@ void baseDeDatos(){
     insertarCharlas(5,"Nuevo primero",2,2019,2,04);
     insertarCharlas(4,"Segundo",2,2019,11,04);
     insertarCharlas(2,"Primero",2,2019,10,04);
-    insertarCharlas(3,"tercero",2,2019,12,04);
+    //insertarCharlas(3,"tercero",2,2019,12,04);
 
 
     //imprimirCharlas();
 
-    registrarAsistenciaCharla(2019053336,5,2019,2);
-    imprimirAsistenciaCharla(2019053336,2019,2,5);
+    //registrarAsistenciaCharla(2019053336,1,2019,2);
+    registrarAsistenciaCharla(2019053336,2,2019,2);
+    imprimirAsistenciaCharla(2019053336,2019,2,1);
 }
 
 int main(){
@@ -2274,10 +2279,11 @@ bool buscarSemestreBool(int year, int numS){
 }
 
 Charla*buscarCharla(int year, int numS,int numC){
-    //Semestre*tempS = buscarSemestre(year,numS);
-    //if(tempS == NULL)
-      //  return NULL;
-    Charla*tempC = primerSemestre->sublistaCharla;
+    Semestre*tempS = buscarSemestre(year,numS);
+    if(tempS == NULL)
+        return NULL;
+    Charla*tempC = tempS->sublistaCharla; //primerSemestre->sublistaCharla;
+
     while(tempC != NULL){
         if(tempC->numCharla == numC )
             return tempC;
