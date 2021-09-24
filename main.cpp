@@ -569,10 +569,6 @@ bool modificarCurso(string tipo,string nombre,int creditos,int codigo){ //si no 
         return true;
     }
 }
-
-
-
-
 void imprimirCursos(){
     Curso*tempC = primerCurso;
     do{
@@ -626,29 +622,6 @@ bool insertarGrupo(int unNum, int codigo){
 
 
 }
-/* imprimir los grupos
-void imprimirGrupos(int codigo){
-
-        Curso *tempC = buscarCurso(codigo);
-
-        if(tempC== NULL){
-            cout<<"No se encuentra el curso";
-            return;
-        }
-         cout<<"\n--------------------------INFORME DE MATRICULA ---------------------------------------\n";
-
-        cout<<"\nLos grupos de: "<<tempC->nomCurso<<" es: "<<endl;
-        Grupo *tempG = tempC->sublistaGrupos;
-
-        while(tempG != NULL){
-
-            cout<<"\t"<<tempG->numGrupo<<endl;
-            tempG = tempG->sig;
-        }
-
-        cout<<"\n--------------------------ULTIMA LINEA ---------------------------------------\n";
-
-}*/
 
 //Punto "G"
 bool relacionarProfesoresGrupo(int ced, int codigoCurso,int numGrupo){
@@ -690,7 +663,36 @@ bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
     tempE ->enlaceReporte = newReporte;// inserta al inicio de la sublista de matricula
     return true;
 }
+bool borrarRelacionEstudiantesGrupo(int carnet, int numGrupo){
 
+    Estudiante*tempE = buscarEstudianteReturn(carnet);
+    if (tempE == NULL);
+        return false;
+    ReporteEstudiante*tempReporte = tempE->enlaceReporte;
+    if (tempReporte == NULL)
+        return false;
+    if (tempReporte->enlaceGrupo->numGrupo == numGrupo ){
+        tempE->enlaceReporte = tempReporte->sig;
+        return true;
+
+    }else{
+        ReporteEstudiante*tempReporteAnt =NULL;
+        while (tempReporte != NULL){
+
+            if (tempReporte->enlaceGrupo->numGrupo == numGrupo){
+                tempReporteAnt->sig == tempReporte->sig;
+                return true;
+            }
+            tempReporteAnt = tempReporte;
+            tempReporte= tempReporte->sig;
+        }
+
+
+        return false;
+
+    }
+
+}
 //Punto "i"
 bool relacionarSemestresCursos(int year, int numS, int codC){
 
@@ -734,6 +736,8 @@ void imprimirInformeMatricula(int year, int numS){
 
 };
 
+
+//Punto "J"
 //Inserción de las evaluaciones
 bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempP == NULL){
@@ -959,7 +963,6 @@ return true;
 
 }
 
-//Punto "j"
 bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int year, int codCurso, int numGrupo, int cedula)
 {
     Profesor*tempProfesor = buscarProfesor2(cedula);
@@ -1069,7 +1072,6 @@ return true;
 
 return true;
 }
-
 bool modificarCharla(int id, int anSemestre, int numSem){//MOdifica el nombre de la charla
 
     //cout<<"Que se desea modificar: "
@@ -1087,6 +1089,16 @@ bool modificarCharla(int id, int anSemestre, int numSem){//MOdifica el nombre de
 
 
 }
+//punto **L**
+bool registrarActividad(int numCarnet, int numCurso, int numGrupo,int numAsignacion, string tipoActividad){
+
+
+
+
+-}
+
+
+
 
 //Menus
 void menuAdmin(){
