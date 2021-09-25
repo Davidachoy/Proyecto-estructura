@@ -149,12 +149,12 @@ struct Evaluacion{//Simple list de evaluaciones
     int id;
     Evaluacion*sig;
 
-    Evaluacion(string name, int day, int month, int a, int id){
+    Evaluacion(string name, int day, int month, int a, int idAct){
     nombre      = name;
     dia         = day;
     mes         = month;
     year        = a;
-    id          = id;
+    id          = idAct;
 
     sig   = NULL;
 
@@ -722,7 +722,7 @@ bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
 bool borrarRelacionEstudiantesGrupo(int carnet, int numGrupo){
 
     Estudiante*tempE = buscarEstudianteReturn(carnet);
-    if (tempE == NULL);
+    if (tempE == NULL)
         return false;
     ReporteEstudiante*tempReporte = tempE->enlaceReporte;
     if (tempReporte == NULL)
@@ -1019,7 +1019,7 @@ return true;
 
 }
 
-bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int year, int codCurso, int numGrupo, int cedula){
+bool asignarAsignaciones(string tipo, int idAct, string nom, int dia, int mes, int year, int codCurso, int numGrupo, int cedula){
     Profesor*tempProfesor = buscarProfesor2(cedula);
     if (tempProfesor == NULL){
         return false;
@@ -1035,8 +1035,7 @@ bool asignarAsignaciones(string tipo, int id, string nom, int dia, int mes, int 
             if (tempConexion->enlaceG->enlaceCurso->codigo == codCurso){
 
                     Grupo*tempGrupo = tempConexion->enlaceG;
-
-                    Evaluacion*nuevaEvaluacion = new Evaluacion(nom,dia,mes,year,id);
+                    Evaluacion*nuevaEvaluacion = new Evaluacion(nom,dia,mes,year,idAct);
                     if (tipo == "Proyecto"){
 
                             insertarProyecto(nuevaEvaluacion,tempGrupo);
@@ -1185,11 +1184,116 @@ bool borrarCharla(int numC, int anSemestre, int numSem){//No funciona del todo
     return false;
 }
 //punto **L**
-bool buscarCalificacion(ReporteEstudiante*lista,  string tipo , int idActividad){
+bool buscarCalificacion(ReporteEstudiante*lista , int idActividad){
+    Calificaciones*tempC = lista->enlaceEvaluaciones;
+
+    while (tempC!=NULL){
+        if (tempC->enlaceEvaluaciones->id == idActividad)
+            return true;
+        tempC= tempC->sig;
+
+
+    }
+    return false;
 
 }
 
-Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo , string tipo ,int idActividad){
+Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo, string tipo,int idActividad)
+{
+    Curso*tempC = buscarCurso(codigoCurso);
+    if (tempC == NULL)
+        return NULL;
+    Grupo*tempG = buscarGrupo(idGrupo,tempC);
+    if (tempG == NULL)
+        return NULL;
+
+    if (tipo == "Proyecto")
+    {
+        Evaluacion*tempE = tempG->tempP;
+        if (tempE == NULL)
+            return NULL;
+        while (tempE != NULL)
+        {
+            if (tempE->id == idActividad)
+            {
+
+                return tempE;
+            }
+
+
+            tempE= tempE->sig;
+
+
+        }
+
+        return NULL;
+
+
+    }
+    else if(tipo=="Tarea")
+    {
+        Evaluacion*tempE = tempG->tempTC;
+        if (tempE == NULL)
+            return NULL;
+        while (tempE != NULL)
+        {
+            if (tempE->id == idActividad)
+                return tempE;
+
+            tempE= tempE->sig;
+
+
+        }
+
+        return NULL;
+
+
+    }
+    else if(tipo == "Examen")
+    {
+        Evaluacion*tempE = tempG->tempExa;
+        if (tempE == NULL)
+            return NULL;
+        while (tempE != NULL)
+        {
+            if (tempE->id == idActividad)
+                return tempE;
+
+            tempE= tempE->sig;
+
+
+        }
+
+        return NULL;
+
+
+    }
+    else if(tipo == "Giras")
+    {
+        Evaluacion*tempE = tempG->tempG;
+        if (tempE == NULL)
+            return NULL;
+        while (tempE != NULL)
+        {
+            if (tempE->id == idActividad)
+                return tempE;
+
+            tempE= tempE->sig;
+
+
+        }
+
+        return NULL;
+
+
+    }
+    else
+    {
+        return NULL;
+    }
+
+    cout<<"llego hasta el punto 4 "<<endl;
+
 
 
 
@@ -1223,6 +1327,7 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
     Evaluacion*tempEvaluacion = buscarEvaluacion(codigoCurso,idGrupo , tipo ,idActividad);
 
 
+
     Calificaciones*nuevaCalificacion = new Calificaciones();
     if(tempReporte->enlaceEvaluaciones == NULL){
 
@@ -1231,12 +1336,16 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
         return true;
 
     }
-    if(buscarCalificacion(tempReporte,tipo, idActividad) == true )
+    if(buscarCalificacion(tempReporte, idActividad) == true )
         return false;
+
     Calificaciones*tempCalificaciones =tempReporte->enlaceEvaluaciones;
     Calificaciones*tempCalificacionesAnterior = NULL;
+    cout<<"llega hasta aqui"<<endl;
 
     while (tempCalificaciones != NULL){
+
+
 
 
 
@@ -1244,8 +1353,10 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
         tempCalificaciones = tempCalificaciones->sig;
     }
 
-    tempCalificaciones->sig = nuevaCalificacion;
+    tempCalificacionesAnterior->sig = nuevaCalificacion;
+
     nuevaCalificacion->enlaceEvaluaciones = tempEvaluacion;
+
     return true;
 
 
@@ -2101,16 +2212,17 @@ void menuUsuarios(){
     }while(repetir);
 }
 
-/*void imprimirEvaluacion(){
+void imprimirEvaluacion2(){
+    cout<<"LOOOOL";
     Curso*tempC = buscarCurso(1520);
     Grupo*tempG = buscarGrupo(53,tempC);
     Evaluacion*tempE = tempG->tempP;
     while(tempE != NULL){
-        cout<<tempE->nombre<<endl;
+        cout<<tempE->id<<endl;
         tempE = tempE->sig;
     }
 }
-*/
+
 
 void imprimirEvaluacion(int codCurso,int numGrupo){
     Curso*tempC = buscarCurso(codCurso);
@@ -2152,6 +2264,24 @@ void imprimirCharlas(){
 
 }
 
+void imprimirCalificacion(){
+    Estudiante*tempE = buscarEstudianteReturn(2019053336);
+    ReporteEstudiante*tempRe= tempE->enlaceReporte;
+    Calificaciones*tempC= tempRe->enlaceEvaluaciones;
+    do{
+        cout<<tempC->enlaceEvaluaciones->nombre<<endl;
+        tempC = tempC->sig;
+
+
+    }while(tempC != NULL);
+
+
+
+
+}
+
+
+
 void baseDeDatos(){
 
     //Semestres insertados
@@ -2169,7 +2299,7 @@ void baseDeDatos(){
     insertarAdmin("Admin5");
 
     //insertar profesores
-    insertarInicio("Hilary",1001,45);
+    insertarInicio("Hilary"   ,1001,45);
     insertarInicio("David"   , 702900638, 37);
     insertarInicio("Sofia"   , 645900638, 25);
     insertarInicio("Juan"    , 204500638, 27);
@@ -2217,6 +2347,7 @@ void baseDeDatos(){
 
     //Asignacion de evaluaciones
     asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
+
     asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
     asignarAsignaciones("Examen",123,"Parcial 1",01,06,2020,1520,53,1001);
@@ -2225,7 +2356,7 @@ void baseDeDatos(){
     asignarAsignaciones("Examen",123,"Laboratorio II",7,04,2020,1545,02,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
-    //imprimirEvaluacion();
+   // imprimirEvaluacion2();
 
     //insertar charlas
     insertarCharlas(0,"Nuevo ultimo",2,2019,5,07);
@@ -2241,6 +2372,17 @@ void baseDeDatos(){
     //registrarAsistenciaCharla(2019053336,1,2019,2);
     registrarAsistenciaCharla(2019053336,2,2019,2);
     imprimirAsistenciaCharla(2019053336,2019,2,1);
+
+
+    relacionarEstudiantesGrupo(2019053336,1520,53);
+
+    registrarActividad(2019053336,1520,53,109,"Proyecto");
+    registrarActividad(2019053336,1520,53,53,"Proyecto");
+
+    imprimirCalificacion();
+
+
+
 
     //reporte2(1001,2019,2);
 }
