@@ -1078,21 +1078,20 @@ bool insertarCharlas(int id, string nomCharla, int numSem, int anSemestre, int d
    Charla*newCharla = new Charla(nomCharla,id,day,month,anSemestre);
 
    Semestre*tempS = primerSemestre;
+   Charla*tempChar = tempS->sublistaCharla;
 
-   if(tempS->anno == anSemestre && tempS->numSemestre == numSem){
-    if(tempS->sublistaCharla == NULL){
-    tempS->sublistaCharla = newCharla;
-    return true;
+   if(tempS->sublistaCharla == NULL){
+        tempS->sublistaCharla = newCharla;
+        return true;
    }
 
-   Charla*tempChar = tempS->sublistaCharla;
-   if(tempChar->mes > newCharla->mes){
+   if(tempChar->mes == newCharla->mes && tempChar->dia > newCharla->dia){
     newCharla->sig = tempChar;
     tempS->sublistaCharla = newCharla;
     return true;
    }
 
-   if(tempChar->mes == newCharla->mes && tempChar->dia > newCharla->dia){
+    if(tempChar->mes > newCharla->mes){
     newCharla->sig = tempChar;
     tempS->sublistaCharla = newCharla;
     return true;
@@ -1103,6 +1102,11 @@ bool insertarCharlas(int id, string nomCharla, int numSem, int anSemestre, int d
         if(tempChar->mes == newCharla->mes){
             if(tempChar->dia > newCharla->dia)
                 break;
+        }
+        if(tempChar->anno == newCharla->anno){
+            if(tempChar->mes > newCharla->mes){
+                break;
+            }
         }
         tempCharlaAnt = tempChar;
         tempChar = tempChar->sig;
@@ -1118,40 +1122,24 @@ bool insertarCharlas(int id, string nomCharla, int numSem, int anSemestre, int d
     return true;
 
    }
-
-return true;
-   }
-
-return true;
+return false;
 }
 
-bool modificarCharla(int id, int anSemestre, int numSemn, string nuevoName){//Modifica el nombre de la charla //No funciona del todo
+bool modificarCharla(int IDcharla, int anSemestre, int numSemn, string nuevoName){//Modifica el nombre de la charla //No funciona del todo
 
-    Semestre*tempS = buscarSemestre(anSemestre,numSemn);
-    if(tempS == NULL)
-        return false;
-
-    Charla*tempC = tempS->sublistaCharla;
+    Charla*tempC = buscarCharla(anSemestre,numSemn,IDcharla);
     if(tempC == NULL)
         return false;
 
     else{
-    while(tempS->sublistaCharla->sig != NULL){
-        if(tempS->sublistaCharla->numCharla == id){
-            tempS->sublistaCharla->tipoCharla = nuevoName;
+    while(tempC != NULL){
+        if(tempC->numCharla == IDcharla){
+            tempC->tipoCharla = nuevoName;
             return true;
             }
-        tempS->sublistaCharla = tempS->sublistaCharla->sig;
+        tempC = tempC->sig;
         }
     }
-    /*
-    while(tempS->sublistaCharla != NULL){
-        if(tempS->sublistaCharla->numCharla == id){
-            tempS->sublistaCharla->tipoCharla = nuevoName;
-            return true;
-        }
-        tempS->sublistaCharla = tempS->sublistaCharla->sig;
-    }*/
     return false;
 }
 
@@ -1248,30 +1236,19 @@ bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
     if(tempE == NULL)
         return false;
 
-    Semestre*tempS = buscarSemestre(anno,numS);
-    if(tempS == NULL)
-        return false;
-
-    Charla*tempC = tempS->sublistaCharla;
+    Charla*tempC = buscarCharla(anno,numS,idChar);
     if(tempC == NULL)
         return false;
 
-    while(tempC != NULL){
-        if(tempS->sublistaCharla->numCharla == idChar){
-            if(tempC->numCharla == idChar){
-                ReporteCharla*newReporteAsistencia = new ReporteCharla();
-                AsistenciaCharla*confirmarA = new AsistenciaCharla();
+    ReporteCharla*newReporteAsistencia = new ReporteCharla();
+    AsistenciaCharla*confirmarA = new AsistenciaCharla();
 
-                tempE->enlaceCharla = newReporteAsistencia;
-                newReporteAsistencia->enlaceAsistenciaCharla = confirmarA;
-                confirmarA->enlaceCharla = tempC;
-                newReporteAsistencia->sig = tempE->enlaceCharla;
-                confirmarA->sig = newReporteAsistencia->enlaceAsistenciaCharla;
-
-                return true;
-            }
-        }
-    }
+    newReporteAsistencia->sig = tempE->enlaceCharla;
+    tempE->enlaceCharla = newReporteAsistencia;
+    confirmarA->sig = newReporteAsistencia->enlaceAsistenciaCharla;
+    newReporteAsistencia->enlaceAsistenciaCharla = confirmarA;
+    newReporteAsistencia->enlaceAsistenciaCharla->enlaceCharla = buscarCharla(anno,numS,idChar);
+    return true;
 }
 
 bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
@@ -1284,20 +1261,28 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
 
     AsistenciaCharla*tempAsis = tempR->enlaceAsistenciaCharla;
 
-    Charla*tempC = tempAsis->enlaceCharla;
-    if(tempC == NULL)
-        return false;
+    //Charla*tempC = tempAsis->enlaceCharla;
+
+    //if(tempC == NULL)
+      //  return false;
 
     cout<<"\n----------------------------------------\n";
     cout<<"Nombre: "<<tempE->nombre<<"\nCedula: "<<tempE->carnet<<"\nCarrera: "<<tempE->carrera<<"c\n";
 
-    while(tempC != NULL){
-        cout<<"\tTipo de charla: "<<tempC->tipoCharla<<endl;
-        tempC = tempC->sig;
+
+    while(tempAsis != NULL){
+        cout<<"\tTipo de charla: "<<tempAsis->enlaceCharla->tipoCharla<<endl;
+        tempAsis = tempAsis->sig;
         //return true;
     }
     //cout<<"\t\nTipo de charla: "<<tempC->tipoCharla<<endl;
     return NULL;
+}
+
+bool reporte1(){
+
+
+
 }
 
 //Menus
@@ -1859,7 +1844,9 @@ void menuProfe(){
                     int month;
                     cin>>month;
 
-                    insertarCharlas(numC,nombreC,numSem,anno,day,month);
+                    if(insertarCharlas(numC,nombreC,numSem,anno,day,month) == true){
+                        cout<<"La charla se inserto correctamente...\n";
+                    }else{cout<<"La charla NO se logro insertar..\n";}
                 }else{
                     cout<<"\nNo se pudo crear la charla debido a que no\n";
                     cout<<"existe ese semestre o el anno del semestre\n";
@@ -1901,9 +1888,12 @@ void menuProfe(){
                 int numSem;
                 cin>>numSem;
 
-                borrarCharla(IDcharla,anno,numSem);
-                imprimirCharlas();
+                if(borrarCharla(IDcharla,anno,numSem) == true){
+                    cout<<"Charla borrado exitosamente...\n";
+                }else{cout<<"La charla NO se pudo borrar...\n";}
+
             }else if(choiceCharla == 4){
+                menuProfe();
                 break;
             }
         }
@@ -1985,7 +1975,10 @@ void menuEst(){
         int numS;
         cin>>numS;
 
-        registrarAsistenciaCharla(cedEst,numC,anno,numS);
+        if(registrarAsistenciaCharla(cedEst,numC,anno,numS) == true){
+            cout<<"Asistencia confirmada...\n";
+            imprimirAsistenciaCharla(cedEst,anno,numS,numC);
+        }else{cout<<"NO se pudo registrar la asistencia...\n";}
 
         break;
 
@@ -2127,14 +2120,19 @@ void baseDeDatos(){
     //imprimirEvaluacion();
 
     //insertar charlas
+    insertarCharlas(0,"Nuevo ultimo",2,2019,5,07);
     insertarCharlas(1,"Ultimo",2,2019,1,05);
+    insertarCharlas(5,"Nuevo primero",2,2019,2,04);
+    insertarCharlas(4,"Segundo",2,2019,11,04);
     insertarCharlas(2,"Primero",2,2019,10,04);
-    insertarCharlas(3,"Embarazo",2,2019,11,04);
-    insertarCharlas(5,"Drogas",2,2019,2,04);
-    imprimirCharlas();
+    //insertarCharlas(3,"tercero",2,2019,12,04);
 
-    registrarAsistenciaCharla(2019053336,5,2019,2);
-    imprimirAsistenciaCharla(2019053336,2019,2,5);
+
+    //imprimirCharlas();
+
+    //registrarAsistenciaCharla(2019053336,1,2019,2);
+    registrarAsistenciaCharla(2019053336,2,2019,2);
+    imprimirAsistenciaCharla(2019053336,2019,2,1);
 }
 
 int main(){
@@ -2327,10 +2325,11 @@ bool buscarSemestreBool(int year, int numS){
 }
 
 Charla*buscarCharla(int year, int numS,int numC){
-    //Semestre*tempS = buscarSemestre(year,numS);
-    //if(tempS == NULL)
-      //  return NULL;
-    Charla*tempC = primerSemestre->sublistaCharla;
+    Semestre*tempS = buscarSemestre(year,numS);
+    if(tempS == NULL)
+        return NULL;
+    Charla*tempC = tempS->sublistaCharla; //primerSemestre->sublistaCharla;
+
     while(tempC != NULL){
         if(tempC->numCharla == numC )
             return tempC;
