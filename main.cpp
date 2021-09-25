@@ -1194,6 +1194,52 @@ bool borrarCharla(int numC, int anSemestre, int numSem){//No funciona del todo
     return false;
 }
 //punto **L**
+bool registrarActividadesEstudiante(int numCarnet, int codigoCurso,int codigoGrupo, int idEvaluacion, string tipo ){
+    Estudiante*tempE = buscarEstudianteReturn(numCarnet);
+    if (tempE ==NULL)
+        return false;
+    ReporteEstudiante*tempReporte = tempE->enlaceReporte;
+    if (tempReporte == NULL)
+        return false;
+    while (tempReporte != NULL){
+        if (tempReporte->enlaceGrupo->numGrupo == codigoGrupo){
+            if (tempReporte->enlaceGrupo->enlaceCurso->codigo == codigoCurso){
+                break;
+
+            }else{
+            return false;
+            }
+
+        }else{
+        return false;
+
+        }
+        tempReporte= tempReporte->sig;
+
+    }
+    if (tempReporte == NULL)
+        return false;
+
+    Calificaciones*calificacionesNueva = new Calificaciones();
+
+    Calificaciones*tempCalificacion = tempReporte->enlaceEvaluaciones;
+    if (tempCalificacion == NULL){
+
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+}
+
+
 
 //punto "m"
 bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
