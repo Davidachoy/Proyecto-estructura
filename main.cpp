@@ -64,12 +64,14 @@ struct Estudiante{//Simple list del estudiante
 struct Semestre{//Double list
     int anno;
     int numSemestre;
+    string tipo;
     Semestre*sig,*ant;
     //structs
     struct Charla*sublistaCharla; // conecta con la estructura de charla
     struct ConexionCurso*enlaceConexionCurso;//conecta con un auxiliar
 
-    Semestre(int unAnno, int unNumSemestre){
+    Semestre(int unAnno, int unNumSemestre, string tipoSemestre){
+    tipo = tipoSemestre;
     anno = unAnno;
     numSemestre  = unNumSemestre;
     //structs
@@ -419,9 +421,9 @@ Charla*buscarCharla(int year, int numS, int numCharla);
 //punto **D** inserta y modificar semestres     falta modificar
 //E: anno y numsemestre
 //S: semestre creado de forma ordenada en lista doble
-Semestre* insertarSemestreOrdenado(int anno,int numSemestre){
+Semestre* insertarSemestreOrdenado(int anno,int numSemestre,string tipo){
 
-        Semestre *newSemestre = new Semestre(anno,numSemestre);
+        Semestre *newSemestre = new Semestre(anno,numSemestre,tipo);
 
         if(primerSemestre == NULL)
             primerSemestre = newSemestre;
@@ -1182,7 +1184,91 @@ bool borrarCharla(int numC, int anSemestre, int numSem){//No funciona del todo
     return false;
 }
 //punto **L**
+bool buscarCalificacion(ReporteEstudiante*lista,  string tipo , int idActividad){
 
+}
+
+Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo , string tipo ,int idActividad){
+
+
+
+
+
+}
+
+
+
+
+
+bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad, string tipo){
+    Estudiante*tempE = buscarEstudianteReturn(carnet);
+    if(tempE == NULL)
+        return false;
+    ReporteEstudiante*tempReporte = tempE->enlaceReporte;
+    if (tempReporte == NULL)
+        return false;
+
+    while(tempReporte != NULL){
+        if(tempReporte->enlaceGrupo->numGrupo == idGrupo){
+            if(tempReporte->enlaceGrupo->enlaceCurso->codigo == codigoCurso){
+                Grupo*tempGrupo = tempReporte->enlaceGrupo;
+                break;
+
+            }else{
+            return false;
+            }
+        }else{
+        return false;}
+
+        tempReporte = tempReporte->sig;
+
+    }
+    Evaluacion*tempEvaluacion = buscarEvaluacion(codigoCurso,idGrupo , tipo ,idActividad);
+
+
+    Calificaciones*nuevaCalificacion = new Calificaciones();
+    if(tempReporte->enlaceEvaluaciones == NULL){
+
+        tempReporte->enlaceEvaluaciones = nuevaCalificacion;
+        nuevaCalificacion->enlaceEvaluaciones = tempEvaluacion;
+        return true;
+
+    }
+    if(buscarCalificacion(tempReporte,tipo, idActividad) == true )
+        return false;
+    Calificaciones*tempCalificaciones =tempReporte->enlaceEvaluaciones;
+    Calificaciones*tempCalificacionesAnterior = NULL;
+
+    while (tempCalificaciones != NULL){
+
+
+
+        tempCalificacionesAnterior = tempCalificaciones;
+        tempCalificaciones = tempCalificaciones->sig;
+    }
+
+    tempCalificaciones->sig = nuevaCalificacion;
+    nuevaCalificacion->enlaceEvaluaciones = tempEvaluacion;
+    return true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 //punto "m"
 bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
 
@@ -1426,7 +1512,9 @@ void menuAdmin(){
                 int numSem;
                 cin>>numSem;
 
-                if(insertarSemestreOrdenado(anno,numSem) != NULL){
+                string tipo;////////////////////////////////////////////////////////////////////////////////////////////////////////////falta
+
+                if(insertarSemestreOrdenado(anno,numSem,tipo) != NULL){
                     cout<<"Semestre insertado exitosamente...\n";
                 }else{cout<<"El semestre NO se puedo insertar...\n";}
             }
@@ -2001,11 +2089,11 @@ void imprimirCharlas(){
 void baseDeDatos(){
 
     //Semestres insertados
-    insertarSemestreOrdenado(2019,2);
-    insertarSemestreOrdenado(2020,2);
-    insertarSemestreOrdenado(2020,1);
-    insertarSemestreOrdenado(2021,1);
-    insertarSemestreOrdenado(2021,2);
+    insertarSemestreOrdenado(2019,2, "Presencial");
+    insertarSemestreOrdenado(2020,2, "Virtual");
+    insertarSemestreOrdenado(2020,1, "Presencial");
+    insertarSemestreOrdenado(2021,1, "Virtual");
+    insertarSemestreOrdenado(2021,2, "Presencial");
 
     //Administradores insertados
     insertarAdmin("Admin1");
