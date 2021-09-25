@@ -406,6 +406,7 @@ void borrarEst(int num){//Borra a un estudiante por su número de carnet
 void imprimirEstudiante();
 void imprimirProfesor();
 void imprimirCharlas();
+void imprimirEvaluacion(int codCurso, int numGrupo);
 
 //Metodos de buscar
 bool buscarEstudiante(int num);
@@ -1196,10 +1197,6 @@ Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo , string tipo ,int idAc
 
 }
 
-
-
-
-
 bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad, string tipo){
     Estudiante*tempE = buscarEstudianteReturn(carnet);
     if(tempE == NULL)
@@ -1269,6 +1266,7 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
 
 
 }
+
 //punto "m"
 bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
 
@@ -1319,10 +1317,36 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
     return NULL;
 }
 
-bool reporte1(){
+void reporte2(int cedPro, int anno, int numS){
 
+    Profesor*tempP = buscarProfesor2(cedPro);
+    if(tempP == NULL){
+        cout<<"El profesor no se encuentra..\n\n";
+        return;
+    }
+    Semestre*tempS = buscarSemestre(anno,numS);
+    if(tempS == NULL){
+        cout<<"El semestre no se encuentra..\n\n";
+        return;
+    }
+    cout<<"--------------------------------------\n";
+    cout<<"\nNombre del profesor: "<<tempP->nombre;
+    cout<<"\nCedula: "<<tempP->cedula;
+    cout<<"\nEdad: "<<tempP->edad;
+    conexionGrupo*tempConex = tempP->suGrupo;
 
+    Grupo*tempG = tempConex->enlaceG;
 
+    Evaluacion*tempEva = tempG->tempP;
+
+    Curso*tempC = tempG->enlaceCurso;
+    cout<<"\n------------- Reporte ---------------\n";
+    while(tempConex != NULL){
+        cout<<"\nCurso: "<<tempConex->enlaceG->enlaceCurso->nomCurso<<"\tGrupo: "<<tempConex->enlaceG->numGrupo<<"\n\n";
+        imprimirEvaluacion(tempConex->enlaceG->enlaceCurso->codigo,tempConex->enlaceG->numGrupo);
+        cout<<"\n--------------------------------------\n";
+        tempConex = tempConex->sig;
+    }
 }
 
 //Menus
@@ -1957,8 +1981,21 @@ void menuProfe(){
             if(choiceReporte == 1){
 
             }
-            else if(choiceReporte == 2){
+            else if(choiceReporte == 2){//reporte 2
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+                cout<<"Cedula del profesor: ";
+                int cedProfe;
+                cin>>cedProfe;
 
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+
+                reporte2(cedProfe,anno,numSem);
             }
             else if(choiceReporte == 3){
 
@@ -2064,7 +2101,7 @@ void menuUsuarios(){
     }while(repetir);
 }
 
-void imprimirEvaluacion(){
+/*void imprimirEvaluacion(){
     Curso*tempC = buscarCurso(1520);
     Grupo*tempG = buscarGrupo(53,tempC);
     Evaluacion*tempE = tempG->tempP;
@@ -2072,6 +2109,35 @@ void imprimirEvaluacion(){
         cout<<tempE->nombre<<endl;
         tempE = tempE->sig;
     }
+}
+*/
+
+void imprimirEvaluacion(int codCurso,int numGrupo){
+    Curso*tempC = buscarCurso(codCurso);
+    Grupo*tempG = buscarGrupo(numGrupo,tempC);
+
+    Evaluacion*Proyecto = tempG->tempP;
+    Evaluacion*Tarea = tempG->tempTC;
+    Evaluacion*Examen = tempG->tempExa;
+    Evaluacion*Giras = tempG->tempG;
+
+    while(Proyecto != NULL){
+        cout<<"Proyecto: "<<Proyecto->nombre<<endl;
+        Proyecto = Proyecto->sig;
+    }
+    while(Tarea != NULL){
+        cout<<"Tarea: "<<Tarea->nombre<<endl;
+        Tarea = Tarea->sig;
+    }
+    while(Examen != NULL){
+        cout<<"Examenen: "<<Examen->nombre<<endl;
+        Examen = Examen->sig;
+    }
+    while(Giras != NULL){
+        cout<<"Gira: "<<Giras->nombre<<endl;
+        Giras = Giras->sig;
+    }
+
 }
 
 void imprimirCharlas(){
@@ -2120,26 +2186,26 @@ void baseDeDatos(){
     //insertar cursos
     insertarCurso(5,"Mate Discreta", 1520);
     insertarCurso(2,"Programacion basica", 1535);
-
-
     insertarCurso(5,"Dibujo tecnico", 1545);
 
-    borrarCurso(1545);
+    //borrarCurso(1545);
     imprimirCursos();
    // primerCurso        =  insertarCurso(5,"Comunicacion escrita", 1512);
    // primerCurso        =  insertarCurso(5,"Deporte", 1510);
 
     //insertar Grupos
-   // insertarGrupo(53,1520);
-   // insertarGrupo(51,1520);
-   // insertarGrupo(52,1520);
-  //  insertarGrupo(40,1512);
-  //  insertarGrupo(35,1510);
-  //  insertarGrupo(02,1545);
-  //  insertarGrupo(15,1535);
+    insertarGrupo(53,1520);
+    insertarGrupo(51,1520);
+    insertarGrupo(52,1520);
+    insertarGrupo(40,1512);
+    insertarGrupo(35,1510);
+    insertarGrupo(02,1545);
+    insertarGrupo(15,1535);
 
     //insertar profesor con grupos
-//relacionarProfesoresGrupo(1001,1520,53);
+    relacionarProfesoresGrupo(1001,1520,53);
+    relacionarProfesoresGrupo(1001,1545,02);
+    relacionarProfesoresGrupo(1001,1535,15);
     //imprimirInformeMatricula(1001);
 
     //Relaciona los semestres con los cursos
@@ -2150,13 +2216,13 @@ void baseDeDatos(){
     //imprimirInformeMatricula(2020,1);
 
     //Asignacion de evaluaciones
-    //asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
-   // asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
-  //  asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
- //   asignarAsignaciones("Proyecto",123,"Proyecto de estructura ultimo",01,06,2020,1520,53,1001);
- //   asignarAsignaciones("Proyecto",124,"Proyecto de estructura penultimo",30,05,2020,1520,53,1001);
- //   asignarAsignaciones("Proyecto",123,"Proyecto de estructura IcccII",8,04,2020,1520,53,1001);
-  //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura jjjj",7,04,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",53,"Proyecto de estructura I",12,9,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
+    asignarAsignaciones("Examen",123,"Parcial 1",01,06,2020,1520,53,1001);
+    asignarAsignaciones("Giras",124,"Viaje a Londres",30,05,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",123,"Proyecto de estructura IcccII",8,04,2020,1545,02,1001);
+    asignarAsignaciones("Examen",123,"Laboratorio II",7,04,2020,1545,02,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
     //imprimirEvaluacion();
@@ -2167,7 +2233,7 @@ void baseDeDatos(){
     insertarCharlas(5,"Nuevo primero",2,2019,2,04);
     insertarCharlas(4,"Segundo",2,2019,11,04);
     insertarCharlas(2,"Primero",2,2019,10,04);
-    //insertarCharlas(3,"tercero",2,2019,12,04);
+    insertarCharlas(3,"tercero",2,2019,12,04);
 
 
     //imprimirCharlas();
@@ -2175,6 +2241,8 @@ void baseDeDatos(){
     //registrarAsistenciaCharla(2019053336,1,2019,2);
     registrarAsistenciaCharla(2019053336,2,2019,2);
     imprimirAsistenciaCharla(2019053336,2019,2,1);
+
+    //reporte2(1001,2019,2);
 }
 
 int main(){
