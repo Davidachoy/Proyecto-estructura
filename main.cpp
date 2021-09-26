@@ -1444,6 +1444,9 @@ void reporte1(int cedPro,int anno, int numS){
 
 void reporte2(int cedPro, int anno, int numS){
 
+
+
+
     Profesor*tempP = buscarProfesor2(cedPro);
     if(tempP == NULL){
         cout<<"El profesor no se encuentra..\n\n";
@@ -1473,6 +1476,74 @@ void reporte2(int cedPro, int anno, int numS){
         tempConex = tempConex->sig;
     }
 }
+
+void reporte5(int cedulaProf, int numCurso, int numGrupo){
+    Profesor*tempP = buscarProfesor2(cedulaProf);
+    if (tempP == NULL){
+        cout<<"El profesor no existe"<<endl;
+        return;
+    }
+    conexionGrupo*tempC= tempP->suGrupo;
+    if(tempC == NULL){
+       cout<<"El profesor no tiene grupos asignados"<<endl;
+       return;
+    }
+    while(tempC!=NULL){
+        if (tempC->enlaceG->numGrupo == numGrupo){
+            if (tempC->enlaceG->enlaceCurso->codigo == numCurso){
+                cout<<"Profes@r: "<<tempP->nombre<<endl;
+                cout<<"\t"<<tempC->enlaceG->enlaceCurso->nomCurso<<endl;
+                Estudiante*tempE = primerEstudiante;
+                while(tempE != NULL){
+                    if(tempE->enlaceReporte->enlaceGrupo->enlaceCurso->codigo==numCurso){
+                        cout<<tempE->nombre<<endl;
+                        cout<<"\t\t"<<tempE->nombre<<" no ha entregado o participado en:"<<endl;
+                        ReporteEstudiante*tempRe = tempE->enlaceReporte;
+                        Grupo*tempG = tempC->enlaceG;
+                        while(tempG->tempExa !=NULL){//examina por cada examen
+                            Calificaciones*tempCalificacion = tempRe->enlaceEvaluaciones;
+                            while(tempCalificacion != NULL){
+                                if(tempG->tempExa->id == tempCalificacion->enlaceEvaluaciones->id){
+                                        tempG->tempExa = tempG->tempExa->sig;
+
+                                }
+                                tempCalificacion = tempCalificacion->sig;
+                            }
+                             if(tempCalificacion == NULL){
+                            cout<<"\t\t\t"<<tempG->tempExa->nombre<<" del "<<tempG->tempExa->dia<<"/"<< tempG->tempExa->mes<<"/"<< tempG->tempExa->year<<endl;
+
+                         cout<<"loooooooool";
+
+                        tempG->tempExa = tempG->tempExa->sig;
+                             }
+                        }
+
+
+                         cout<<"loooooooool";
+                    }
+
+
+                    cout<<"loooooooool";
+                    cout<<tempE->sig->nombre;
+                }
+
+
+
+
+
+            }else{
+            cout<<"el numero del grupo no coincide con el numero de curso"<<endl;
+            return;
+            }
+        }
+
+       tempC = tempC->sig;
+
+    }
+    return;
+}
+
+
 
 //Menus
 void menuAdmin(){
@@ -1938,6 +2009,7 @@ void menuProfe(){
             cout<<"Opcion: ";
             cin>>actCurco;
 
+
             if(actCurco == 1){
                 cout<<"Ingrese los datos que se le solicitan\n\n";
                 cout<<"Que tipo de evaluacion desea ingresar...\n";
@@ -1987,7 +2059,6 @@ void menuProfe(){
 
         }
         else if(actCurco == 3){
-
         }
         else if(actCurco == 4){
             menuProfe();
@@ -2093,12 +2164,12 @@ void menuProfe(){
     case 3://Reportes
         int choiceReporte;
         while(choiceReporte!=1){
-            cout<<"----------- Menu de reportes -----------\n\n";
+            cout<<"----------- Menu de reportes de Profesor -----------\n\n";
             cout<<" 1 - Reporte 1 \n";
             cout<<" 2 - Reporte 2 \n";
             cout<<" 3 - Reporte 3 \n";
             cout<<" 4 - Reporte 4 \n";
-            cout<<" 5 - Reporte 5 \n\n";
+            cout<<" 5 - Reporte 5 de estudiantes que no han entregado asignaciones\n\n";
             cout<<" 6 - Volver a menú profesor\n\n";
             cout<<"\tOpcion: ";
             cin>>choiceReporte;
@@ -2129,6 +2200,21 @@ void menuProfe(){
 
             }
             else if(choiceReporte == 5){
+                cout<<"Ingrese los datos que se le solicitan\n\n";
+
+                cout<<"Cedula del profesor: ";
+                int cedProfe;
+                cin>>cedProfe;
+
+                cout<<"Curso que imparte: ";
+                int numCurso;
+                cin>>numCurso;
+
+                cout<<"Numero de grupo: ";
+                int numGrupo;
+                cin>>numGrupo;
+
+                reporte5(cedProfe,numCurso,numGrupo);
 
             }
             else if(choiceReporte == 6){
@@ -2213,7 +2299,6 @@ void menuUsuarios(){
     case 1:
         menuEst();
         break;
-
 
     case 2:
         menuProfe();
@@ -2460,20 +2545,23 @@ void baseDeDatos(){
 
 
     relacionarEstudiantesGrupo(2019053336,1520,53);
+    relacionarEstudiantesGrupo(2019053336,1520,53);
 
-    registrarActividad(2019053336,1520,53,109,"Proyecto");
-    registrarActividad(2019053336,1520,53,53,"Proyecto");
+
+    registrarActividad(2021053336,1520,53,109,"Proyecto");
+    registrarActividad(2021053336,1520,53,53,"Proyecto");
+    registrarActividad(2019053336,1520,53,123,"Examen");
+    registrarActividad(2019053336,1520,53,123,"Examen");
+
 
     //imprimirCalificacion();
     reporte1(1001,2019,2);
+    reporte5(1001,1520,53);
     //reporte2(1001,2019,2);
 }
 
 int main(){
     baseDeDatos();
-
-    //relacionarEstudiantesGrupo(2020053336,1520,53);
-    //imprimirInformeMatricula(2020053336);
 
     bool repetir = true;
 
