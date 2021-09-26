@@ -407,6 +407,7 @@ void imprimirEstudiante();
 void imprimirProfesor();
 void imprimirCharlas();
 void imprimirEvaluacion(int codCurso, int numGrupo);
+void imprimirEvaluacion3(int codCurso,int numGrupo);
 
 //Metodos de buscar
 bool buscarEstudiante(int num);
@@ -1183,6 +1184,7 @@ bool borrarCharla(int numC, int anSemestre, int numSem){//No funciona del todo
     cout<<"NO se pudo borrar dicha Charla...\n";
     return false;
 }
+
 //punto **L**
 bool buscarCalificacion(ReporteEstudiante*lista , int idActividad){
     Calificaciones*tempC = lista->enlaceEvaluaciones;
@@ -1341,14 +1343,9 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
 
     Calificaciones*tempCalificaciones =tempReporte->enlaceEvaluaciones;
     Calificaciones*tempCalificacionesAnterior = NULL;
-    cout<<"llega hasta aqui"<<endl;
+    //cout<<"llega hasta aqui"<<endl;
 
     while (tempCalificaciones != NULL){
-
-
-
-
-
         tempCalificacionesAnterior = tempCalificaciones;
         tempCalificaciones = tempCalificaciones->sig;
     }
@@ -1358,24 +1355,6 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
     nuevaCalificacion->enlaceEvaluaciones = tempEvaluacion;
 
     return true;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 //punto "m"
@@ -1426,6 +1405,41 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
     }
     //cout<<"\t\nTipo de charla: "<<tempC->tipoCharla<<endl;
     return NULL;
+}
+
+///Reportes
+
+void reporte1(int cedPro,int anno, int numS){
+
+    Profesor*tempP = buscarProfesor2(cedPro);
+    if(tempP == NULL){
+        cout<<"El profesor no se encuentra..\n\n";
+        return;
+    }
+    Semestre*tempS = buscarSemestre(anno,numS);
+    if(tempS == NULL){
+        cout<<"El semestre no se encuentra..\n\n";
+        return;
+    }
+    cout<<"--------------------------------------\n";
+    cout<<"\nNombre del profesor: "<<tempP->nombre;
+    cout<<"\nCedula: "<<tempP->cedula;
+    cout<<"\nEdad: "<<tempP->edad;
+    conexionGrupo*tempConex = tempP->suGrupo;
+
+    Grupo*tempG = tempConex->enlaceG;
+
+    Evaluacion*tempEva = tempG->tempP;
+
+    Curso*tempC = tempG->enlaceCurso;
+    cout<<"\n------------- Reporte ---------------\n";
+    while(tempConex != NULL){
+        cout<<"\nCurso: "<<tempConex->enlaceG->enlaceCurso->nomCurso<<"\tGrupo: "<<tempConex->enlaceG->numGrupo<<"\n\n";
+        imprimirEvaluacion3(tempConex->enlaceG->enlaceCurso->codigo,tempConex->enlaceG->numGrupo);
+        cout<<"\n--------------------------------------\n";
+        tempConex = tempConex->sig;
+    }
+
 }
 
 void reporte2(int cedPro, int anno, int numS){
@@ -2212,6 +2226,78 @@ void menuUsuarios(){
     }while(repetir);
 }
 
+void imprimirEvaluacion3(int codCurso,int numGrupo){
+    Curso*tempC = buscarCurso(codCurso);
+    Grupo*tempG = buscarGrupo(numGrupo,tempC);
+
+    Evaluacion*Proyecto = tempG->tempP;
+    Evaluacion*Tarea = tempG->tempTC;
+    Evaluacion*Examen = tempG->tempExa;
+    Evaluacion*Giras = tempG->tempG;
+
+    int day = 30 + 7;
+    int month = 4;
+    int monthMayor = month + 1;
+    int dayMayor = day + 7;
+    int cont = 0;
+    int contDay = 30 + 7;
+    if(day >= 30){
+        day -= 30;
+        dayMayor -= 30;
+        month += 1;
+        monthMayor += 1;
+        contDay -= 30;
+    }
+    if(cont == 0)
+        cout<<"   Lunes:\n";
+    if(cont == 1)
+        cout<<"   Martes:\n";
+    if(cont == 2)
+        cout<<"   Miercoles:\n";
+    if(cont == 3)
+        cout<<"   Jueves:\n";
+    if(cont == 4)
+        cout<<"   Viernes:\n";
+    if(cont == 5)
+        cout<<"   Sabado:\n";
+    if(cont == 6)
+        cout<<"   Domingo:\n";
+
+    cout<<"Day: "<<day<<endl;
+    cout<<"Month: "<<month<<endl;
+
+    while(Proyecto != NULL){
+        if(Proyecto->dia >= day && Proyecto->mes >= month && Proyecto->dia <= dayMayor && Proyecto->mes < monthMayor ){
+            if(contDay == Proyecto->dia){
+                cout<<"Proyecto: "<<Proyecto->nombre<<endl;
+                cont += 1;
+            }
+        }
+        Proyecto = Proyecto->sig;
+    }
+    while(Tarea != NULL){
+        if(Tarea->dia >= day && Tarea->mes >= month && Tarea->dia <= dayMayor && Tarea->mes < monthMayor){
+
+            cout<<"Tarea: "<<Tarea->nombre<<endl;
+        }
+        Tarea = Tarea->sig;
+    }
+    while(Examen != NULL){
+        if(Examen->dia > day && Examen->mes >= month && Examen->dia <= dayMayor && Examen->mes < monthMayor){
+
+        cout<<"Examen: "<<Examen->nombre<<endl;
+        }
+        Examen = Examen->sig;
+    }
+    while(Giras != NULL){
+        if(Giras->dia > day && Giras->mes >= month && Giras->dia <= dayMayor && Giras->mes < monthMayor){
+        cout<<"Gira: "<<Giras->nombre<<endl;
+        }
+        Giras = Giras->sig;
+    }
+
+}
+
 void imprimirEvaluacion2(){
     cout<<"LOOOOL";
     Curso*tempC = buscarCurso(1520);
@@ -2222,7 +2308,6 @@ void imprimirEvaluacion2(){
         tempE = tempE->sig;
     }
 }
-
 
 void imprimirEvaluacion(int codCurso,int numGrupo){
     Curso*tempC = buscarCurso(codCurso);
@@ -2242,7 +2327,7 @@ void imprimirEvaluacion(int codCurso,int numGrupo){
         Tarea = Tarea->sig;
     }
     while(Examen != NULL){
-        cout<<"Examenen: "<<Examen->nombre<<endl;
+        cout<<"Examen: "<<Examen->nombre<<endl;
         Examen = Examen->sig;
     }
     while(Giras != NULL){
@@ -2352,8 +2437,8 @@ void baseDeDatos(){
     asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
     asignarAsignaciones("Examen",123,"Parcial 1",01,06,2020,1520,53,1001);
     asignarAsignaciones("Giras",124,"Viaje a Londres",30,05,2020,1520,53,1001);
-    asignarAsignaciones("Proyecto",123,"Proyecto de estructura IcccII",8,04,2020,1545,02,1001);
-    asignarAsignaciones("Examen",123,"Laboratorio II",7,04,2020,1545,02,1001);
+    asignarAsignaciones("Proyecto",125,"Proyecto de estructura IcccII",8,04,2020,1545,02,1001);
+    asignarAsignaciones("Examen",126,"Laboratorio II",8,04,2020,1545,02,1001);
   //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
    // imprimirEvaluacion2();
@@ -2379,11 +2464,8 @@ void baseDeDatos(){
     registrarActividad(2019053336,1520,53,109,"Proyecto");
     registrarActividad(2019053336,1520,53,53,"Proyecto");
 
-    imprimirCalificacion();
-
-
-
-
+    //imprimirCalificacion();
+    reporte1(1001,2019,2);
     //reporte2(1001,2019,2);
 }
 
