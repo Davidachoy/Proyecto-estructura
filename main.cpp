@@ -1500,31 +1500,32 @@ void reporte5(int cedulaProf, int numCurso, int numGrupo){
                         cout<<"\t\t"<<tempE->nombre<<" no ha entregado o participado en:"<<endl;
                         ReporteEstudiante*tempRe = tempE->enlaceReporte;
                         Grupo*tempG = tempC->enlaceG;
-                        while(tempG->tempExa !=NULL){//examina por cada examen
+                        Evaluacion*tempEvaluacionExamen = tempG->tempExa;
+                        while(tempEvaluacionExamen !=NULL){//examina por cada examen
                             Calificaciones*tempCalificacion = tempRe->enlaceEvaluaciones;
                             while(tempCalificacion != NULL){
-                                if(tempG->tempExa->id == tempCalificacion->enlaceEvaluaciones->id){
-                                        tempG->tempExa = tempG->tempExa->sig;
+                                if(tempEvaluacionExamen->id == tempCalificacion->enlaceEvaluaciones->id){
+                                        tempEvaluacionExamen = tempEvaluacionExamen->sig;
 
                                 }
                                 tempCalificacion = tempCalificacion->sig;
                             }
                              if(tempCalificacion == NULL){
-                            cout<<"\t\t\t"<<tempG->tempExa->nombre<<" del "<<tempG->tempExa->dia<<"/"<< tempG->tempExa->mes<<"/"<< tempG->tempExa->year<<endl;
+                            cout<<"loooooooool";
+                            cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<tempEvaluacionExamen->dia<<"/"<< tempEvaluacionExamen->mes<<"/"<< tempEvaluacionExamen->year<<endl;
 
-                         cout<<"loooooooool";
 
-                        tempG->tempExa = tempG->tempExa->sig;
+
+                        tempEvaluacionExamen = tempEvaluacionExamen->sig;
                              }
                         }
 
-
-                         cout<<"loooooooool";
+                    cout<<"loooooooool";
+                    cout<<tempE->sig->nombre;
                     }
 
 
-                    cout<<"loooooooool";
-                    cout<<tempE->sig->nombre;
+                cout<<tempE->sig->nombre;
                 }
 
 
@@ -2545,7 +2546,9 @@ void baseDeDatos(){
 
 
     relacionarEstudiantesGrupo(2019053336,1520,53);
+
     relacionarEstudiantesGrupo(2019053336,1520,53);
+    relacionarEstudiantesGrupo(2020054897,1520,53);
 
 
     registrarActividad(2021053336,1520,53,109,"Proyecto");
