@@ -2439,6 +2439,30 @@ void menuUsuarios(){
     }while(repetir);
 }
 
+void dia(int anno,int mes, int day){
+
+    int a = (14-mes)/12;
+    int y = anno - a;
+    int m = mes + 12*a - 2;
+    int d = (day + y+ y/4 - y/100 + (31*m)/12)%7;
+
+    if(d == 1)
+        cout<<"   Lunes:\n";
+    else if(d == 2)
+        cout<<"   Martes:\n";
+    else if(d == 3)
+        cout<<"   Miercoles:\n";
+    else if(d == 4)
+        cout<<"   Jueves:\n";
+    else if(d == 5)
+        cout<<"   Viernes:\n";
+    else if(d == 6)
+        cout<<"   Sabado:\n";
+    else if(d == 0)
+        cout<<"   Domingo:\n";
+
+}
+
 void imprimirEvaluacion3(int codCurso,int numGrupo){
     Curso*tempC = buscarCurso(codCurso);
     Grupo*tempG = buscarGrupo(numGrupo,tempC);
