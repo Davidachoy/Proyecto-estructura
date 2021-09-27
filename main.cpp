@@ -1495,13 +1495,13 @@ void imprimirReporte5Aux(Grupo*tempG) {
             cout<<"\t\t\t"<<tempEvaluacionTarea->nombre<<" del "<<tempEvaluacionTarea->dia<<"/"<< tempEvaluacionTarea->mes<<"/"<< tempEvaluacionTarea->year<<endl;
             tempEvaluacionTarea = tempEvaluacionTarea->sig;
 
-        }
+        }}
         if (tempEvaluacionGiras != NULL) {
             while(tempEvaluacionGiras != NULL) {
                 cout<<"\t\t\t"<<tempEvaluacionGiras->nombre<<" del "<<tempEvaluacionGiras->dia<<"/"<< tempEvaluacionGiras->mes<<"/"<< tempEvaluacionGiras->year<<endl;
                 tempEvaluacionGiras = tempEvaluacionGiras->sig;
 
-            }
+            }}
             if (tempEvaluacionProyecto != NULL) {
                 while(tempEvaluacionProyecto != NULL) {
                     cout<<"\t\t\t"<<tempEvaluacionProyecto->nombre<<" del "<<tempEvaluacionProyecto->dia<<"/"<< tempEvaluacionProyecto->mes<<"/"<< tempEvaluacionProyecto->year<<endl;
@@ -1510,8 +1510,8 @@ void imprimirReporte5Aux(Grupo*tempG) {
                 }
             }
         }
-    }
-}
+
+
 
 void imprimirAsignacionExamen(Evaluacion*tempEvaluacionExamen,ReporteEstudiante*tempReporte){
     while(tempEvaluacionExamen != NULL){
@@ -1632,41 +1632,6 @@ bool imprimirReporte5(Estudiante*tempE,Grupo*tempG,int numCurso, int numGrupo) {
 
     return false;
 
-/*
-
-    if(tempE->enlaceReporte->enlaceGrupo->enlaceCurso->codigo==numCurso) {
-        cout<<tempE->nombre<<endl;
-        cout<<"\t\t"<<tempE->nombre<<" no ha entregado o participado en:"<<endl;
-        ReporteEstudiante*tempRe = tempE->enlaceReporte;
-        Grupo*tempG = tempC->enlaceG;
-        Evaluacion*tempEvaluacionExamen = tempG->tempExa;
-        while(tempEvaluacionExamen !=NULL) { //examina por cada examen
-            Calificaciones*tempCalificacion = tempRe->enlaceEvaluaciones;
-            while(tempCalificacion != NULL) {
-                if(tempEvaluacionExamen->id == tempCalificacion->enlaceEvaluaciones->id) {
-                    tempEvaluacionExamen = tempEvaluacionExamen->sig;
-
-                }
-                tempCalificacion = tempCalificacion->sig;
-            }
-            if(tempCalificacion == NULL) {
-                cout<<"loooooooool";
-                cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<tempEvaluacionExamen->dia<<"/"<< tempEvaluacionExamen->mes<<"/"<< tempEvaluacionExamen->year<<endl;
-
-
-
-                tempEvaluacionExamen = tempEvaluacionExamen->sig;
-            }
-        }
-
-        cout<<"loooooooool";
-        cout<<tempE->sig->nombre;
-    }
-
-
-    cout<<tempE->sig->nombre;
-
-*/
 
 }
 
@@ -2722,9 +2687,9 @@ void baseDeDatos(){
     registrarActividad(2021053336,1520,53,109,"Proyecto");
     registrarActividad(2021053336,1520,53,53,"Proyecto");
     registrarActividad(2021053336,1520,53,123,"Examen");
-    registrarActividad(2019053336,1520,53,123,"Examen");
-    registrarActividad(2019053336,1520,53,136,"Examen");
-    registrarActividad(2019053336,1520,53,124,"Giras");
+    //registrarActividad(2019053336,1520,53,123,"Examen");
+    //registrarActividad(2019053336,1520,53,136,"Examen");
+    //registrarActividad(2019053336,1520,53,124,"Giras");
 
 
     //imprimirCalificacion();
