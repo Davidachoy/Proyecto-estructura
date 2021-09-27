@@ -1408,6 +1408,8 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
 }
 
 ///Reportes
+string returnMes(int mes);
+string returnDia(int anno,int mes, int day);
 
 void reporte1(int cedPro,int anno, int numS){
 
@@ -1486,32 +1488,38 @@ void imprimirReporte5Aux(Grupo*tempG) {
 
     if (tempEvaluacionExamen != NULL) {
         while(tempEvaluacionExamen != NULL) {
-            cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<tempEvaluacionExamen->dia<<"/"<< tempEvaluacionExamen->mes<<"/"<< tempEvaluacionExamen->year<<endl;
+            string dia = returnDia(tempEvaluacionExamen->year,tempEvaluacionExamen->mes,tempEvaluacionExamen->dia);
+            string mes = returnMes(tempEvaluacionExamen->mes);
+            cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<dia<<" "<<tempEvaluacionExamen->dia <<" de "<< mes<<endl;
             tempEvaluacionExamen = tempEvaluacionExamen->sig;
         }
     }
     if (tempEvaluacionTarea != NULL) {
         while(tempEvaluacionTarea != NULL) {
-            cout<<"\t\t\t"<<tempEvaluacionTarea->nombre<<" del "<<tempEvaluacionTarea->dia<<"/"<< tempEvaluacionTarea->mes<<"/"<< tempEvaluacionTarea->year<<endl;
+            string dia = returnDia(tempEvaluacionTarea->year,tempEvaluacionTarea->mes,tempEvaluacionTarea->dia);
+            string mes = returnMes(tempEvaluacionTarea->mes);
+            cout<<"\t\t\t"<<tempEvaluacionTarea->nombre<<" del "<<dia<<" "<<tempEvaluacionTarea->dia <<" de "<< mes<<endl;
             tempEvaluacionTarea = tempEvaluacionTarea->sig;
 
         }}
         if (tempEvaluacionGiras != NULL) {
             while(tempEvaluacionGiras != NULL) {
-                cout<<"\t\t\t"<<tempEvaluacionGiras->nombre<<" del "<<tempEvaluacionGiras->dia<<"/"<< tempEvaluacionGiras->mes<<"/"<< tempEvaluacionGiras->year<<endl;
+            string dia = returnDia(tempEvaluacionGiras->year,tempEvaluacionGiras->mes,tempEvaluacionGiras->dia);
+            string mes = returnMes(tempEvaluacionGiras->mes);
+            cout<<"\t\t\t"<<tempEvaluacionGiras->nombre<<" del "<<dia<<" "<<tempEvaluacionGiras->dia <<" de "<< mes<<endl;
                 tempEvaluacionGiras = tempEvaluacionGiras->sig;
 
             }}
             if (tempEvaluacionProyecto != NULL) {
                 while(tempEvaluacionProyecto != NULL) {
-                    cout<<"\t\t\t"<<tempEvaluacionProyecto->nombre<<" del "<<tempEvaluacionProyecto->dia<<"/"<< tempEvaluacionProyecto->mes<<"/"<< tempEvaluacionProyecto->year<<endl;
+            string dia = returnDia(tempEvaluacionProyecto->year,tempEvaluacionProyecto->mes,tempEvaluacionProyecto->dia);
+            string mes = returnMes(tempEvaluacionProyecto->mes);
+            cout<<"\t\t\t"<<tempEvaluacionProyecto->nombre<<" del "<<dia<<" "<<tempEvaluacionProyecto->dia <<" de "<< mes<<endl;
                     tempEvaluacionProyecto = tempEvaluacionProyecto->sig;
 
                 }
             }
         }
-
-
 
 void imprimirAsignacionExamen(Evaluacion*tempEvaluacionExamen,ReporteEstudiante*tempReporte){
     while(tempEvaluacionExamen != NULL){
@@ -1524,7 +1532,9 @@ void imprimirAsignacionExamen(Evaluacion*tempEvaluacionExamen,ReporteEstudiante*
 
         }
         if(tempCalificaciones == NULL){
-        cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<tempEvaluacionExamen->dia<<"/"<< tempEvaluacionExamen->mes<<"/"<< tempEvaluacionExamen->year<<endl;
+            string dia = returnDia(tempEvaluacionExamen->year,tempEvaluacionExamen->mes,tempEvaluacionExamen->dia);
+            string mes = returnMes(tempEvaluacionExamen->mes);
+            cout<<"\t\t\t"<<tempEvaluacionExamen->nombre<<" del "<<dia<<" "<<tempEvaluacionExamen->dia <<" de "<< mes<<endl;
         }
 
     tempEvaluacionExamen = tempEvaluacionExamen->sig;
@@ -1543,7 +1553,9 @@ void imprimirAsignacionTarea(Evaluacion*tempEvaluacionTarea,ReporteEstudiante*te
 
         }
         if(tempCalificaciones == NULL){
-        cout<<"\t\t\t"<<tempEvaluacionTarea->nombre<<" del "<<tempEvaluacionTarea->dia<<"/"<< tempEvaluacionTarea->mes<<"/"<< tempEvaluacionTarea->year<<endl;
+            string dia = returnDia(tempEvaluacionTarea->year,tempEvaluacionTarea->mes,tempEvaluacionTarea->dia);
+            string mes = returnMes(tempEvaluacionTarea->mes);
+            cout<<"\t\t\t"<<tempEvaluacionTarea->nombre<<" del "<<dia<<" "<<tempEvaluacionTarea->dia <<" de "<< mes<<endl;
         }
 
     tempEvaluacionTarea = tempEvaluacionTarea->sig;
@@ -1562,7 +1574,9 @@ void imprimirAsignacionGiras(Evaluacion*tempEvaluacionGiras,ReporteEstudiante*te
 
         }
         if(tempCalificaciones == NULL){
-        cout<<"\t\t\t"<<tempEvaluacionGiras->nombre<<" del "<<tempEvaluacionGiras->dia<<"/"<< tempEvaluacionGiras->mes<<"/"<< tempEvaluacionGiras->year<<endl;
+            string dia = returnDia(tempEvaluacionGiras->year,tempEvaluacionGiras->mes,tempEvaluacionGiras->dia);
+            string mes = returnMes(tempEvaluacionGiras->mes);
+            cout<<"\t\t\t"<<tempEvaluacionGiras->nombre<<" del "<<dia<<" "<<tempEvaluacionGiras->dia <<" de "<< mes<<endl;
         }
 
     tempEvaluacionGiras = tempEvaluacionGiras->sig;
@@ -1581,15 +1595,15 @@ void imprimirAsignacionProyecto(Evaluacion*tempEvaluacionProyecto,ReporteEstudia
 
         }
         if(tempCalificaciones == NULL){
-        cout<<"\t\t\t"<<tempEvaluacionProyecto->nombre<<" del "<<tempEvaluacionProyecto->dia<<"/"<< tempEvaluacionProyecto->mes<<"/"<< tempEvaluacionProyecto->year<<endl;
+            string dia = returnDia(tempEvaluacionProyecto->year,tempEvaluacionProyecto->mes,tempEvaluacionProyecto->dia);
+            string mes = returnMes(tempEvaluacionProyecto->mes);
+            cout<<"\t\t\t"<<tempEvaluacionProyecto->nombre<<" del "<<dia<<" "<<tempEvaluacionProyecto->dia <<" de "<< mes<<endl;
         }
 
     tempEvaluacionProyecto = tempEvaluacionProyecto->sig;
     }
 
 }
-
-
 
 bool imprimirReporte5(Estudiante*tempE,Grupo*tempG,int numCurso, int numGrupo) {
     if (tempE->enlaceReporte == NULL)
@@ -1635,9 +1649,6 @@ bool imprimirReporte5(Estudiante*tempE,Grupo*tempG,int numCurso, int numGrupo) {
 
 }
 
-
-
-
 void reporte5(int cedulaProf, int numCurso, int numGrupo) {
     Profesor*tempP = buscarProfesor2(cedulaProf);
     if (tempP == NULL) {
@@ -1670,6 +1681,13 @@ void reporte5(int cedulaProf, int numCurso, int numGrupo) {
     }
     return;
 }
+
+//reporte 6
+
+
+
+
+
 
 
 
@@ -2438,7 +2456,63 @@ void menuUsuarios(){
         }
     }while(repetir);
 }
+string returnMes(int mes){
 
+    switch(mes)
+{
+    case 1: return "Enero";
+    break;
+    case 2: return "Febrero";
+    break;
+    case 3: return "Marzo";
+    break;
+    case 4:  return "Abril";
+    break;
+    case 5: return "Mayo";
+    break;
+    case 6: return "Junio";
+    break;
+    case 7:  return "Julio";
+    break;
+    case 8:  return "Agosto";
+    break;
+    case 9: return "Septiembre";
+    break;
+    case 10: return "Octubre";
+    break;
+    case 11:  return "Noviembre";
+    break;
+    case 12:  return "Diciembre";
+    break;
+}
+
+
+
+}
+
+string returnDia(int anno,int mes, int day){
+
+    int a = (14-mes)/12;
+    int y = anno - a;
+    int m = mes + 12*a - 2;
+    int d = (day + y+ y/4 - y/100 + (31*m)/12)%7;
+
+    if(d == 1)
+        return "Lunes";
+    else if(d == 2)
+        return "Martes";
+    else if(d == 3)
+        return "Miercoles";
+    else if(d == 4)
+       return "Jueves";
+    else if(d == 5)
+        return "Viernes";
+    else if(d == 6)
+        return "Sabado";
+    else if(d == 0)
+        return "Domingo";
+
+}
 void dia(int anno,int mes, int day){
 
     int a = (14-mes)/12;
@@ -2672,7 +2746,7 @@ void baseDeDatos(){
 
     asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
-    asignarAsignaciones("Examen",123,"Parcial 1",01,06,2020,1520,53,1001);
+    asignarAsignaciones("Examen",123,"Parcial 1",30,05,2020,1520,53,1001);
     asignarAsignaciones("Examen",135,"Parcial 2",01,06,2020,1520,53,1001);
     asignarAsignaciones("Examen",136,"Parcial 3",01,06,2020,1520,53,1001);
 
