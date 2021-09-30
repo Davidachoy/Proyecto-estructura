@@ -471,7 +471,16 @@ Semestre* insertarSemestreOrdenado(int anno,int numSemestre,string tipo){
 return primerSemestre;
 }
 
+bool modificarSemestre(int NEWanno,int NEWnumSemestre,string newtipo){
 
+    Semestre*tempS = buscarSemestre(NEWanno,NEWnumSemestre);
+    if( tempS == NULL)
+        return false;
+    cout<<tempS->tipo<<endl;
+    tempS->tipo = newtipo;
+    cout<<tempS->tipo<<endl;
+    return true;
+}
 
 //punto **E** insertar curso lista circular final        falta borrar y modificar
 //E: creditos, nombre, codigo
@@ -619,6 +628,7 @@ bool insertarGrupo(int unNum, int codigo){
 }
 
 //Punto "G"
+
 bool relacionarProfesoresGrupo(int ced, int codigoCurso,int numGrupo){
 
     Profesor*tempP = buscarProfesor2(ced);
@@ -2162,6 +2172,19 @@ void menuAdmin(){
             }
             else if(choiceSem == 2){
                 cout<<"Ingrese los datos que se le solicitan \n\n";
+                cout<<"Año: ";
+                int anno;
+                cin>>anno;
+
+                cout<<"Numero de semestre: ";
+                int numSem;
+                cin>>numSem;
+                cout<<"Tipo de semestre por el cual va a asignar(Presencial o Virtual): ";
+                string tipo;
+                cin>>tipo;
+                if(modificarSemestre(anno,numSem,tipo) == true){
+                    cout<<"El semestre se modifico correctamente...\n";
+                }else{cout<<"El semestre NO se modifico...\n";}
             }
             else if(choiceSem == 3){
                 menuAdmin();
@@ -2505,7 +2528,8 @@ void menuProfe(){///Menu para el profesor
                     cout<<"\tEvaluacion registrada...\n\n";
                 }else{cout<<"\tEvaluacion NO registrada...\n\n";}
             }
-        else if(actCurco == 2){
+        else if(actCurco == 2){//modificar
+
 
         }
         else if(actCurco == 3){
@@ -3003,6 +3027,7 @@ void baseDeDatos(){
     //reporte2(1001,2020,2);
     //reporte7();
     //reporte3(1520);
+    modificarSemestre(2020,2,"Presencial");
 }
 
 int main(){
