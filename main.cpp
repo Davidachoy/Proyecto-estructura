@@ -219,6 +219,7 @@ struct Charla{//Simple list de Charlas
     int dia;
     int mes;
     int anno;
+    int cantidadEstudiantes;
     Charla*sig;
 
     Charla(string type, int idC,int day,int month,int year){
@@ -227,6 +228,7 @@ struct Charla{//Simple list de Charlas
         dia = day;
         mes = month;
         anno = year;
+        cantidadEstudiantes = 0;
 
         sig = NULL;
     }
@@ -1712,9 +1714,56 @@ bool reporte7() {
 
 
 
-//reporte 8 /////////////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+//reporte 8                                                         /////////////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+void borrarCantidadCharla(Charla*tempCharla){
+    while(tempCharla!= NULL){
 
-void reporte8();
+        tempCharla->cantidadEstudiantes = 0;
+        tempCharla = tempCharla->sig;
+
+    }
+}
+
+void reporte8(int anno,int numSem) {
+    Semestre*tempS = buscarSemestre(anno,numSem);
+    if (tempS==NULL) {
+        cout<<"El semestre ingresado no existe"<<endl;
+        return;
+    }
+    Charla*tempCharla = tempS->sublistaCharla;
+    if (tempCharla == NULL) {
+        cout<<"El semestre no tiene charlas"<<endl;
+    }
+    borrarCantidadCharla(tempCharla);
+    while(tempCharla!= NULL) {
+        Estudiante*tempEstudiante = primerEstudiante;
+        while (tempEstudiante != NULL) {
+            if(tempEstudiante->enlaceCharla->enlaceAsistenciaCharla->enlaceCharla->numCharla == tempCharla->numCharla) {
+                tempCharla->cantidadEstudiantes += 1;
+                tempEstudiante = tempEstudiante->sig;
+            }
+            tempEstudiante = tempEstudiante->sig;
+
+
+
+
+
+        }
+        tempCharla= tempCharla->sig;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+}
 
 
 
@@ -2821,12 +2870,12 @@ void baseDeDatos(){
 // amanda 2019053336
 // jimmy 2021053336
 
-    //registrarActividad(2021053336,1520,53,109,"Proyecto");
-    //registrarActividad(2021053336,1520,53,53,"Proyecto");
-    //registrarActividad(2021053336,1520,53,123,"Examen");
+    registrarActividad(2021053336,1520,53,109,"Proyecto");
+    registrarActividad(2021053336,1520,53,53,"Proyecto");
+    registrarActividad(2021053336,1520,53,123,"Examen");
     registrarActividad(2019053336,1520,53,123,"Examen");
-    //registrarActividad(2019053336,1520,53,136,"Examen");
-    //registrarActividad(2019053336,1520,53,124,"Giras");
+    registrarActividad(2019053336,1520,53,136,"Examen");
+    registrarActividad(2019053336,1520,53,124,"Giras");
 
 
     //imprimirCalificacion();
