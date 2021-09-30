@@ -141,6 +141,7 @@ struct Grupo{//Simple list del grupo
     tempG = NULL;
   }
 };
+
 struct Evaluacion{//Simple list de evaluaciones
     string nombre;
     int dia;
@@ -1494,18 +1495,41 @@ void reporte3(int codCurso){
         return;
     }
 
-    while(tempE != NULL){
-            if(tempE->enlaceCharla != NULL){
-                ReporteEstudiante*tempRe = tempE->enlaceReporte;
-                while(tempRe != NULL){
-                    if(tempRe->enlaceEvaluaciones != NULL){
-                        cout<<"Tarea: "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
-                        tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig;
-                    }else{ tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig; }
-                    tempRe = tempRe->sig;
+    while( tempC->sublistaGrupos != NULL ){
+        //cout<<tempC->sublistaGrupos->numGrupo<<endl;
+        while(tempC->sublistaGrupos->tempTC != NULL){
+            cout<<tempC->sublistaGrupos->tempTC->id<<endl;
+            //llamarEst();
+            while(tempE != NULL){
+                //cout<<"Llego aquí...1\n";
+                while(tempE->enlaceReporte != NULL){
+                    //cout<<"Llego aquí...2\n";
+                    ReporteEstudiante*tempRe = tempE->enlaceReporte;
+                    while(tempRe != NULL){
+                        //cout<<"Llego aquí...3\n";
+                        while(tempRe->enlaceEvaluaciones != NULL){
+                                cout<<"Nombre: "<<tempE->nombre<<endl;
+                                cout<<"Tarea entregada: "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->id<<endl;
+                                //cout<<"Llego aquí...4\n";
+                                if( tempC->sublistaGrupos->tempTC->id == tempRe->enlaceEvaluaciones->enlaceEvaluaciones->id ){
+
+                                    cout<<tempE->nombre<<" entrego la tarea "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
+                                    //break;
+                                    //tempRe->enlaceEvaluaciones->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->enlaceEvaluaciones->sig;
+                                }else if(tempC->sublistaGrupos->tempTC->id != tempRe->enlaceEvaluaciones->enlaceEvaluaciones->id){
+                                    //cout<<tempE->nombre<<" no entrego la tarea "<<tempC->sublistaGrupos->tempTC->nombre<<endl;
+                                }
+                            tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig;
+                        }
+                        tempRe = tempRe->sig;
+                    }
+                    tempE->enlaceReporte = tempE->enlaceReporte->sig;
                 }
+                tempE = tempE->sig;
             }
-        tempE = tempE->sig;
+            tempC->sublistaGrupos->tempTC = tempC->sublistaGrupos->tempTC->sig;
+        }
+        tempC->sublistaGrupos = tempC->sublistaGrupos->sig;
     }
 }
 
@@ -2862,14 +2886,14 @@ void baseDeDatos(){
 
     asignarAsignaciones("Proyecto",109,"Proyecto de estructura segundo",10,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",503,"Proyecto de estructura primero",7,05,2020,1520,53,1001);
-    asignarAsignaciones("Examen",123,"Parcial 1",30,05,2020,1520,53,1001);
+    asignarAsignaciones("Tarea",123,"TC#2",30,05,2020,1520,53,1001);
     asignarAsignaciones("Examen",135,"Parcial 2",01,06,2020,1520,53,1001);
     asignarAsignaciones("Examen",136,"Parcial 3",01,06,2020,1520,53,1001);
 
-    asignarAsignaciones("Giras",124,"Viaje a Londres",30,05,2020,1520,53,1001);
+    asignarAsignaciones("Tarea",124,"TC#1",30,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",125,"Proyecto de estructura IcccII",8,04,2020,1545,02,1001);
     asignarAsignaciones("Examen",126,"Laboratorio II",8,04,2020,1545,02,1001);
-    asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
+    //asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
    // imprimirEvaluacion2();
 
@@ -2899,11 +2923,11 @@ void baseDeDatos(){
 // jimmy 2021053336
 
     registrarActividad(2021053336,1520,53,109,"Proyecto");
-    registrarActividad(2021053336,1520,53,53,"Proyecto");
-    registrarActividad(2021053336,1520,53,123,"Examen");
-    registrarActividad(2019053336,1520,53,123,"Examen");
+    registrarActividad(2021053336,1520,53,124,"Tarea");
+    registrarActividad(2021053336,1520,53,123,"Tarea");
+    registrarActividad(2019053336,1520,53,123,"Tarea");
     registrarActividad(2019053336,1520,53,136,"Examen");
-    registrarActividad(2019053336,1520,53,124,"Giras");
+    registrarActividad(2019053336,1520,53,124,"Tarea");
 
 
     //imprimirCalificacion();
