@@ -1480,6 +1480,34 @@ void reporte2(int cedPro, int anno, int numS){
     }
 }
 
+void reporte3(int codCurso){
+
+    Estudiante*tempE = primerEstudiante;
+    if (tempE == NULL) {
+        cout<<"No hay estudiantes"<<endl;
+        return;
+    }
+
+    Curso*tempC = buscarCurso(codCurso);
+    if(tempC == NULL){
+        cout<<"Curso no encontrado"<<endl;
+        return;
+    }
+
+    while(tempE != NULL){
+            if(tempE->enlaceCharla != NULL){
+                ReporteEstudiante*tempRe = tempE->enlaceReporte;
+                while(tempRe != NULL){
+                    if(tempRe->enlaceEvaluaciones != NULL){
+                        cout<<"Tarea: "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
+                        tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig;
+                    }else{ tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig; }
+                    tempRe = tempRe->sig;
+                }
+            }
+        tempE = tempE->sig;
+    }
+}
 
 //reporte 5
 void imprimirReporte5Aux(Grupo*tempG) {
@@ -2804,7 +2832,7 @@ void baseDeDatos(){
     insertarCurso(5,"Deporte", 1510);
 
     //borrarCurso(1545);
-    imprimirCursos();
+    //imprimirCursos();
 
 
     //insertar Grupos
@@ -2841,7 +2869,7 @@ void baseDeDatos(){
     asignarAsignaciones("Giras",124,"Viaje a Londres",30,05,2020,1520,53,1001);
     asignarAsignaciones("Proyecto",125,"Proyecto de estructura IcccII",8,04,2020,1545,02,1001);
     asignarAsignaciones("Examen",126,"Laboratorio II",8,04,2020,1545,02,1001);
-  //  asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
+    asignarAsignaciones("Proyecto",123,"Proyecto de estructura bbbbb",8,04,2020,1520,53,1001);
    // imprimirEvaluaciones(53,1520);
    // imprimirEvaluacion2();
 
@@ -2858,7 +2886,7 @@ void baseDeDatos(){
 
     //registrarAsistenciaCharla(2019053336,1,2019,2);
     registrarAsistenciaCharla(2019053336,2,2019,2);
-    imprimirAsistenciaCharla(2019053336,2019,2,1);
+    //imprimirAsistenciaCharla(2019053336,2019,2,1);
 
 
     relacionarEstudiantesGrupo(2019053336,1520,53);
@@ -2879,10 +2907,11 @@ void baseDeDatos(){
 
 
     //imprimirCalificacion();
-    reporte1(1001,2019,2);
-    reporte5(1001,1520,53);
+    //reporte1(1001,2019,2);
+    //reporte5(1001,1520,53);
     //reporte2(1001,2019,2);
-    reporte7();
+    //reporte7();
+    reporte3(1520);
 }
 
 int main(){
