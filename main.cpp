@@ -1685,7 +1685,36 @@ void reporte5(int cedulaProf, int numCurso, int numGrupo) {
 //reporte 6
 
 
+//reporte 7
+bool reporte7() {
+    cout<<"Reporte de estudiantes que no han entregado ninguna asignacion"<<endl;
+    Estudiante*tempE = primerEstudiante;
+    if (tempE == NULL) {
+        cout<<"No hay estudiantes"<<endl;
+        return false;
+    }
+    while (tempE != NULL) {
+        if (tempE->enlaceReporte != NULL) {
+            ReporteEstudiante*tempRe = tempE->enlaceReporte;
+            while (tempRe != NULL) {
+                if(tempRe->enlaceEvaluaciones == NULL) {
+                    cout<<"\t"<<tempE->nombre<<" no ha entregado nada en: "<<tempE->enlaceReporte->enlaceGrupo->enlaceCurso->nomCurso<<endl;
+                    tempRe = tempRe->sig;
+                } else {
+                    tempRe = tempRe->sig;
+                }
+            }
+        }
+        tempE = tempE->sig;
+    }
+}
 
+
+
+
+//reporte 8 /////////////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+
+void reporte8();
 
 
 
@@ -1705,7 +1734,7 @@ void menuAdmin(){
         cout<<" 6 - Relacionar y borrar profesores con los grupos de los cursos respectivos \n";
         cout<<" 7 - Relacionar y borrar estudiantes con los grupos de los cursos\n";
         cout<<" 8 - Relacionar los semestres con los cursos, insertar y modificar\n";
-        cout<<" 9 - Reporte 7\n";
+        cout<<" 9 - Reporte 7 \n";
         cout<<" 10- Reporte 8  \n";
         cout<<" 0 - Volver a menu principal\n\n";
         cout<<" Opcion: ";
@@ -1877,8 +1906,9 @@ void menuAdmin(){
                 cout<<"Numero de semestre: ";
                 int numSem;
                 cin>>numSem;
-
-                string tipo;////////////////////////////////////////////////////////////////////////////////////////////////////////////falta
+                cout<<"tipo de semestre(Presencial o Virtual): ";
+                string tipo;
+                cin>>tipo;
 
                 if(insertarSemestreOrdenado(anno,numSem,tipo) != NULL){
                     cout<<"Semestre insertado exitosamente...\n";
@@ -2116,9 +2146,18 @@ void menuAdmin(){
         break;
 
     case 9://reporte 7
+        reporte7();
         break;
 
-    case 10://reporte 8
+    case 10://reporte 8//////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+        cout<<"Ingrese los datos que se le solicitan\n\n";
+        cout<<"Año del semestre: ";
+        int anno;
+        cin>>anno;
+        cout<<"Numero de semestre: ";
+        int numSem;
+        cin>>numSem;
+        reporte8(anno,numSem);
         break;
 
     case 0:
@@ -2782,10 +2821,10 @@ void baseDeDatos(){
 // amanda 2019053336
 // jimmy 2021053336
 
-    registrarActividad(2021053336,1520,53,109,"Proyecto");
-    registrarActividad(2021053336,1520,53,53,"Proyecto");
-    registrarActividad(2021053336,1520,53,123,"Examen");
-    //registrarActividad(2019053336,1520,53,123,"Examen");
+    //registrarActividad(2021053336,1520,53,109,"Proyecto");
+    //registrarActividad(2021053336,1520,53,53,"Proyecto");
+    //registrarActividad(2021053336,1520,53,123,"Examen");
+    registrarActividad(2019053336,1520,53,123,"Examen");
     //registrarActividad(2019053336,1520,53,136,"Examen");
     //registrarActividad(2019053336,1520,53,124,"Giras");
 
@@ -2794,6 +2833,7 @@ void baseDeDatos(){
     reporte1(1001,2019,2);
     reporte5(1001,1520,53);
     //reporte2(1001,2019,2);
+    reporte7();
 }
 
 int main(){
