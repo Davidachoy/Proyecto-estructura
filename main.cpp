@@ -1534,11 +1534,7 @@ void reporte2(int cedPro, int anno, int numS){
 
 void reporte3(int codCurso){
 
-    Estudiante*tempE = primerEstudiante;
-    if (tempE == NULL) {
-        cout<<"No hay estudiantes"<<endl;
-        return;
-    }
+
 
     Curso*tempC = buscarCurso(codCurso);
     if(tempC == NULL){
@@ -1548,53 +1544,32 @@ void reporte3(int codCurso){
 
     while( tempC->sublistaGrupos != NULL ){
         cout<<tempC->sublistaGrupos->numGrupo<<endl;
+        //cout<<tempC->codigo<<endl;
         //llamarEst(tempC);
         while(tempC->sublistaGrupos->tempTC != NULL){
             cout<<tempC->sublistaGrupos->tempTC->nombre<<" del "<<tempC->sublistaGrupos->tempTC->dia<<"/"<<tempC->sublistaGrupos->tempTC->mes<<"/"<<tempC->sublistaGrupos->tempTC->year;
-            cout<<" en el curso "<<tempC->nomCurso<<endl;//" del grupo "<<tempC->sublistaGrupos->numGrupo<<endl;
-
+            cout<<" en el curso "<<tempC->nomCurso<<" con el codigo "<<tempC->sublistaGrupos->tempTC->id<<endl;//" del grupo "<<tempC->sublistaGrupos->numGrupo<<endl;
+            //cout<<"Llego aquí...0\n";
             //llamarEst(tempC);
+
+            Estudiante*tempE = primerEstudiante;
+            if (tempE == NULL) {
+                cout<<"No hay estudiantes"<<endl;
+                return;
+            }
+
             while(tempE != NULL){
                 //cout<<"Llego aquí...1\n";
-                while(tempE->enlaceReporte != NULL){
-                    //cout<<"Llego aquí...2\n";
-                    ReporteEstudiante*tempRe = tempE->enlaceReporte;
-                    while(tempRe != NULL){
-                        //cout<<"Llego aquí...3\n";
-                        while(tempRe->enlaceEvaluaciones != NULL){
-                                int cont = 0;
-                                //cout<<"Nombre: "<<tempE->nombre<<endl;
-                                //cout<<"Tarea entregada: "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->id<<endl;
-                                if( tempC->sublistaGrupos->tempTC->id == tempRe->enlaceEvaluaciones->enlaceEvaluaciones->id ){
-                                    //cout<<"Llego aquí...5\n";
-                                    //if(tempC->sublistaGrupos->numGrupo == tempE->enlaceReporte->enlaceGrupo->numGrupo){
-                                        cout<<"\t"<<tempE->nombre<<" del grupo "<<tempE->enlaceReporte->enlaceGrupo->numGrupo<<" entrego la tarea "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
-
-                                    //}
-                                }
-                                else{
-                                    if(tempRe->enlaceEvaluaciones == NULL){
-                                        cout<<tempE->nombre<<" no presento la tarea "<<tempC->sublistaGrupos->tempTC->nombre<<endl;
-                                    }
-
-                                    if(cont != 1){
-
-                                        while( tempC->sublistaGrupos->tempTC->id == tempRe->enlaceEvaluaciones->enlaceEvaluaciones->id ){
-                                                //cout<<"Llego aquí...5\n";
-                                            cout<<tempE->nombre<<" entrego la tarea "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
-                                            cont += 1;
-                                            cout<<cont<<endl;
-                                            tempRe->enlaceEvaluaciones->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->enlaceEvaluaciones->sig;
-                                        }
-
-                                    }
-                                }
-                            tempRe->enlaceEvaluaciones = tempRe->enlaceEvaluaciones->sig;
-                        }
-                        tempRe = tempRe->sig;
+                //cout<<tempE->nombre<<endl;
+                ReporteEstudiante*tempRe = tempE->enlaceReporte;
+                if(tempE->enlaceReporte != NULL){
+                    //cout<<"Llego aqui...2\n";
+                    if( tempC->sublistaGrupos->numGrupo == tempRe->enlaceGrupo->numGrupo){
+                        cout<<"\t"<<tempE->nombre<<" del grupo "<<tempE->enlaceReporte->enlaceGrupo->numGrupo<<" entrego la tarea "<<tempE->enlaceReporte->enlaceEvaluaciones->enlaceEvaluaciones->nombre<<endl;
                     }
-                    tempE->enlaceReporte = tempE->enlaceReporte->sig;
+
                 }
+
                 tempE = tempE->sig;
             }
             tempC->sublistaGrupos->tempTC = tempC->sublistaGrupos->tempTC->sig;
@@ -3001,11 +2976,11 @@ void baseDeDatos(){
 // amanda 2019053336
 // jimmy 2021053336
 
-    registrarActividad(2021053336,1520,53,109,"Proyecto");
+    //registrarActividad(2021053336,1520,53,109,"Proyecto");
     registrarActividad(2021053336,1520,53,124,"Tarea");
     registrarActividad(2021053336,1520,53,123,"Tarea");
     registrarActividad(2019053336,1520,53,123,"Tarea");
-    registrarActividad(2019053336,1520,53,136,"Examen");
+    //registrarActividad(2019053336,1520,53,136,"Examen");
     registrarActividad(2019053336,1520,53,124,"Tarea");
     registrarActividad(2020053336,1520,51,124,"Tarea");
 
