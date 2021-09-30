@@ -1520,7 +1520,7 @@ void reporte1(int cedPro, int anno, int numS){///Reporte 1
     cout<<"\nEdad: "<<tempP->edad;
     conexionGrupo*tempConex = tempP->suGrupo;
 
-    cout<<"\n------------- Reporte ---------------\n";
+    cout<<"\n------------- Reporte 1 ---------------\n";
     cout<<"\nIngrese la fecha del día de hoy\nDia: ";
     int diaDeHoy,mesDeHoy,anoDeHoy;
     cin>>diaDeHoy;
@@ -1558,7 +1558,8 @@ void reporte2(int cedPro, int anno, int numS){///Reporte 2
     cout<<"\nEdad: "<<tempP->edad;
     conexionGrupo*tempConex = tempP->suGrupo;
 
-    cout<<"\n------------- Reporte ---------------\n";
+    cout<<"\n ------------------------------ Reporte 2 ------------------------------ \n";
+    cout<<"                       Semestre "<<tempS->numSemestre<<"\tAño "<<tempS->anno<<endl;
     while(tempConex != NULL){
 
         //cout<<"\nCurso: "<<tempConex->enlaceG->enlaceCurso->nomCurso<<"\tGrupo: "<<tempConex->enlaceG->numGrupo<<"\n\n";
@@ -1589,6 +1590,7 @@ void reporte2(int cedPro, int anno, int numS){///Reporte 2
 
         tempConex = tempConex->sig;
     }
+    cout<<"\n------------------------------------------------------------------------ \n";
 
 }
 
@@ -2604,7 +2606,7 @@ void menuProfe(){///Menu para el profesor
                 int numSem;
                 cin>>numSem;
 
-                //reporte2(cedProfe,anno,numSem);
+                reporte2(cedProfe,anno,numSem);
             }
             else if(choiceReporte == 3){//reporte 3
                 cout<<"Ingrese los datos que se le solicitan\n\n";
@@ -2686,10 +2688,7 @@ void menuEst(){
 
         if(registrarActividad(carnet,codCurso,idGrupo,idAct,tipo) == true){
             cout<<"Actividad registrada exitosamente...\n";
-        }
-        else{
-            cout<<"La actividad NO se pudo ingresar...\n";
-        }
+            }else{cout<<"La actividad NO se pudo ingresar...\n";}
         break;
 
     /*case 2://punto "m"
