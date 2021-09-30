@@ -453,22 +453,13 @@ Semestre* insertarSemestreOrdenado(int anno,int numSemestre,string tipo){
                     if(temp->numSemestre > newSemestre->numSemestre){
                     break;
                     }}
-
-
                 tempAnt = temp;
                 temp = temp->sig;
-
-
-        }//
+        }
         if(temp ==NULL){//el numero a insertar es mayor a todos
                tempAnt->sig = newSemestre;
                newSemestre->ant =  tempAnt;
         }
-
-
-
-
-
         else{// insertar en medio
             newSemestre->sig = temp;
             newSemestre->ant = tempAnt;
@@ -479,6 +470,8 @@ Semestre* insertarSemestreOrdenado(int anno,int numSemestre,string tipo){
 
 return primerSemestre;
 }
+
+
 
 //punto **E** insertar curso lista circular final        falta borrar y modificar
 //E: creditos, nombre, codigo
@@ -1361,6 +1354,34 @@ bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad
     return true;
 }
 
+void puntoL(){
+
+    cout<<"Ingrese los datos que se le solicitan\n\n";
+    int carnet, codCurso, idGrupo, idAct;
+    string tipo;
+
+    cout<<"Carnet de estudiante: ";
+    cin>>carnet;
+
+    cout<<"Codigo del curso: ";
+    cin>>codCurso;
+
+    cout<<"Numero del grupo: ";
+    cin>>idGrupo;
+
+    cout<<"ID de la actividad: ";
+    cin>>idAct;
+
+    cout<<"Tipos de actividades: Examen - Tarea - Proyecto - Giras\n";
+    cout<<"Tipo a modificar: ";
+    cin>>tipo;
+
+    if(registrarActividad(carnet,codCurso,idGrupo,idAct,tipo) == true){
+        cout<<"Actividad registrada exitosamente...\n";
+        }else{cout<<"La actividad NO se pudo ingresar...\n";}
+
+}
+
 //punto "m"
 bool registrarAsistenciaCharla(int cedEst, int idChar, int anno, int numS){
 
@@ -1411,6 +1432,31 @@ bool imprimirAsistenciaCharla(int cedEst, int year, int numSem, int numC){
     return NULL;
 }
 
+void puntoM(){
+
+    cout<<"Ingrese los datos que se le solicitan\n\n";
+    cout<<"Numero de carnet: ";
+    int cedEst;
+    cin>>cedEst;
+
+    cout<<"Numero de la charla: ";
+    int numC;
+    cin>>numC;
+
+    cout<<"Año del semestre: ";
+    int anno;
+    cin>>anno;
+
+    cout<<"Numero de semestre: ";
+    int numS;
+    cin>>numS;
+
+    if(registrarAsistenciaCharla(cedEst,numC,anno,numS) == true){
+        cout<<"Actividad registrada exitosamente...\n";
+        imprimirAsistenciaCharla(cedEst,anno,numS,numC);
+    }else{cout<<"NO se pudo registrar la actividad...\n";}
+
+}
 ///Reportes
 string returnMes(int mes);
 string returnDia(int anno,int mes, int day);
@@ -2568,7 +2614,7 @@ void menuProfe(){///Menu para el profesor
 
     case 3://Reportes
         int choiceReporte;
-        while(choiceReporte!=1){
+        while(choiceReporte!=6){
             cout<<"----------- Menu de reportes de Profesor -----------\n\n";
             cout<<" 1 - Reporte 1 \n";
             cout<<" 2 - Reporte 2 \n";
@@ -2616,7 +2662,7 @@ void menuProfe(){///Menu para el profesor
                 reporte3(codCurso);
             }
             else if(choiceReporte == 4){//reporte 4
-
+            ///No se hizo
             }
             else if(choiceReporte == 5){//reporte 5
                 cout<<"Ingrese los datos que se le solicitan\n\n";
@@ -2666,64 +2712,20 @@ void menuEst(){
         switch(choiceEst){
 
     case 1://punto "l"
-        cout<<"Ingrese los datos que se le solicitan\n\n";
-        int carnet, codCurso, idGrupo, idAct;
-        string tipo;
-
-        cout<<"Carnet de estudiante: ";
-        cin>>carnet;
-
-        cout<<"Codigo del curso: ";
-        cin>>codCurso;
-
-        cout<<"Numero del grupo: ";
-        cin>>idGrupo;
-
-        cout<<"ID de la actividad: ";
-        cin>>idAct;
-
-        cout<<"Tipos de actividades: Examen - Tarea - Proyecto - Giras\n";
-        cout<<"Tipo a modificar: ";
-        cin>>tipo;
-
-        if(registrarActividad(carnet,codCurso,idGrupo,idAct,tipo) == true){
-            cout<<"Actividad registrada exitosamente...\n";
-            }else{cout<<"La actividad NO se pudo ingresar...\n";}
+        puntoL();
         break;
 
-    /*case 2://punto "m"
-
-        cout<<"Ingrese los datos que se le solicitan\n\n";
-        cout<<"Numero de carnet: ";
-        int cedEst;
-        cin>>cedEst;
-
-        cout<<"Numero de la charla: ";
-        int numC;
-        cin>>numC;
-
-        cout<<"Año del semestre: ";
-        int anno;
-        cin>>anno;
-
-        cout<<"Numero de semestre: ";
-        int numS;
-        cin>>numS;
-
-        if(registrarAsistenciaCharla(cedEst,numC,anno,numS) == true){
-            cout<<"Actividad registrada exitosamente...\n";
-            imprimirAsistenciaCharla(cedEst,anno,numS,numC);
-        }else{cout<<"NO se pudo registrar la actividad...\n";}
-
+    case 2://punto "m"
+        puntoM();
         break;
 
-    case 3:
-        break;*/
+    case 3://reporte 6
+        ///No se hizo
+        break;
 
-    //case 4:
+    case 4:
         repetir = false;
         break;
-
         }
     }while(repetir);
 };
@@ -2814,102 +2816,6 @@ string returnDia(int anno,int mes, int day){
 
 }
 
-/*void dia(int anno,int mes, int day){
-
-    int a = (14-mes)/12;
-    int y = anno - a;
-    int m = mes + 12*a - 2;
-    int d = (day + y+ y/4 - y/100 + (31*m)/12)%7;
-
-    if(d == 1)
-        cout<<"   Lunes:\n";
-    else if(d == 2)
-        cout<<"   Martes:\n";
-    else if(d == 3)
-        cout<<"   Miercoles:\n";
-    else if(d == 4)
-        cout<<"   Jueves:\n";
-    else if(d == 5)
-        cout<<"   Viernes:\n";
-    else if(d == 6)
-        cout<<"   Sabado:\n";
-    else if(d == 0)
-        cout<<"   Domingo:\n";
-
-}*/
-
-/*void imprimirEvaluacion3(int codCurso,int numGrupo){
-    Curso*tempC = buscarCurso(codCurso);
-    Grupo*tempG = buscarGrupo(numGrupo,tempC);
-
-    Evaluacion*Proyecto = tempG->tempP;
-    Evaluacion*Tarea = tempG->tempTC;
-    Evaluacion*Examen = tempG->tempExa;
-    Evaluacion*Giras = tempG->tempG;
-
-    int day = 30 + 7;
-    int month = 4;
-    int monthMayor = month + 1;
-    int dayMayor = day + 7;
-    int cont = 0;
-    int contDay = 30 + 7;
-    if(day >= 30){
-        day -= 30;
-        dayMayor -= 30;
-        month += 1;
-        monthMayor += 1;
-        contDay -= 30;
-    }
-    if(cont == 0)
-        cout<<"   Lunes:\n";
-    if(cont == 1)
-        cout<<"   Martes:\n";
-    if(cont == 2)
-        cout<<"   Miercoles:\n";
-    if(cont == 3)
-        cout<<"   Jueves:\n";
-    if(cont == 4)
-        cout<<"   Viernes:\n";
-    if(cont == 5)
-        cout<<"   Sabado:\n";
-    if(cont == 6)
-        cout<<"   Domingo:\n";
-
-    cout<<"Day: "<<day<<endl;
-    cout<<"Month: "<<month<<endl;
-
-    while(Proyecto != NULL){
-        if(Proyecto->dia >= day && Proyecto->mes >= month && Proyecto->dia <= dayMayor && Proyecto->mes < monthMayor ){
-            if(contDay == Proyecto->dia){
-                cout<<"Proyecto: "<<Proyecto->nombre<<endl;
-                cont += 1;
-            }
-        }
-        Proyecto = Proyecto->sig;
-    }
-    while(Tarea != NULL){
-        if(Tarea->dia >= day && Tarea->mes >= month && Tarea->dia <= dayMayor && Tarea->mes < monthMayor){
-
-            cout<<"Tarea: "<<Tarea->nombre<<endl;
-        }
-        Tarea = Tarea->sig;
-    }
-    while(Examen != NULL){
-        if(Examen->dia > day && Examen->mes >= month && Examen->dia <= dayMayor && Examen->mes < monthMayor){
-
-        cout<<"Examen: "<<Examen->nombre<<endl;
-        }
-        Examen = Examen->sig;
-    }
-    while(Giras != NULL){
-        if(Giras->dia > day && Giras->mes >= month && Giras->dia <= dayMayor && Giras->mes < monthMayor){
-        cout<<"Gira: "<<Giras->nombre<<endl;
-        }
-        Giras = Giras->sig;
-    }
-
-}
-*/
 void imprimirEvaluacion2(){
     Curso*tempC = buscarCurso(1520);
     Grupo*tempG = buscarGrupo(53,tempC);
@@ -2976,8 +2882,6 @@ void imprimirCalificacion(){
 
 }
 
-
-
 void baseDeDatos(){
 
     //Semestres insertados
@@ -2995,7 +2899,7 @@ void baseDeDatos(){
     insertarAdmin("Admin5");
 
     //insertar profesores
-    insertarInicio("Hilary"   ,1001,45);
+    insertarInicio("Hilary"   ,1001,21);
     insertarInicio("David"   , 702900638, 37);
     insertarInicio("Sofia"   , 645900638, 25);
     insertarInicio("Juan"    , 204500638, 27);
@@ -3080,7 +2984,6 @@ void baseDeDatos(){
 
     relacionarEstudiantesGrupo(2019053336,1520,53);
     relacionarEstudiantesGrupo(2020053336,1520,51);
-    //relacionarEstudiantesGrupo(2020053874,1520,52);
     relacionarEstudiantesGrupo(2021053336,1520,53);
     //relacionarEstudiantesGrupo(2021053336,1520,53);
 
@@ -3097,7 +3000,7 @@ void baseDeDatos(){
     //imprimirCalificacion();
     //reporte1(1001,2020,2);
     ////reporte5(1001,1520,53);
-    reporte2(1001,2020,2);
+    //reporte2(1001,2020,2);
     //reporte7();
     //reporte3(1520);
 }
