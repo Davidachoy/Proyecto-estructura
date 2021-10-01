@@ -1926,6 +1926,24 @@ bool reporte7() {//reporte 7
 }
 
 //reporte 8                                                         /////////////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+void verificarCharla(Estudiante*tempEstud, Charla*tempCharla){
+    ReporteCharla*tempReporte = tempEstud->enlaceCharla;
+    while (tempReporte!= NULL){
+            AsistenciaCharla*tempAsistencia = tempReporte->enlaceAsistenciaCharla;
+            while(tempAsistencia != NULL){
+                if (tempAsistencia->enlaceCharla->numCharla ==tempCharla->numCharla){
+                    tempCharla->cantidadEstudiantes += 1;
+                    return;
+                }else{
+                    tempAsistencia= tempAsistencia->sig;
+                }
+            }
+            tempReporte = tempReporte->sig;
+        }
+
+        return;
+    }
+
 void borrarCantidadCharla(Charla*tempCharla){
     while(tempCharla!= NULL){
 
@@ -1949,33 +1967,68 @@ void reporte8(int anno,int numSem) {
     while(tempCharla!= NULL) {
         Estudiante*tempEstudiante = primerEstudiante;
         while (tempEstudiante != NULL) {
-            if(tempEstudiante->enlaceCharla->enlaceAsistenciaCharla->enlaceCharla->numCharla == tempCharla->numCharla) {
-                tempCharla->cantidadEstudiantes += 1;
+            if (tempEstudiante->enlaceCharla == NULL) {
                 tempEstudiante = tempEstudiante->sig;
             }
+
+
+            verificarCharla(tempEstudiante, tempCharla);
             tempEstudiante = tempEstudiante->sig;
 
 
 
 
 
+            }
+            tempCharla= tempCharla->sig;
         }
-        tempCharla= tempCharla->sig;
+
+
+    Charla*mayorAMenorCharla = NULL;
+    Charla*tempCharlaLista = tempS->sublistaCharla;
+    while(tempCharlaLista != NULL) {
+        Charla*newCharla = new Charla(tempCharlaLista->tipoCharla,tempCharlaLista->numCharla, tempCharlaLista->dia,tempCharlaLista->mes,tempCharlaLista->anno);
+        newCharla->cantidadEstudiantes = tempCharlaLista->cantidadEstudiantes;
+        if(mayorAMenorCharla == NULL) {
+            mayorAMenorCharla = newCharla;
+        } else if(newCharla->cantidadEstudiantes > mayorAMenorCharla->cantidadEstudiantes) {
+            newCharla->sig = mayorAMenorCharla;
+            mayorAMenorCharla = newCharla;
+        } else {
+
+            Charla*temp = mayorAMenorCharla;
+            Charla*tempAnt =NULL;
+            while((temp != NULL) && (newCharla->cantidadEstudiantes<= temp->cantidadEstudiantes)) {
+                tempAnt = temp;
+                temp = temp->sig;
+            }//
+            if(temp ==NULL) { //el numero a insertar es mayor a todos
+                tempAnt->sig = newCharla;
+            } else { // insertar en medio
+                newCharla->sig = temp;
+                tempAnt->sig = newCharla;
+            }
+        }
+        tempCharlaLista = tempCharlaLista->sig;
+    }
+    Charla*imprimirChar2 = mayorAMenorCharla;
+    while(imprimirChar2!= NULL) {
+        imprimirChar2= imprimirChar2->sig;
+    }
+    int contador = 0;
+    Charla*imprimirChar = mayorAMenorCharla;
+    cout<<"Para el "<<tempS->numSemestre<<" semestre "<<tempS->anno<<endl;
+    while (contador != 3) {
+        if (imprimirChar == NULL) {
+            break;
+        }
+        cout<<"\tCharla #"<<imprimirChar->numCharla<< " con "<<imprimirChar->cantidadEstudiantes<< " estudiante"<<endl;
+        imprimirChar = imprimirChar->sig;
+        contador += 1;
     }
 
 
-
-
-
-
-
-
-
-
-
-
 }
-
 //Menus
 void menuAdmin(){
     bool repetir = true;
