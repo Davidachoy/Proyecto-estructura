@@ -7,7 +7,7 @@ Primer proyecto de estructuras de datos
 
 Estudiantes: Nicole Tencio y David Achoy
 
-Fecha de inicio: Jueves 02 sept
+Fecha de inicio: Jueves 02 sept y Fecha final: 30 de septiembre
 */
 
 //Estructuras a usar
@@ -46,7 +46,7 @@ struct Estudiante{//Simple list del estudiante
     string carrera;
     Estudiante* sig;
     struct ReporteEstudiante*enlaceReporte;// conecta con un auxiliar
-    struct ReporteCharla*enlaceCharla;
+    struct ReporteCharla*enlaceCharla; //conecta con un auxiliar de charlas
 
     Estudiante(string nom, int unCarnet, string carr){
 
@@ -163,7 +163,7 @@ struct Evaluacion{//Simple list de evaluaciones
 
 };
 
-struct ReporteCharla{
+struct ReporteCharla{//Conecta los estudiantes con las charlas
 
     struct AsistenciaCharla*enlaceAsistenciaCharla;
     ReporteCharla*sig;
@@ -237,11 +237,11 @@ struct Charla{//Simple list de Charlas
 };
 
 //Punteros globales
-Profesor*primerProfesor;
-Semestre*primerSemestre;
-Administrador*primerAdministrador;
-Estudiante*primerEstudiante;
-Curso*primerCurso;
+Profesor*primerProfesor;//lista de profesores
+Semestre*primerSemestre;//Lista de semestres
+Administrador*primerAdministrador;// lista de administradores
+Estudiante*primerEstudiante; // lista de estudiantes
+Curso*primerCurso; //lista de cursos
 
 //punto "a"
 Administrador* insertarAdmin(string user){//Inserta los usuarios //recibe como parametro al nombre de usuario a ingresar
@@ -431,7 +431,7 @@ Profesor*buscarProfesor2(int ced);
 Semestre*buscarSemestre(int year, int numS);
 Charla*buscarCharla(int year, int numS, int numCharla);
 
-//punto **D** inserta y modificar semestres     falta modificar
+//punto **D** inserta y modificar semestre
 //E: anno y numsemestre
 //S: semestre creado de forma ordenada en lista doble
 Semestre* insertarSemestreOrdenado(int anno,int numSemestre,string tipo){//Recibe el año, numero de semestre y el tipo de modalidad del semestre //Inserta al semestre de forma ordenada
@@ -492,7 +492,6 @@ bool modificarSemestre(int NEWanno,int NEWnumSemestre,string newtipo){//Modifica
     tempS->tipo = newtipo;//Lo modifica
     return true;
 }
-
 //punto **E** insertar curso lista circular final        falta borrar y modificar
 //E: creditos, nombre, codigo
 Curso* insertarCurso(int creditos, string nombre, int codigo){
@@ -736,8 +735,8 @@ bool relacionarEstudiantesGrupo(int carnet,int codigoCurso, int numGrupo){
     tempE ->enlaceReporte = newReporte;// inserta al inicio de la sublista de matricula
     return true;
 }
-
-bool borrarRelacionEstudiantesGrupo(int carnet, int numGrupo){
+// Borra la relacion de estudiante con el Grupo
+bool borrarRelacionEstudiantesGrupo(int carnet, int numGrupo){//Recibe carnet de estudiante y numero de Grupo
 
     Estudiante*tempE = buscarEstudianteReturn(carnet);
     if (tempE == NULL)
@@ -870,7 +869,7 @@ bool insertarProyecto(Evaluacion*nuevaEvaluacion, Grupo*grupo){
 return true;
 
 }
-
+//Inserta evaluacion tipo Examen
 bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempExa == NULL){
         grupo->tempExa = nuevaEvaluacion;
@@ -924,7 +923,7 @@ bool insertarExamen(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     }
 return true;
 }
-
+//inserta Evaluacion tipo Tarea
 bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempTC == NULL){
         grupo->tempTC = nuevaEvaluacion;
@@ -981,7 +980,7 @@ bool insertarTarea(Evaluacion*nuevaEvaluacion, Grupo*grupo){
 return true;
 
 }
-
+// inserta Evaluacuin tipo giras
 bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
     if( grupo->tempG == NULL){
         grupo->tempG = nuevaEvaluacion;
@@ -1037,7 +1036,7 @@ bool insertarGiras(Evaluacion*nuevaEvaluacion, Grupo*grupo){
 return true;
 
 }
-
+// inserta Evaluacion tipo Proyecto
 bool asignarAsignaciones(string tipo, int idAct, string nom, int dia, int mes, int year, int codCurso, int numGrupo, int cedula){
     Profesor*tempProfesor = buscarProfesor2(cedula);
     if (tempProfesor == NULL){
@@ -1096,7 +1095,6 @@ bool asignarAsignaciones(string tipo, int idAct, string nom, int dia, int mes, i
 
 Charla*buscarCharla(int year,int numSem, int numC);
 
-//Punto "k"
 bool insertarCharlas(int id, string nomCharla, int numSem, int anSemestre, int day, int month){//Relaciona los semestres con las charlas
     //Recibe el ID, el nombre de la charla, el año y el número del semestre a relacionar y la fecha de la charla
 
@@ -1202,6 +1200,7 @@ bool borrarCharla(int numC, int anSemestre, int numSem){//Borrar X charla
 }
 
 //punto **L**
+
 bool buscarCalificacion(ReporteEstudiante*lista , int idActividad){
     Calificaciones*tempC = lista->enlaceEvaluaciones;
 
@@ -1215,7 +1214,7 @@ bool buscarCalificacion(ReporteEstudiante*lista , int idActividad){
     return false;
 
 }
-
+//funcion que busca la evaluacion
 Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo, string tipo,int idActividad)
 {
     Curso*tempC = buscarCurso(codigoCurso);
@@ -1318,7 +1317,7 @@ Evaluacion*buscarEvaluacion(int codigoCurso, int idGrupo, string tipo,int idActi
 
 
 }
-
+//Funcion que Registra cuando un estuidante hace una actividad Recibe carnet / codigo Curso/ numGrupo / y la id de actividad.
 bool registrarActividad(int carnet, int codigoCurso, int idGrupo,int idActividad, string tipo){
     Estudiante*tempE = buscarEstudianteReturn(carnet);
     if(tempE == NULL)
@@ -1473,6 +1472,7 @@ void puntoM(){//imprime el punto "m" en el menu del est
 
 }
 ///Reportes
+//funciones que retorna el dia segun una fecha
 string returnMes(int mes);
 string returnDia(int anno,int mes, int day);
 
@@ -1707,7 +1707,8 @@ void reporte3(int codCurso){///Reporte 3
     }
 }
 
-//funciones para el reporte 5
+//funciones para el reporte 5 consulta que estudiantes no han entregado asignaciones en un Curso
+//imprime todas las evaluaciones en caso de que no haya participado en nada
 void imprimirReporte5Aux(Grupo*tempG) {
     Evaluacion*tempEvaluacionExamen = tempG->tempExa;
     Evaluacion*tempEvaluacionTarea = tempG->tempTC;
@@ -1748,7 +1749,7 @@ void imprimirReporte5Aux(Grupo*tempG) {
                 }
             }
         }
-
+// imprime los examenes que no ha hecho
 void imprimirAsignacionExamen(Evaluacion*tempEvaluacionExamen,ReporteEstudiante*tempReporte){
     while(tempEvaluacionExamen != NULL){
         Calificaciones*tempCalificaciones = tempReporte->enlaceEvaluaciones;
@@ -1769,7 +1770,7 @@ void imprimirAsignacionExamen(Evaluacion*tempEvaluacionExamen,ReporteEstudiante*
     }
 
 }
-
+// imprime las tareas que no ha hecho
 void imprimirAsignacionTarea(Evaluacion*tempEvaluacionTarea,ReporteEstudiante*tempReporte){
     while(tempEvaluacionTarea != NULL){
         Calificaciones*tempCalificaciones = tempReporte->enlaceEvaluaciones;
@@ -1790,7 +1791,7 @@ void imprimirAsignacionTarea(Evaluacion*tempEvaluacionTarea,ReporteEstudiante*te
     }
 
 }
-
+// imprime los Giras que no ha hecho
 void imprimirAsignacionGiras(Evaluacion*tempEvaluacionGiras,ReporteEstudiante*tempReporte){
     while(tempEvaluacionGiras != NULL){
         Calificaciones*tempCalificaciones = tempReporte->enlaceEvaluaciones;
@@ -1811,7 +1812,7 @@ void imprimirAsignacionGiras(Evaluacion*tempEvaluacionGiras,ReporteEstudiante*te
     }
 
 }
-
+// imprime los Proyecto que no ha hecho
 void imprimirAsignacionProyecto(Evaluacion*tempEvaluacionProyecto,ReporteEstudiante*tempReporte){
     while(tempEvaluacionProyecto != NULL){
         Calificaciones*tempCalificaciones = tempReporte->enlaceEvaluaciones;
@@ -1913,7 +1914,7 @@ void reporte5(int cedulaProf, int numCurso, int numGrupo) {///Reporte 5
 //reporte 6
 
 
-bool reporte7() {//reporte 7
+bool reporte7() {//reporte 7 imprime los estudiantes que no han hecho nada
     cout<<"Reporte de estudiantes que no han entregado ninguna asignacion"<<endl;
     Estudiante*tempE = primerEstudiante;
     if (tempE == NULL) {
@@ -1936,7 +1937,7 @@ bool reporte7() {//reporte 7
     }
 }
 
-//reporte 8                                                         /////////////////////////////////////////////////////////////////////////////////////////////////////////////trabajando aqui
+//reporte 8      verifica si un estudante ha participado en una charla y le suma uno
 void verificarCharla(Estudiante*tempEstud, Charla*tempCharla){
     ReporteCharla*tempReporte = tempEstud->enlaceCharla;
     while (tempReporte!= NULL){
@@ -1954,7 +1955,7 @@ void verificarCharla(Estudiante*tempEstud, Charla*tempCharla){
 
         return;
     }
-
+//vacia la cantidad de estudiantes por charla
 void borrarCantidadCharla(Charla*tempCharla){
     while(tempCharla!= NULL){
 
@@ -1963,7 +1964,7 @@ void borrarCantidadCharla(Charla*tempCharla){
 
     }
 }
-
+//Funcion para imprimir las 3 mejores charlas de X semestre R: num semestre y anno semestre
 void reporte8(int anno,int numSem) {
     Semestre*tempS = buscarSemestre(anno,numSem);
     if (tempS==NULL) {
@@ -2775,7 +2776,7 @@ void menuProfe(){///Menu para el profesor
     }while(acceso);
 }
 
-void menuEst(){
+void menuEst(){ /// menu Estudiante
     bool repetir = true;
     do{
         cout<<"----------- Menu de estudiantes -----------\n\n";
@@ -2809,7 +2810,7 @@ void menuEst(){
     }while(repetir);
 };
 
-void menuUsuarios(){
+void menuUsuarios(){ ///main menu
 
     bool repetir = false;
     do{
@@ -2960,7 +2961,7 @@ void imprimirCalificacion(){
 
 
 }
-
+//Base de datos del proyecto
 void baseDeDatos(){
 
     //Semestres insertados
@@ -3187,7 +3188,7 @@ bool buscarEstudiante(int num){
     }
     return true;
 };
-
+//true si existe el profesor y false lo contrario
 bool buscarProfesor(int ced){
 
     Profesor*i = primerProfesor;
@@ -3223,6 +3224,7 @@ Curso* buscarCurso(int codigo){
     return NULL;
 
 }
+//Retorna el Grupo
 Grupo*buscarGrupo(int codigo, Curso*puntero){
 
     if(puntero->sublistaGrupos == NULL)
@@ -3235,6 +3237,7 @@ Grupo*buscarGrupo(int codigo, Curso*puntero){
     }
     return NULL;
 }
+//Retorna el estudiante
 Estudiante*buscarEstudianteReturn(int num){
 
     Estudiante * i = primerEstudiante;
@@ -3248,7 +3251,7 @@ Estudiante*buscarEstudianteReturn(int num){
 
 
 }
-
+//retorna el semestre
 Semestre*buscarSemestre(int year, int numS){
     Semestre*tempS = primerSemestre;
 
@@ -3259,7 +3262,7 @@ Semestre*buscarSemestre(int year, int numS){
     }
     return NULL;
 }
-
+//retorna true si hay semestre y false lo contrario
 bool buscarSemestreBool(int year, int numS){
     Semestre*tempS = primerSemestre;
 
@@ -3270,7 +3273,7 @@ bool buscarSemestreBool(int year, int numS){
     }
     return false;
 }
-
+//retorna la charla
 Charla*buscarCharla(int year, int numS,int numC){
     Semestre*tempS = buscarSemestre(year,numS);
     if(tempS == NULL)
